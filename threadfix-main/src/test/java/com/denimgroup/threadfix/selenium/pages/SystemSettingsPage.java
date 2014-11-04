@@ -40,13 +40,6 @@ public class SystemSettingsPage extends BasePage {
         return new SystemSettingsPage(driver);
     }
 
-    @Deprecated
-    public SystemSettingsPage defaultPermissions() {
-        driver.findElementByClassName("panel-title").click();
-        sleep(1000);
-        return new SystemSettingsPage(driver);
-    }
-
     public SystemSettingsPage toggleDefaultRoleCheckbox() {
         driver.findElementById("globalGroupEnabledCheckbox").click();
         return this;

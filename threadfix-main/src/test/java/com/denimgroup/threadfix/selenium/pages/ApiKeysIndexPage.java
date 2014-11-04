@@ -34,7 +34,8 @@ public class ApiKeysIndexPage extends BasePage {
 	private WebElement createNewKeyLink;
 
 
-    /* _____________________ Action Methods _____________________ */
+    /*---------------------------- Action Methods ----------------------------*/
+
 	public ApiKeysIndexPage(WebDriver webdriver) {
 		super(webdriver);
 		createNewKeyLink = driver.findElementById("createNewKeyModalButton");
@@ -81,7 +82,18 @@ public class ApiKeysIndexPage extends BasePage {
         return new ApiKeysIndexPage(driver);
     }
 
-    /* _____________________ Boolean Methods _____________________ */
+    /*---------------------------- Get Methods ----------------------------*/
+
+    public String getNoteError() {
+        return driver.findElementById("lengthLimitError").getText();
+    }
+
+    public int getTableWidth(){
+        return driver.findElementById("table").getSize().width;
+    }
+
+    /*---------------------------- Boolean Methods ----------------------------*/
+
 	public boolean isCreationSuccessAlertPresent(){
 		return driver.findElementByClassName("alert-success").getText().contains("Successfully created key");
 	}
@@ -107,14 +119,7 @@ public class ApiKeysIndexPage extends BasePage {
 		return driver.findElementById("note" + note).getText().trim().length()<=255;
 	}
 
-    /* _____________________ Get Methods _____________________ */
-    public String getNoteError() {
-        return driver.findElementById("lengthLimitError").getText();
-    }
-	
-	public int getTableWidth(){
-		return driver.findElementById("table").getSize().width;
-	}
+
 	
 
 	

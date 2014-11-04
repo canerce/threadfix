@@ -240,11 +240,6 @@ public class RemoteProvidersIndexPage extends BasePage {
         waitForElement(driver.findElementById("addImportQueueLink"));
         return new RemoteProvidersSchedulePage(driver);
     }
-
-	public String getErrorMessage(){
-        waitForElementPresence("errorSpan", 60);
-		return driver.findElementById("errorSpan").getText();
-	}
 	
 	public RemoteProvidersIndexPage clearWhiteHat(){
 		driver.findElementById("clearConfig1").click();
@@ -283,13 +278,21 @@ public class RemoteProvidersIndexPage extends BasePage {
         handleAlert();
         return new RemoteProvidersIndexPage(driver);
     }
-	
+
+    /*------------------------------ Get Methods ------------------------------*/
+
 	public String successAlert(){
         waitForElement(driver.findElementByClassName("alert-success"));
 		return driver.findElementByClassName("alert-success").getText().trim();
 	}
 
+    public String getErrorMessage(){
+        waitForElementPresence("errorSpan", 60);
+        return driver.findElementById("errorSpan").getText();
+    }
+
     /*------------------------------ Boolean Methods ------------------------------*/
+
     //Note: Qualys = 3, Veracode = 2, Whitehat = 1
     public boolean isMappingCorrect(int provider, int appRow, String teamName, String appName) {
         if(!driver.findElementById("provider"+ provider + "tfteamname" + appRow).getText().contains(teamName) ||

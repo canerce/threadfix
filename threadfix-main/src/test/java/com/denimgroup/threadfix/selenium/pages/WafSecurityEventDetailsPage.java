@@ -12,6 +12,8 @@ public class WafSecurityEventDetailsPage extends BasePage {
         super(webdriver);
     }
 
+    /*------------------------------------ Boolean Methods ------------------------------------*/
+
     public boolean isLogsNumberPresent() {
         return driver.findElementById("viewSecEvents").isDisplayed();
     }

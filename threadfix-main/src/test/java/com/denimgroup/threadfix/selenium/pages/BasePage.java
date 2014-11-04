@@ -69,7 +69,9 @@ public abstract class BasePage {
         Dimension dimensions = new Dimension(1250,1020);
         driver.manage().window().setSize(dimensions);
 	}
-	/*--------------click functions--------------*/
+
+    /*---------------------------- Action Methods ----------------------------*/
+
 	public LoginPage logout() {
 		clickUserTab();
 //		waitForElement(driver.findElementById("configurationHeader"));
@@ -92,74 +94,67 @@ public abstract class BasePage {
         return teamIndexMap;
     }
 
-    public int getNumTeamRows() {
-        if (!(driver.findElementById("teamTable").getText().equals("Add Team"))) {
-            return driver.findElementsByClassName("pointer").size();
-        }
-        return 0;
-    }
-
-	public TeamIndexPage clickOrganizationHeaderLink() {
+    public TeamIndexPage clickOrganizationHeaderLink() {
         driver.findElementById("orgHeader").click();
         waitForElement(driver.findElementById("expandAllButton"));
         return new TeamIndexPage(driver);
-	}
+    }
 
     public TeamIndexPage clickTeamsTab() {
         driver.findElementById("orgHeader").click();
         return new TeamIndexPage(driver);
     }
-	
-	public ScanIndexPage clickScansHeaderLink(){
-		driver.findElementById("scansHeader").click();
-		sleep(3000);
-		return new ScanIndexPage(driver);
-	}
-	
-	public WafIndexPage clickWafsHeaderLink() {
-		clickConfigTab();
-		driver.findElementById("wafsLink").click();
-		sleep(1000);
-		return new WafIndexPage(driver);
-	}
 
-	public AnalyticsPage clickAnalyticsLink() {
-		driver.findElementById("reportsHeader").click();
-		waitForElement(driver.findElementByTagName("h2"));
-		return new AnalyticsPage(driver);
-	}
-	
-	public void clickConfigTab(){
-        sleep(2000);
-		driver.findElementById("tabConfigAnchor").click();
-		sleep(2000);
-        waitForElement(driver.findElementById("configurationHeader"));
-	}
-	
-	public void clickUserTab(){
-		driver.findElementById("tabUserAnchor").click();
+    public ScanIndexPage clickScansHeaderLink(){
+        driver.findElementById("scansHeader").click();
         sleep(3000);
-	}
+        return new ScanIndexPage(driver);
+    }
 
-	public ApiKeysIndexPage clickApiKeysLink(){
-		clickConfigTab();
-		driver.findElementById("apiKeysLink").click();
-		return new ApiKeysIndexPage(driver);
-	}
-	
-	public DefectTrackerIndexPage clickDefectTrackersLink(){
-		clickConfigTab();
+    public WafIndexPage clickWafsHeaderLink() {
+        clickConfigTab();
+        driver.findElementById("wafsLink").click();
+        sleep(1000);
+        return new WafIndexPage(driver);
+    }
+
+    public AnalyticsPage clickAnalyticsLink() {
+        driver.findElementById("reportsHeader").click();
+        waitForElement(driver.findElementByTagName("h2"));
+        return new AnalyticsPage(driver);
+    }
+
+    public void clickConfigTab(){
+        sleep(2000);
+        driver.findElementById("tabConfigAnchor").click();
+        sleep(2000);
+        waitForElement(driver.findElementById("configurationHeader"));
+    }
+
+    public void clickUserTab(){
+        driver.findElementById("tabUserAnchor").click();
+        sleep(3000);
+    }
+
+    public ApiKeysIndexPage clickApiKeysLink(){
+        clickConfigTab();
+        driver.findElementById("apiKeysLink").click();
+        return new ApiKeysIndexPage(driver);
+    }
+
+    public DefectTrackerIndexPage clickDefectTrackersLink(){
+        clickConfigTab();
         driver.findElementById("defectTrackersLink").click();
-		sleep(4000);
-		return new DefectTrackerIndexPage(driver);
-	}
-	
-	public RemoteProvidersIndexPage clickRemoteProvidersLink(){
-		clickConfigTab();
-		driver.findElementById("remoteProvidersLink").click();
-		sleep(6000);
-		return new RemoteProvidersIndexPage(driver);
-	}
+        sleep(4000);
+        return new DefectTrackerIndexPage(driver);
+    }
+
+    public RemoteProvidersIndexPage clickRemoteProvidersLink(){
+        clickConfigTab();
+        driver.findElementById("remoteProvidersLink").click();
+        sleep(6000);
+        return new RemoteProvidersIndexPage(driver);
+    }
 
     public ScanAgentTasksPage clickScanAgentTasksLink() {
         clickConfigTab();
@@ -167,20 +162,20 @@ public abstract class BasePage {
         sleep(3000);
         return new ScanAgentTasksPage(driver);
     }
-	
-	public UserChangePasswordPage clickChangePasswordLink(){
-		clickUserTab();
-		driver.findElementById("changePasswordLink").click();
+
+    public UserChangePasswordPage clickChangePasswordLink(){
+        clickUserTab();
+        driver.findElementById("changePasswordLink").click();
         waitForElement(driver.findElementById("currentPasswordInput"));
         return new UserChangePasswordPage(driver);
-	}
-	
-	public UserIndexPage clickManageUsersLink(){
-		clickConfigTab();
-		driver.findElementById("manageUsersLink").click();
-		sleep(3000);
-		return new UserIndexPage(driver);
-	}
+    }
+
+    public UserIndexPage clickManageUsersLink(){
+        clickConfigTab();
+        driver.findElementById("manageUsersLink").click();
+        sleep(3000);
+        return new UserIndexPage(driver);
+    }
 
     public FilterPage clickManageFiltersLink() {
         clickConfigTab();
@@ -188,35 +183,70 @@ public abstract class BasePage {
         sleep(3000);
         return new FilterPage(driver);
     }
-	
-	public RolesIndexPage clickManageRolesLink(){
-		clickConfigTab();
-		driver.findElementById("manageRolesLink").click();
-		sleep(3000);
-		return new RolesIndexPage(driver);
-	}
-	
-	public ErrorLogPage clickViewLogsLink(){
-		clickConfigTab();
-		driver.findElementById("viewLogsLink").click();
-		return new ErrorLogPage(driver);
-	}
-	
-	public SystemSettingsPage clickSystemSettingsLink(){
-		clickConfigTab();
-		driver.findElementById("configureDefaultsLink").click();
-		return new SystemSettingsPage(driver);
-		
-	}
-	
-	public DashboardPage clickDashboardLink(){
-		driver.findElementById("dashboardHeader").click();
-		sleep(3000);
-		return new DashboardPage(driver);
-	}
-	
-	
-	/*--------------get functions--------------*/
+
+    public RolesIndexPage clickManageRolesLink(){
+        clickConfigTab();
+        driver.findElementById("manageRolesLink").click();
+        sleep(3000);
+        return new RolesIndexPage(driver);
+    }
+
+    public ErrorLogPage clickViewLogsLink(){
+        clickConfigTab();
+        driver.findElementById("viewLogsLink").click();
+        return new ErrorLogPage(driver);
+    }
+
+    public SystemSettingsPage clickSystemSettingsLink(){
+        clickConfigTab();
+        driver.findElementById("configureDefaultsLink").click();
+        return new SystemSettingsPage(driver);
+
+    }
+
+    public DashboardPage clickDashboardLink(){
+        driver.findElementById("dashboardHeader").click();
+        sleep(3000);
+        return new DashboardPage(driver);
+    }
+
+    /*---------------------------- Get Methods ----------------------------*/
+
+    public int getNumTeamRows() {
+        if (!(driver.findElementById("teamTable").getText().equals("Add Team"))) {
+            return driver.findElementsByClassName("pointer").size();
+        }
+        return 0;
+    }
+
+    public String getH2Tag() {
+        return driver.findElementByTagName("h2").getText();
+    }
+
+    protected static String getRandomString(int length) {
+        return RandomStringUtils.random(length,"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
+    }
+
+    public String tryGetText(By by) {
+        int attempts = 0;
+        String result = null;
+        while (attempts < 2) {
+            try {
+                result = driver.findElement(by).getText();
+                break;
+            } catch (StaleElementReferenceException e) {
+                System.err.print("Attempting to avoid StaleElementReferenceException.");
+            }
+            attempts++;
+        }
+        if (result == null) {
+            throw new NoSuchElementException("Element not found.");
+        }
+        return result;
+    }
+
+    /*---------------------------- Boolean Methods ----------------------------*/
+
 	public boolean isElementPresent(String elementId) {
 		try {
 			return driver.findElementById(elementId) != null;
@@ -228,10 +258,6 @@ public abstract class BasePage {
     public boolean isLinkPresent(String linkName) {
         return driver.findElementsByLinkText(linkName).size() != 0;
     }
-
-    public String getH2Tag() {
-		return driver.findElementByTagName("h2").getText();
-	}
 
 	public boolean isLoggedInUser(String user){
 		return driver.findElementById("tabUserAnchor").getText().trim().contains(user);
@@ -416,6 +442,22 @@ public abstract class BasePage {
         return false;
     }
 
+    public boolean tryClick(By by) {
+        int attempts = 0;
+        boolean result = false;
+        while (attempts < 2) {
+            try {
+                driver.findElement(by).click();
+                result = true;
+                break;
+            } catch (StaleElementReferenceException e) {
+                System.err.print("Attempting to avoid StaleElementReferenceException.");
+            }
+            attempts++;
+        }
+        return result;
+    }
+
 
     /*--------------------------------- Helper Methods ---------------------------------*/
 	public void sleep(int num) {
@@ -480,10 +522,6 @@ public abstract class BasePage {
     public void refreshPage() {
         driver.navigate().refresh();
     }
-	
-	protected static String getRandomString(int length) {
-		return RandomStringUtils.random(length,"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
-	}
 
     public void checkForAlert() {
         try {
@@ -492,40 +530,6 @@ public abstract class BasePage {
         } catch (NoAlertPresentException e) {
             throw new RuntimeException("Alert was not displayed as it should have been.", e);
         }
-    }
-
-    public boolean tryClick(By by) {
-        int attempts = 0;
-        boolean result = false;
-        while (attempts < 2) {
-            try {
-                driver.findElement(by).click();
-                result = true;
-                break;
-            } catch (StaleElementReferenceException e) {
-                System.err.print("Attempting to avoid StaleElementReferenceException.");
-            }
-            attempts++;
-        }
-        return result;
-    }
-
-    public String tryGetText(By by) {
-        int attempts = 0;
-        String result = null;
-        while (attempts < 2) {
-            try {
-                result = driver.findElement(by).getText();
-                break;
-            } catch (StaleElementReferenceException e) {
-                System.err.print("Attempting to avoid StaleElementReferenceException.");
-            }
-            attempts++;
-        }
-        if (result == null) {
-            throw new NoSuchElementException("Element not found.");
-        }
-        return result;
     }
 
     @SuppressWarnings("unchecked")

@@ -35,7 +35,8 @@ public class AnalyticsPage extends BasePage {
 		super(webdriver);
 	}
 
-    /* _____________________ Action Methods _____________________ */
+    /*---------------------------- Action Methods ----------------------------*/
+
     public AnalyticsPage clickTrendingTab() {
         driver.findElementByLinkText("Trending").click();
         return new AnalyticsPage(driver);

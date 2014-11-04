@@ -13,6 +13,8 @@ public class DefectTrackerSchedulePage extends BasePage{
         super(webDriver);
     }
 
+    /*------------------------------ Action Methods ------------------------------*/
+
     public DefectTrackerSchedulePage clickScheduleNewUpdateTab() {
         driver.findElementById("addUpdateQueueLink").click();
         waitForElement(driver.findElementById("submit"));
@@ -57,7 +59,7 @@ public class DefectTrackerSchedulePage extends BasePage{
         return this;
     }
 
-      /*------------------------------ Boolean Methods ------------------------------*/
+    /*------------------------------ Boolean Methods ------------------------------*/
 
     public boolean isNewSchedulePresent(String expectedTime) {
         return driver.findElementById("scheduledUpdateDay" + expectedTime).isDisplayed();

@@ -38,13 +38,8 @@ public class DefectTrackerIndexPage extends BasePage {
 
     /*----------------------------------- Action Methods -----------------------------------*/
 
-	public DefectTrackerIndexPage clickEditLink(String defectTrackerName) {
-		waitForElement(driver.findElementById("editDefectTrackerButton" + defectTrackerName));
-        driver.findElementById("editDefectTrackerButton" + defectTrackerName).click();
-        waitForElement(driver.findElementById("myModalLabel"));
-		return new DefectTrackerIndexPage(driver);
-	}
-	
+    //SET FUNCTIONS
+
 	public DefectTrackerIndexPage setName(String newName){
         driver.findElementById("nameInput").clear();
         driver.findElementById("nameInput").sendKeys(newName);
@@ -61,13 +56,22 @@ public class DefectTrackerIndexPage extends BasePage {
 			driver.findElementById("urlInput").sendKeys(newURL);
 		return this;
 	}
-	
+
+    //CLICK FUNCTIONS
+
 	public DefectTrackerIndexPage clickDeleteButton(){
 		driver.findElementById("deleteButton").click();
 		handleAlert();
         sleep(1000);
 		return new DefectTrackerIndexPage(driver);
 	}
+
+    public DefectTrackerIndexPage clickEditLink(String defectTrackerName) {
+        waitForElement(driver.findElementById("editDefectTrackerButton" + defectTrackerName));
+        driver.findElementById("editDefectTrackerButton" + defectTrackerName).click();
+        waitForElement(driver.findElementById("myModalLabel"));
+        return new DefectTrackerIndexPage(driver);
+    }
 
 	public DefectTrackerIndexPage clickAddDefectTrackerButton() {
 		driver.findElementById("addNewDTButton").click();
@@ -101,6 +105,8 @@ public class DefectTrackerIndexPage extends BasePage {
             waitForElement(driver.findElementById("addUpdateQueueLink"));
             return new DefectTrackerSchedulePage(driver);
     }
+
+    /*------------------------------ Get Methods ------------------------------*/
 
 	public String getNameRequiredErrorsText() {
 		return driver.findElementById("nameRequiredError").getText();

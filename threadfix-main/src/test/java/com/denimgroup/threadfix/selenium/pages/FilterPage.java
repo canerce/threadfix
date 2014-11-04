@@ -37,6 +37,7 @@ public class FilterPage extends BasePage {
     }
 
     /*---------------------------- Vulnerability Filter ----------------------------*/
+
     public FilterPage clickCreateNewFilter() {
         WebDriverWait wait = new WebDriverWait(driver, 60);
         wait.until(ExpectedConditions.visibilityOf(driver.findElementById("createNewKeyModalButton")));
@@ -80,6 +81,7 @@ public class FilterPage extends BasePage {
     }
 
     /*---------------------------- Severity Filter ----------------------------*/
+
     public FilterPage enableSeverityFilters() {
         if (driver.findElementById("enabledBox").getAttribute("checked") == null) {
             driver.findElementById("enabledBox").click();
@@ -157,6 +159,7 @@ public class FilterPage extends BasePage {
     }
 
     /*---------------------------- Page Methods ----------------------------*/
+
     public FilterPage waitForChanges() {
         sleep(300000);
         return this;

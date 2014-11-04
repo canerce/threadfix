@@ -31,19 +31,11 @@ public class ScanIndexPage extends BasePage {
 
     private WebElement scanTable;
 
+    /*----------------------------------- Action Methods -----------------------------------*/
+
     public ScanIndexPage(WebDriver webdriver) {
         super(webdriver);
         scanTable = driver.findElementById("main-content");
-    }
-
-    public int getNumScanRows() {
-        int cnt = driver.findElementsByClassName("bodyRow").size();
-        if (cnt == 1) {
-            if (driver.findElementByClassName("bodyRow").getText().contains("No scans found.")) {
-                return 0;
-            }
-        }
-        return cnt;
     }
 
     public ScanDetailPage clickViewScanLink(String teamName, String appName, String Scanner) {
@@ -59,5 +51,17 @@ public class ScanIndexPage extends BasePage {
             }
         }
         return new ScanDetailPage(driver);
+    }
+
+    /*----------------------------------- Get Methods -----------------------------------*/
+
+    public int getNumScanRows() {
+        int cnt = driver.findElementsByClassName("bodyRow").size();
+        if (cnt == 1) {
+            if (driver.findElementByClassName("bodyRow").getText().contains("No scans found.")) {
+                return 0;
+            }
+        }
+        return cnt;
     }
 }

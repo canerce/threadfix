@@ -37,13 +37,7 @@ public class UserPermissionsPage extends BasePage {
 
     /*------------------------------------ Action Methods ------------------------------------*/
 
-    public UserPermissionsPage clickAddPermissionsLink() {
-        sleep(1000);
-        driver.findElementById("addPermissionButton").click();
-        waitForElement(driver.findElementById("orgSelect"));
-        return new UserPermissionsPage(driver);
-    }
-
+    //SET FUNCTIONS
     public UserPermissionsPage setTeam(String team) {
         try {
             new Select(driver.findElementById("orgSelect")).selectByVisibleText(team);
@@ -78,21 +72,32 @@ public class UserPermissionsPage extends BasePage {
         return this;
     }
 
+    public UserPermissionsPage editSpecificPermissions(String teamName, String appName, String role) {
+        driver.findElementById("editAppMap" + teamName + appName + role).click();
+        return new UserPermissionsPage(driver);
+    }
+
+    //CLICK FUNCTIONS
     public UserPermissionsPage clickDeleteButton(String teamName, String appName, String role) {
         driver.findElementById("deleteAppMap" + teamName + appName + role).click();
         handleAlert();
         return new UserPermissionsPage(driver);
     }
 
+    public UserPermissionsPage clickAddPermissionsLink() {
+        sleep(1000);
+        driver.findElementById("addPermissionButton").click();
+        waitForElement(driver.findElementById("orgSelect"));
+        return new UserPermissionsPage(driver);
+    }
+
+    //NAVIGATION FUNCTIONS
     public UserPermissionsPage expandTeamName() {
         driver.findElementById("orgSelect").click();
         return this;
     }
 
-    public UserPermissionsPage editSpecificPermissions(String teamName, String appName, String role) {
-        driver.findElementById("editAppMap" + teamName + appName + role).click();
-        return new UserPermissionsPage(driver);
-    }
+    /*------------------------------------ Get Methods ------------------------------------*/
 
     public String errorAlert() {
         return driver.findElementByClassName("alert-error").getText();

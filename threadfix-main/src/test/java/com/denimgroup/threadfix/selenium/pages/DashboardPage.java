@@ -37,6 +37,7 @@ public class DashboardPage extends BasePage{
 
     /*---------------------------- Action Methods ----------------------------*/
 
+    //CLICK FUNCTIONS
 	public AnalyticsPage clickLeftViewMore(){
 		driver.findElementById("leftViewMore").click();
         waitForElement(driver.findElementById("csvLink"));
@@ -70,7 +71,9 @@ public class DashboardPage extends BasePage{
 		driver.findElementsByLinkText("View").get(0).click();
 		return new VulnerabilityDetailPage(driver);
 	}
-	
+
+    /*---------------------------- Get Methods ----------------------------*/
+
 	public int getNumUploads(){
 		return driver.findElementById("wafTableBody").findElements(By.className("bodyRow")).size();
 	}
