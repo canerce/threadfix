@@ -204,6 +204,12 @@ public abstract class BasePage {
         return new DashboardPage(driver);
     }
 
+    public TagIndexPage clickTagsLink() {
+        clickConfigTab();
+        driver.findElementById("tagsLink").click();
+        return new TagIndexPage(driver);
+    }
+
     /*---------------------------- Get Methods ----------------------------*/
 
     public int getNumTeamRows() {
