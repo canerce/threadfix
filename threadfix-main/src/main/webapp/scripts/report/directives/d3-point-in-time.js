@@ -30,11 +30,10 @@ d3ThreadfixModule.directive('d3Pointintime', ['$window', '$timeout', 'd3', 'd3do
                         return;
 
                     color.domain(reportConstants.vulnTypeList);
-                    var svg = d3Service.getExistingSvg(d3, ele[0], pieDim.w, pieDim.h)
-                        .attr("transform", "translate("+pieDim.w/2+","+pieDim.h/2+")");
+                    var svg = d3Service.getExistingSvg(d3, ele[0], pieDim.w, pieDim.h);
 
                     svg.selectAll('*').remove();
-                    reportUtilities.drawTitle(svg, pieDim.w, scope.label.teams, scope.label.apps, "Point in Time Report", 30);
+                    reportUtilities.drawTitle(svg, pieDim.w, scope.label, "Point in Time Report", 30);
 
                     if (Object.keys(data).length === 0) {
                         svg.append("g")
@@ -68,6 +67,7 @@ d3ThreadfixModule.directive('d3Pointintime', ['$window', '$timeout', 'd3', 'd3do
                         .data(tableData)
                         .enter().append("g")
                         .attr("class", "legend")
+                        .attr("id", function(d){return "legend" + d.Severity;})
                         .attr("transform", function(d, i) { return "translate(300," + (150 + i * 20) + ")"; });
 
                     legend.append("rect")

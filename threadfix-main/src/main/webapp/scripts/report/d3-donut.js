@@ -3,6 +3,14 @@ angular.module('threadfix')
 
         var Donut={};
 
+        var tip = d3.tip()
+            .attr('class', 'd3-tip')
+            .attr("id", "pointInTimeTip")
+            .offset([-10, 0])
+            .html(function(d) {
+                return "<strong>" + d.data.tip + ":</strong> <span style='color:red'>" + d.value + "</span> <span>(" + getPercent(d) + ")</span>";
+            });
+
         function pieTop(d, rx, ry, ir ){
             if(d.endAngle - d.startAngle == 0 ) return "M 0 0";
             var sx = rx*Math.cos(d.startAngle),
@@ -136,7 +144,6 @@ angular.module('threadfix')
         }
 
         Donut.draw2D=function(id, data, height/*height*/, width/*width*/, x, y, rs/*radius*/, isNavigate, label){
-//        Donut.draw2D=function(id, data, height/*height*/, width/*width*/, rs/*radius*/, isNavigate, updateTree){
             var arc = d3.svg.arc()
                 .outerRadius(rs - 10)
                 .innerRadius(0);
@@ -149,17 +156,9 @@ angular.module('threadfix')
                 .attr("height", height)
                 .append("g")
                 .attr("transform", "translate(" + x + "," + y + ")");
-//                .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
             svg.selectAll('*').remove();
 
-            /* ------- TIP -------*/
-            var tip = d3.tip()
-                .attr('class', 'd3-tip')
-                .offset([-10, 0])
-                .html(function(d) {
-                    return "<strong>" + d.data.tip + ":</strong> <span style='color:red'>" + d.value + "</span> <span>(" + getPercent(d) + ")</span>";
-                });
             svg.call(tip);
 
             var durationEachAngle = 500/(2*Math.PI);
@@ -170,7 +169,11 @@ angular.module('threadfix')
             slices.selectAll(".arc")
                 .data(_data).enter()
                 .append("g")
-                .attr("class", "arc")
+                .attr("class", "arc pointer")
+                .attr("id", function(d){
+                    var str = (d.data.teamName)? d.data.teamName : "pointInTime";
+                    return str + d.data.severity + "Arc";
+                })
                 .append("path")
                 .style("fill", function(d) { return d.data.fillColor; })
                 .on('mouseover', tip.show)
@@ -182,9 +185,6 @@ angular.module('threadfix')
                             label = {};
                         threadFixModalService.showVulnsModal(vulnSearchParameterService.createFilterCriteria(d.data, label), false);
                     }
-//                    else {
-//                        updateTree({severity:d.data.severity});
-//                    }
                 })
                 .transition().delay(function(d, i) { return durationEachAngle * d.startAngle; })
                 .duration(function(d){ return durationEachAngle * (d.endAngle-d.startAngle); })

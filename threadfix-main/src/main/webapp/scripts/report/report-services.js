@@ -122,9 +122,10 @@ threadfixModule.factory('d3Service', function() {
             .attr("height", h);
     }
 
-    d3Service.getTip = function(d3, clazz, offset) {
+    d3Service.getTip = function(d3, clazz, offset, tipId) {
         return d3.tip()
             .attr('class', clazz)
+            .attr('id', tipId)
             .offset(offset);
     }
 
@@ -155,7 +156,13 @@ threadfixModule.factory('reportUtilities', function(vulnSearchParameterService, 
     var reportUtilities = {};
     var drawingDuration = 500;
 
-    reportUtilities.drawTitle = function(svg, w, teams, apps, title, y) {
+    reportUtilities.drawTitle = function(svg, w, label, title, y) {
+        var teams, apps, tags;
+        if (label) {
+            teams = label.teams;
+            apps = label.apps;
+            tags = label.tags;
+        }
         svg.append("g")
             .append("text")
             .attr("x", w/2)
@@ -164,13 +171,13 @@ threadfixModule.factory('reportUtilities', function(vulnSearchParameterService, 
             .text(title)
         var i = 0;
         if (teams) {
-            i++;
             svg.append("g")
                 .append("text")
                 .attr("x", w/2)
                 .attr("y", y + 20)
                 .attr("class", "title")
-                .text("Team: " + teams)
+                .text("Team: " + teams);
+            i++;
         }
         if (apps) {
             svg.append("g")
@@ -178,31 +185,56 @@ threadfixModule.factory('reportUtilities', function(vulnSearchParameterService, 
                 .attr("x", w/2)
                 .attr("y", y + 20 + i*15)
                 .attr("class", "title")
-                .text("Application: " + apps)
+                .text("Application: " + apps);
+            i++;
+        }
+        if (tags) {
+            svg.append("g")
+                .append("text")
+                .attr("x", w/2)
+                .attr("y", y + 20 + i*15)
+                .attr("class", "title")
+                .text("Tags: " + tags)
         }
     }
 
     reportUtilities.createTeamAppNames = function($scope) {
         var teams;
         var apps;
-        if ($scope.parameters.teams.length === 0 && $scope.parameters.applications.length === 0) {
-            teams = "All";
-            apps = "All";
-        }
-        else {
-            if ($scope.parameters.teams.length > 0) {
-                teams = $scope.parameters.teams[0].name;
-            }
-            var i;
-            for (i=1; i<$scope.parameters.teams.length; i++) {
-                teams += ", " + $scope.parameters.teams[i].name;
+        var tags;
+        if ($scope.parameters.teams && $scope.parameters.applications)
+            if ($scope.parameters.teams.length === 0
+                && $scope.parameters.applications.length === 0) {
+                teams = "All";
+                apps = "All";
+            } else {
+                if ($scope.parameters.teams.length > 0) {
+                    teams = $scope.parameters.teams[0].name;
+                }
+                var i;
+                for (i=1; i<$scope.parameters.teams.length; i++) {
+                    teams += ", " + $scope.parameters.teams[i].name;
+                }
+
+                if ($scope.parameters.applications.length > 0) {
+                    apps = $scope.parameters.applications[0].name;
+                }
+                for (i=1; i<$scope.parameters.applications.length; i++) {
+                    apps += ", " + $scope.parameters.applications[i].name;
+                }
             }
 
-            if ($scope.parameters.applications.length > 0) {
-                apps = $scope.parameters.applications[0].name;
-            }
-            for (i=1; i<$scope.parameters.applications.length; i++) {
-                apps += ", " + $scope.parameters.applications[i].name;
+        if ($scope.parameters.tags) {
+            if ($scope.parameters.tags.length === 0) {
+                tags = "All";
+            } else {
+                if ($scope.parameters.tags.length > 0) {
+                    tags = $scope.parameters.tags[0].name;
+                }
+                var i;
+                for (i=1; i<$scope.parameters.tags.length; i++) {
+                    tags += ", " + $scope.parameters.tags[i].name;
+                }
             }
         }
 
@@ -210,6 +242,7 @@ threadfixModule.factory('reportUtilities', function(vulnSearchParameterService, 
             $scope.title = {};
         $scope.title.teams = teams;
         $scope.title.apps = apps;
+        $scope.title.tags = tags;
     }
 
     reportUtilities.drawTable = function(d3, tableData, divId) {
@@ -235,74 +268,6 @@ threadfixModule.factory('reportUtilities', function(vulnSearchParameterService, 
             .data(function(d){return d3.values(d)})
             .enter().append("td")
             .text(function(d) {return d});
-    }
-
-    reportUtilities.drawVerticalBarsChart = function(svg, data, x, y, tip, label) {
-
-        var col = svg.selectAll(".title")
-            .data(data)
-            .enter().append("g")
-            .attr("class", "g")
-            .attr("transform", function(d) { return "translate(" + x(d.title) + ",0)"; });
-
-        var drawTime = -1;
-        var colDuration = drawingDuration/data.length;
-        col.selectAll("rect")
-            .data(function(d) { return d.vulns; })
-            .enter().append("rect")
-            .attr("class", "bar")
-            .attr("width", 0)
-            .attr("y", function(d) { return y(d.y1); })
-            .attr("height", function(d) { return y(d.y0) - y(d.y1); })
-            .style("fill", function(d) { return d.fillColor; })
-            .on('mouseover', tip.show)
-            .on('mouseout', tip.hide)
-            .on('click', function(d) {
-                tip.hide();
-                threadFixModalService.showVulnsModal(vulnSearchParameterService.createFilterCriteria(d, label), label.teamId || label.appId);
-            })
-            .transition()
-            .attr("width", x.rangeBand())
-            .duration(colDuration)
-            .delay(function(d) {
-                if (d.y0 === 0)
-                    drawTime++;
-                return colDuration*drawTime; }) ;
-    }
-
-    reportUtilities.drawHorizonBarsChart = function(svg, data, x, y, tip, label) {
-
-        var col = svg.selectAll(".title")
-            .data(data)
-            .enter().append("g")
-            .attr("class", "g")
-            .attr("transform", function(d) { return "translate(0," + y(d.title) + ")"; });
-
-        var drawTime = -1;
-        var rowDuration = drawingDuration/data.length;
-
-        col.selectAll("rect")
-            .data(function(d) { return d.vulns; })
-            .enter().append("rect")
-            .attr("class", "bar")
-            .attr("height", 0)
-            .attr("x", function(d) { return x(d.y0); })
-            .attr("width", function(d) { return x(d.y1) - x(d.y0); })
-            .style("fill", function(d) { return d.fillColor; })
-            .on('mouseover', tip.show)
-            .on('mouseout', tip.hide)
-            .on('click', function(d) {
-                tip.hide();
-                threadFixModalService.showVulnsModal(vulnSearchParameterService.createFilterCriteria(d, label), label.teamId || label.appId);
-            })
-            .transition()
-            .attr("height", y.rangeBand())
-            .duration(rowDuration)
-            .delay(function(d) {
-                if (d.y0 === 0)
-                    drawTime++;
-                return rowDuration*drawTime; })
-        ;
     }
 
     return reportUtilities;

@@ -1,8 +1,8 @@
 var d3ThreadfixModule = angular.module('threadfix');
 
 // Months Summary report
-d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3', 'd3Service', 'reportConstants', 'reportUtilities',
-    function($window, $timeout, d3, d3Service, reportConstants, reportUtilities) {
+d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3', 'd3Service', 'reportConstants', 'reportUtilities', 'threadFixModalService', 'vulnSearchParameterService',
+    function($window, $timeout, d3, d3Service, reportConstants, reportUtilities, threadFixModalService, vulnSearchParameterService) {
         return {
             restrict: 'EA',
             scope: {
@@ -29,7 +29,7 @@ d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3', 'd3Service'
                     .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-                var tip = d3Service.getTip(d3, 'd3-tip', [-10, 0])
+                var tip = d3Service.getTip(d3, 'd3-tip', [-10, 0], 'verticalBarTip')
                     .html(function(d) {
                         return "<strong>" + d.tip + ":</strong> <span style='color:red'>" + (d.y1 - d.y0) + "</span>";
                     });
@@ -59,7 +59,36 @@ d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3', 'd3Service'
                         .attr("class", "y axis")
                         .call(yAxis);
 
-                    reportUtilities.drawVerticalBarsChart(svg, data, x, y, tip, scope.label);
+                    var col = svg.selectAll(".title")
+                        .data(data)
+                        .enter().append("g")
+                        .attr("class", "g")
+                        .attr("transform", function(d) { return "translate(" + x(d.title) + ",0)"; });
+
+                    var drawTime = -1;
+                    var colDuration = drawingDuration/data.length;
+                    col.selectAll("rect")
+                        .data(function(d) { return d.vulns; })
+                        .enter().append("rect")
+                        .attr("id", function(d){return d.graphId})
+                        .attr("class", "bar")
+                        .attr("width", 0)
+                        .attr("y", function(d) { return y(d.y1); })
+                        .attr("height", function(d) { return y(d.y0) - y(d.y1); })
+                        .style("fill", function(d) { return d.fillColor; })
+                        .on('mouseover', tip.show)
+                        .on('mouseout', tip.hide)
+                        .on('click', function(d) {
+                            tip.hide();
+                            threadFixModalService.showVulnsModal(vulnSearchParameterService.createFilterCriteria(d, scope.label), scope.label.teamId || scope.label.appId);
+                        })
+                        .transition()
+                        .attr("width", x.rangeBand())
+                        .duration(colDuration)
+                        .delay(function(d) {
+                            if (d.y0 === 0)
+                                drawTime++;
+                            return colDuration*drawTime; }) ;
 
                 };
                 ;
@@ -67,21 +96,24 @@ d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3', 'd3Service'
         }
     }]);
 
-
 // Top Applications Summary report
-d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service', 'reportConstants', 'reportUtilities',
-    function($window, $timeout, d3, d3Service, reportConstants, reportUtilities) {
+d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service', 'reportConstants', 'reportUtilities', 'threadFixModalService', 'vulnSearchParameterService',
+    function($window, $timeout, d3, d3Service, reportConstants, reportUtilities, threadFixModalService, vulnSearchParameterService) {
         return {
             restrict: 'EA',
             scope: {
                 data: '=',
-                label: '='
+                label: '=',
+                width: '@',
+                height: '@',
+                margin: '='
             }
             ,
             link: function(scope, ele) {
-                var margin = {top: 20, right: 20, bottom: 30, left: 60},
-                    width = 422 - margin.left - margin.right,
-                    height = 250 - margin.top - margin.bottom;
+
+                var margin = scope.margin,
+                    width = scope.width - margin.left - margin.right,
+                    height = scope.height - margin.top - margin.bottom;
 
                 var x = d3Service.getScaleLinearRange(d3, [0, width]);
 
@@ -106,7 +138,7 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
                     .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-                var tip = d3Service.getTip(d3, 'd3-tip', [-10, 0])
+                var tip = d3Service.getTip(d3, 'd3-tip', [-10, 0], 'horizontalBarTip')
                     .html(function(d) {
                         return "<strong>" + d.tip + ":</strong> <span style='color:red'>" + (d.y1 - d.y0) + "</span>";
                     });
@@ -122,6 +154,9 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
 
                     if (!data || data.length < 1) return;
 
+                    if (scope.label && (scope.label.teams || scope.label.apps))
+                        reportUtilities.drawTitle(svg, scope.width, scope.label, "Most Vulnerable Applications", -30);
+
                     barGraphData(d3, data, color, false, scope.label, reportConstants);
 
                     y.domain(data.map(function(d) { return d.title; }));
@@ -136,7 +171,38 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
                         .attr("class", "x axis")
                         .call(yAxis);
 
-                    reportUtilities.drawHorizonBarsChart(svg, data, x, y, tip, scope.label);
+                    var col = svg.selectAll(".rect")
+                        .data(data)
+                        .enter().append("g")
+                        .attr("class", "g")
+                        .attr("transform", function(d) { return "translate(0," + y(d.title) + ")"; });
+
+                    var drawTime = -1;
+                    var rowDuration = drawingDuration/data.length;
+
+                    col.selectAll("rect")
+                        .data(function(d) { return d.vulns; })
+                        .enter().append("rect")
+                        .attr("id", function(d){return d.graphId})
+                        .attr("class", "bar pointer")
+                        .attr("height", 0)
+                        .attr("x", function(d) { return x(d.y0); })
+                        .attr("width", function(d) { return x(d.y1) - x(d.y0); })
+                        .style("fill", function(d) { return d.fillColor; })
+                        .on('mouseover', tip.show)
+                        .on('mouseout', tip.hide)
+                        .on('click', function(d) {
+                            tip.hide();
+                            threadFixModalService.showVulnsModal(vulnSearchParameterService.createFilterCriteria(d, scope.label), scope.label.teamId || scope.label.appId);
+                        })
+                        .transition()
+                        .attr("height", y.rangeBand())
+                        .duration(rowDuration)
+                        .delay(function(d) {
+                            if (d.y0 === 0)
+                                drawTime++;
+                            return rowDuration*drawTime; })
+                    ;
 
                 };
                 ;
@@ -172,8 +238,7 @@ d3ThreadfixModule.directive('d3Donut', ['$window', '$timeout', 'd3', 'd3donut', 
 
                     var pieDim ={w:260, h: 200};
 
-                    var svg = d3Service.getSvg(d3, ele[0], pieDim.w, pieDim.h)
-                        .attr("transform", "translate("+pieDim.w/2+","+pieDim.h/2+")");
+                    var svg = d3Service.getSvg(d3, ele[0], pieDim.w, pieDim.h);
 
                     svg.append("g").attr("id",scope.label);
 
@@ -221,7 +286,8 @@ function barGraphData(d3, data, color, isLeftReport, label, reportConstants) {
                 teamName: d.teamName,
                 appId: (label && label.appId) ? label.appId : d.appId,
                 appName: d.appName,
-                severity: (topVulnsReport) ? undefined : key
+                severity: (topVulnsReport) ? undefined : key,
+                graphId: d.teamName + d.appName + ((topVulnsReport)? "CWE" + d.displayId : tip) + "Bar"
             };
         });
         d.total = d.vulns[d.vulns.length - 1].y1;
@@ -236,3 +302,4 @@ var topVulnMapKeyword = ["count"];
 var currentDate = new Date();
 var currentYear = currentDate.getFullYear();
 var currentMonth = currentDate.getMonth();
+var drawingDuration = 500;
