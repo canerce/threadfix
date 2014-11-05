@@ -27,7 +27,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.Select;
+
+import java.util.ArrayList;
 
 public class AnalyticsPage extends BasePage {
 
@@ -35,49 +36,72 @@ public class AnalyticsPage extends BasePage {
 		super(webdriver);
 	}
 
-    /*---------------------------- Action Methods ----------------------------*/
+    /* _____________________ Action Methods _____________________ */
 
     public AnalyticsPage clickTrendingTab() {
         driver.findElementByLinkText("Trending").click();
+        sleep(2500);
         return new AnalyticsPage(driver);
     }
 
     public AnalyticsPage clickSnapshotTab() {
         driver.findElementByLinkText("Snapshot").click();
-        return new AnalyticsPage(driver);
-    }
-
-    public AnalyticsPage clickComparisonTab() {
-        driver.findElementByLinkText("Comparison").click();
+        sleep(2500);
         return new AnalyticsPage(driver);
     }
 
     public AnalyticsPage clickVulnerabilitySearchTab() {
         driver.findElementByLinkText("Vulnerability Search").click();
-        waitForResultsToLoad();
+        sleep(2500);
         return  new AnalyticsPage(driver);
     }
 
-    public AnalyticsPage toggleAllFilter() {
-        driver.findElementById("toggleAllButton").click();
+    public AnalyticsPage toggleAllFilter(String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        filterDiv.findElement(By.id("toggleAllButton")).click();
         sleep(2000);
         return new AnalyticsPage(driver);
     }
 
-    public AnalyticsPage clearFilter() {
-        driver.findElementById("clearFiltersButton").click();
-        return new AnalyticsPage(driver);
-    }
-
-    public AnalyticsPage expandTeamApplicationFilter() {
-        driver.findElementById("expandTeamAndApplicationFilters").click();
+    public AnalyticsPage toggleAllFilterReport(String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        filterDiv.findElement(By.id("toggleAllButtonReport")).click();
         sleep(2000);
         return new AnalyticsPage(driver);
     }
 
-    public AnalyticsPage addTeamFilter(String teamName) {
-        WebElement teamNameSpace = driver.findElementById("teamNameTypeahead");
-        driver.findElementById("showTeamInput").click();
+    public AnalyticsPage clearFilter(String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        filterDiv.findElement(By.id("clearFiltersButton")).click();
+        sleep(1000);
+        return new AnalyticsPage(driver);
+    }
+
+    public AnalyticsPage clearFilterReport(String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        filterDiv.findElement(By.id("clearFiltersButtonReport")).click();
+        sleep(1000);
+        return new AnalyticsPage(driver);
+    }
+
+    public AnalyticsPage expandTeamApplicationFilter(String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        filterDiv.findElement(By.id("expandTeamAndApplicationFilters")).click();
+        sleep(2000);
+        return new AnalyticsPage(driver);
+    }
+
+    public AnalyticsPage expandTeamApplicationFilterReport(String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        filterDiv.findElement(By.id("expandTeamAndApplicationFiltersReport")).click();
+        sleep(2000);
+        return new AnalyticsPage(driver);
+    }
+
+    public AnalyticsPage addTeamFilter(String teamName, String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        WebElement teamNameSpace = filterDiv.findElement(By.id("teamNameTypeahead"));
+        filterDiv.findElement(By.id("showTeamInput")).click();
         teamNameSpace.clear();
         teamNameSpace.sendKeys(teamName);
         teamNameSpace.sendKeys(Keys.ENTER);
@@ -85,9 +109,21 @@ public class AnalyticsPage extends BasePage {
         return new AnalyticsPage(driver);
     }
 
-    public AnalyticsPage addApplicationFilter(String appName) {
-        WebElement applicationNameSpace = driver.findElementById("applicationNameTypeahead");
-        driver.findElementById("showApplicationInput").click();
+    public AnalyticsPage addTeamFilterReport(String teamName, String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        WebElement teamNameSpace = filterDiv.findElement(By.id("teamNameTypeaheadReport"));
+        filterDiv.findElement(By.id("showTeamInputReport")).click();
+        teamNameSpace.clear();
+        teamNameSpace.sendKeys(teamName);
+        teamNameSpace.sendKeys(Keys.ENTER);
+        waitForResultsToLoad();
+        return new AnalyticsPage(driver);
+    }
+
+    public AnalyticsPage addApplicationFilter(String appName, String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        WebElement applicationNameSpace = filterDiv.findElement(By.id("applicationNameTypeahead"));
+        filterDiv.findElement(By.id("showApplicationInput")).click();
         applicationNameSpace.clear();
         applicationNameSpace.sendKeys(appName);
         applicationNameSpace.sendKeys(Keys.ENTER);
@@ -95,8 +131,14 @@ public class AnalyticsPage extends BasePage {
         return new AnalyticsPage(driver);
     }
 
-    public AnalyticsPage clickCloseVulnerabilityButton() {
-        driver.findElementById("closeVulnerabilityLink").click();
+    public AnalyticsPage addApplicationFilterReport(String appName, String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        WebElement applicationNameSpace = filterDiv.findElement(By.id("applicationNameTypeaheadReport"));
+        filterDiv.findElement(By.id("showApplicationInputReport")).click();
+        applicationNameSpace.clear();
+        applicationNameSpace.sendKeys(appName);
+        applicationNameSpace.sendKeys(Keys.ENTER);
+        waitForResultsToLoad();
         return new AnalyticsPage(driver);
     }
 
@@ -104,8 +146,8 @@ public class AnalyticsPage extends BasePage {
 
     /* _____________________ Get Methods _____________________ */
 
-    public int getFilterDivHeight() {
-        return driver.findElement(By.className("filter-controls")).getSize().getHeight();
+    public int getFilterDivHeight(String divId) {
+        return driver.findElement(By.id(divId)).getSize().getHeight();
     }
 
     /* _____________________ Helper Methods _____________________ */
@@ -122,20 +164,29 @@ public class AnalyticsPage extends BasePage {
         return expected.equals(driver.findElementById("totalBadge" + level).getText().trim());
     }
 
+    public boolean isSeverityLevelShown(String level) {
+        return driver.findElementsById("totalBadge" + level).size() != 0;
+    }
+
     public boolean areAllVulnerabilitiesHidden() {
         return driver.findElementById("noResultsFound").getText().trim().equals("No results found.");
     }
 
-    public boolean isReportCorrect(String report) {
-        Select reportSelection = new Select(driver.findElementById("reportSelect"));
-        return reportSelection.getFirstSelectedOption().getText().equals(report);
+    public boolean isReportCorrect() {
+        WebElement filterDiv = driver.findElementById("trendingFilterDiv");
+        return filterDiv.findElement(By.id("toggleAllButtonReport")).isEnabled();
     }
 
-    public boolean isExportCsvButtonAvailable(){
-        return driver.findElementById("csvLink").isDisplayed();
-    }
+    public boolean checkCorrectFilterLevel(String level) {
+        ArrayList<String> levels = new ArrayList<String>();
+        levels.add("Info"); levels.add("Low"); levels.add("Medium"); levels.add("High"); levels.add("Critical");
+        levels.remove(level);
 
-    public boolean isCollapseAllButtonDisplay() {
-        return driver.findElementById("toggleVulnTree").isDisplayed();
+        WebElement filterDiv = driver.findElementById("vulnSearchFilterDiv");
+        return (filterDiv.findElement(By.id("show" + level)).isSelected() &&
+                !filterDiv.findElement(By.id("show" + levels.get(0))).isSelected() &&
+                !filterDiv.findElement(By.id("show" + levels.get(1))).isSelected() &&
+                !filterDiv.findElement(By.id("show" + levels.get(2))).isSelected() &&
+                !filterDiv.findElement(By.id("show" + levels.get(3))).isSelected());
     }
 }

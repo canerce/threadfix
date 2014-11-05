@@ -180,8 +180,11 @@ public class RemoteProvidersIT extends BaseDataTest {
     public void editVeracodeMapping() {
         remoteProvidersIndexPage.clickConfigureVeracode()
                 .setVeraUsername(VERACODE_USER)
-                .setVeraPassword(VERACODE_PASSWORD)
-                .saveVera();
+                .setVeraPassword(VERACODE_PASSWORD);
+
+        sleep(30000);
+
+        remoteProvidersIndexPage.saveVera();
 
         remoteProvidersIndexPage.mapVeracodeToTeamAndApp(0, teamName, appName);
 
@@ -292,7 +295,8 @@ public class RemoteProvidersIT extends BaseDataTest {
         remoteProvidersIndexPage.mapWhiteHatToTeamAndApp(1, teamName, appName);
 
         ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickWhiteHatImportScan(1);
-        sleep(40000);
+        applicationDetailPage.checkForAlert();
+
         assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
         driver.switchTo().alert().accept();
 

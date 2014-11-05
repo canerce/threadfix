@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.openqa.selenium.By;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -597,7 +598,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
 
     @Test
     public void checkGenerateReportsPermission() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithWebInspectScan();
 
         createRestrictedUser("canGenerateReports");
 
@@ -609,7 +610,13 @@ public class UserPermissionsEntIT extends BaseDataTest{
         TeamIndexPage teamIndexPage = dashboardPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName);
 
-        assertFalse("The Chart still available",teamIndexPage.isGraphDisplayed(teamName));
+        teamIndexPage.waitForPieWedge(teamName, "Critical");
+
+        assertTrue("The Chart is still available", teamIndexPage.isGraphWedgeDisplayed(teamName, "Info") &&
+                teamIndexPage.isGraphWedgeDisplayed(teamName, "Low") &&
+                teamIndexPage.isGraphWedgeDisplayed(teamName, "Medium") &&
+                teamIndexPage.isGraphWedgeDisplayed(teamName, "High") &&
+                teamIndexPage.isGraphWedgeDisplayed(teamName, "Critical"));
 
         ApplicationDetailPage applicationDetailPage = teamIndexPage.clickViewAppLink(appName, teamName);
 
@@ -723,5 +730,16 @@ public class UserPermissionsEntIT extends BaseDataTest{
                 .clickModalSubmit();
 
         assertTrue("Could not edit permissions", userPermissionsPage.isPermissionPresent(teamName, appName, role2));
+    }
+
+    @Test
+    public void testManageTagsPermission() {
+        createRestrictedUser("canManageTags");
+
+        DashboardPage dashboardPage = loginPage.login(userName, testPassword);
+
+        dashboardPage.clickConfigTab();
+
+        assertTrue("Manage tags permission not added", driver.findElements(By.id("tagsLink")).isEmpty());
     }
 }

@@ -40,13 +40,13 @@ public class DashboardPage extends BasePage{
     //CLICK FUNCTIONS
 	public AnalyticsPage clickLeftViewMore(){
 		driver.findElementById("leftViewMore").click();
-        waitForElement(driver.findElementById("csvLink"));
+        waitForElement(driver.findElementById("trendingFilterDiv"));
 		return new AnalyticsPage(driver);
 	}
 	
 	public AnalyticsPage clickRightViewMore(){
 		driver.findElementById("rightViewMore").click();
-        waitForElement(driver.findElementById("csvLink"));
+        waitForElement(driver.findElementById("snapshotFilterDiv"));
 		return new AnalyticsPage(driver);
 	}
 	
@@ -71,6 +71,11 @@ public class DashboardPage extends BasePage{
 		driver.findElementsByLinkText("View").get(0).click();
 		return new VulnerabilityDetailPage(driver);
 	}
+
+    public AnalyticsPage clickDetails() {
+        driver.findElementById("submit").click();
+        return new AnalyticsPage(driver);
+    }
 
     /*---------------------------- Get Methods ----------------------------*/
 
@@ -127,5 +132,21 @@ public class DashboardPage extends BasePage{
 
     public boolean isRightReportLinkPresent() {
         return driver.findElementsById("rightTileReport").size() != 0;
+    }
+
+    public boolean isMostVulnerableTipCorrect(String expected) {
+        return driver.findElementById("horizontalBarTip").getText().contains(expected);
+    }
+
+    public boolean isTeamNameCorrectInVulnerabilitySummaryModal(String teamName) {
+        return driver.findElementById("header0").getText().contains(teamName);
+    }
+
+    public boolean isApplicationNameCorrectInVulnerabilitySummaryModal(String appName) {
+        return driver.findElementById("header1").getText().contains(appName);
+    }
+
+    public boolean isCountCorrectInVulnerabilitySummaryModal(String count) {
+        return driver.findElementById("header2").getText().contains(count);
     }
 }

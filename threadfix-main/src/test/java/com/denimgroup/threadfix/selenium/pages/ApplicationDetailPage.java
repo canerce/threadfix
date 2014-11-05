@@ -496,13 +496,13 @@ public class ApplicationDetailPage extends BasePage {
 
     public AnalyticsPage clickViewMoreVulnerabilityTrending(){
         driver.findElementById("leftViewMore").click();
-        waitForElement(driver.findElementById("reportSelect"));
+        sleep(2500);
         return new AnalyticsPage(driver);
     }
 
     public AnalyticsPage clickViewMoreTopVulnerabilities(){
         driver.findElementById("rightViewMore").click();
-        waitForElement(driver.findElementById("reportSelect"));
+        waitForElement(driver.findElementById("snapshotFilterDiv"));
         return new AnalyticsPage(driver);
     }
 
@@ -530,6 +530,12 @@ public class ApplicationDetailPage extends BasePage {
         driver.findElementById("commentInputBox").clear();
         driver.findElementById("commentInputBox").sendKeys(comment);
         return this;
+    }
+
+    public TagDetailPage clickTagName(String tagName) {
+        driver.findElementByLinkText(tagName).click();
+        waitForElement(driver.findElementByLinkText("Back to Tags Page"));
+        return new TagDetailPage(driver);
     }
 
     public FilterPage clickEditVulnerabilityFilters() {
@@ -805,6 +811,19 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
+    public ApplicationDetailPage attachTag(String tagName) {
+        driver.findElementByXPath("//*[@id=\"tagSelect\"]/button").click();
+        driver.findElementById(tagName).click();
+        driver.findElementByXPath("//*[@id=\"tagSelect\"]/button").click();
+        return this;
+    }
+
+    public TagDetailPage clickTagHeader(String number) {
+        driver.findElementById("appTag" + number).click();
+        waitForElement(driver.findElementByLinkText("Back to Tags Page"));
+        return new TagDetailPage(driver);
+    }
+
     /*---------------------------- Get Methods ----------------------------*/
 
     public int getNumPermUsers() {
@@ -958,7 +977,7 @@ public class ApplicationDetailPage extends BasePage {
     /*---------------------------- Boolean Methods ----------------------------*/
 
     public boolean vulnsFilteredOpen(int count) {
-        return driver.findElementByLinkText( count + " Vulnerabilities").isDisplayed();
+        return driver.findElementByLinkText(count + " Vulnerabilities").isDisplayed();
     }
 
     public boolean isCweErrorPresent() {
@@ -967,6 +986,10 @@ public class ApplicationDetailPage extends BasePage {
 
     public boolean isApplicationNamePresent() {
         return driver.findElementById("nameText").isDisplayed();
+    }
+
+    public boolean isApplicationNameCorrect(String appName) {
+        return driver.findElementById("nameText").getText().equals(appName);
     }
 
     public boolean isBreadcrumbPresent() {
@@ -1335,10 +1358,30 @@ public class ApplicationDetailPage extends BasePage {
         return driver.findElementById("cveDescription" + expectedNumber).isDisplayed();
     }
 
+    public boolean isCWEBarPresent(String teamName, String appName, String vulnerability) {
+        return driver.findElementById(teamName + appName + vulnerability + "Bar").isDisplayed();
+    }
+
+    public boolean isTop10TipCorrect(String tipText) {
+        return driver.findElementById("horizontalBarTip").getText().trim().contains(tipText);
+    }
+
+    public boolean isTop10BarCountCorrect(int expected) {
+        return driver.findElementsByClassName("g").size() == expected;
+    }
+
+    public boolean isVulnerabilitySummaryElementCorrect(String element, String expected) {
+        return driver.findElementById(element).getText().contains(expected);
+    }
+
     /*___________________Void Methods__________________*/
     public void waitForResultsToLoad() {
         while (driver.findElementById("vulnTreeLoadingSpinner").isDisplayed()) {
             sleep(1000);
         }
+    }
+
+    public void waitForCWEBar(String teamName, String appName, String vulnerability) {
+        waitForElement(driver.findElementById(teamName + appName + vulnerability + "Bar"));
     }
 }

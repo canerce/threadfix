@@ -35,7 +35,7 @@ public class TeamIndexPage extends BasePage {
         super(webdriver);
     }
 
-    /*----------------------------------- Action Methods -----------------------------------*/
+    /*------------------------------------ Action Methods ----------------------------------------*/
 
     public TeamIndexPage clickAddTeamButton() {
         driver.findElementById("addTeamModalButton").click();
@@ -226,7 +226,14 @@ public class TeamIndexPage extends BasePage {
         return new TeamIndexPage(driver);
     }
 
-    /*----------------------------------- Get Methods -----------------------------------*/
+    public AnalyticsPage clickDetails() {
+        driver.findElementById("submit").click();
+        sleep(1000);
+        return new AnalyticsPage(driver);
+    }
+
+
+    /*------------------------------------ Get Methods ----------------------------------------*/
 
     public String getLengthError() {
         return driver.findElementById("lengthError").getText();
@@ -330,8 +337,8 @@ public class TeamIndexPage extends BasePage {
         return isClickable("collapseAllButton");
     }
 
-    public boolean isGraphDisplayed(String teamName) {
-        return driver.findElementById("teamGraph" + teamName).isDisplayed();
+    public boolean isGraphWedgeDisplayed(String teamName, String level) {
+        return driver.findElementById(teamName + level + "Arc").isDisplayed();
     }
 
     public boolean teamVulnerabilitiesFiltered(String teamName, String level, String expected) {
@@ -362,5 +369,10 @@ public class TeamIndexPage extends BasePage {
         return driver.findElementById("numTotalVulns" + teamName + "-" + appName).getText().trim().equals(expectecNumber);
     }
 
+    /*------------------------------------ Void Methods ----------------------------------------*/
+
+    public void waitForPieWedge(String teamName, String level) {
+        waitForElement(driver.findElementById(teamName + level + "Arc"));
+    }
 }
 

@@ -26,8 +26,12 @@ package com.denimgroup.threadfix.selenium.tests;
 import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -37,22 +41,19 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
 
     @Test
     public void expandCollapseTest() {
-        int filtersExpandedSize;
-        int filtersCollapsedSize;
-
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
                 .clickVulnerabilitySearchTab();
 
-        filtersCollapsedSize = analyticsPage.getFilterDivHeight();
-        analyticsPage.toggleAllFilter();
+        int filtersCollapsedSize = analyticsPage.getFilterDivHeight("vulnSearchFilterDiv");
+        analyticsPage.toggleAllFilter("vulnSearchFilterDiv");
 
-        filtersExpandedSize = analyticsPage.getFilterDivHeight();
+        int filtersExpandedSize = analyticsPage.getFilterDivHeight("vulnSearchFilterDiv");
         assertFalse("Filters were not expanded.", filtersCollapsedSize == filtersExpandedSize);
 
-        analyticsPage = analyticsPage.toggleAllFilter();
+        analyticsPage = analyticsPage.toggleAllFilter("vulnSearchFilterDiv");
         assertFalse("Filters were not collapsed.",
-                filtersExpandedSize == analyticsPage.getFilterDivHeight());
+                filtersExpandedSize == analyticsPage.getFilterDivHeight("vulnSearchFilterDiv"));
     }
 
     @Test
@@ -64,8 +65,8 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
                 .clickAnalyticsLink()
                 .clickVulnerabilitySearchTab();
 
-        analyticsPage.expandTeamApplicationFilter()
-                .addTeamFilter(teamName);
+        analyticsPage.expandTeamApplicationFilter("vulnSearchFilterDiv")
+                .addTeamFilter(teamName, "vulnSearchFilterDiv");
 
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "10"));
@@ -76,8 +77,8 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
         assertTrue("Only 5 info vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Info", "5"));
 
-        analyticsPage.clearFilter()
-                .addTeamFilter(teamName2);
+        analyticsPage.clearFilter("vulnSearchFilterDiv")
+                .addTeamFilter(teamName2, "vulnSearchFilterDiv");
 
         assertTrue("There should be no results shown.",
                 analyticsPage.areAllVulnerabilitiesHidden());
@@ -93,8 +94,8 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
                 .clickAnalyticsLink()
                 .clickVulnerabilitySearchTab();
 
-        analyticsPage.expandTeamApplicationFilter()
-                .addApplicationFilter(appName);
+        analyticsPage.expandTeamApplicationFilter("vulnSearchFilterDiv")
+                .addApplicationFilter(appName,"vulnSearchFilterDiv");
 
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "10"));
@@ -105,8 +106,8 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
         assertTrue("Only 5 info vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Info", "5"));
 
-        analyticsPage.clearFilter()
-                .addApplicationFilter(appName2);
+        analyticsPage.clearFilter("vulnSearchFilterDiv")
+                .addApplicationFilter(appName2,"vulnSearchFilterDiv");
 
         assertTrue("There should be no results shown.",
                 analyticsPage.areAllVulnerabilitiesHidden());
@@ -133,8 +134,8 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
                 .clickAnalyticsLink()
                 .clickVulnerabilitySearchTab();
 
-        analyticsPage.expandTeamApplicationFilter()
-                .addApplicationFilter(appName);
+        analyticsPage.expandTeamApplicationFilter("vulnSearchFilterDiv")
+                .addApplicationFilter(appName, "vulnSearchFilterDiv");
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "9"));
     }
@@ -149,10 +150,40 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
                 .clickViewAppLink(appName, teamName)
                 .clickViewMoreVulnerabilityTrending();
 
-        assertTrue("Export CSV Button is Not Available", analyticsPage.isExportCsvButtonAvailable());
+        assertTrue("Incorrect Navigation", analyticsPage.isReportCorrect());
 
         analyticsPage.clickVulnerabilitySearchTab();
 
-        assertTrue("Vulnerabilities Lists are not Present", analyticsPage.isCollapseAllButtonDisplay());
+        assertTrue("Vulnerabilities Lists are not Present", analyticsPage.isElementPresent("vulnSearchFilterDiv"));
+    }
+
+    @Test
+    public void checkAgingFilter() {
+        initializeTeamAndAppWithIBMScan();
+
+        AnalyticsPage analyticsPage = loginPage.defaultLogin()
+                .clickAnalyticsLink()
+                .clickVulnerabilitySearchTab();
+
+        analyticsPage.expandTeamApplicationFilter("vulnSearchFilterDiv")
+                .addTeamFilter(teamName, "vulnSearchFilterDiv");
+
+        driver.findElement(By.id("showDateControls")).click();
+        driver.findElement(By.linkText("More Than")).click();
+        driver.findElement(By.linkText("1 Week")).click();
+
+        assertTrue("Only 10 critical vulnerabilities should be shown.",
+                analyticsPage.isVulnerabilityCountCorrect("Critical", "10"));
+        assertTrue("Only 9 medium vulnerabilities should be shown.",
+                analyticsPage.isVulnerabilityCountCorrect("Medium", "9"));
+        assertTrue("Only 21 low vulnerabilities should be shown.",
+                analyticsPage.isVulnerabilityCountCorrect("Low", "21"));
+        assertTrue("Only 5 info vulnerabilities should be shown.",
+                analyticsPage.isVulnerabilityCountCorrect("Info", "5"));
+
+        driver.findElement(By.linkText("Less Than")).click();
+
+        assertTrue("There should have been no results found", driver.findElement(By.id("noResultsFound"))
+                .getText().trim().equals("No results found."));
     }
 }

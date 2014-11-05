@@ -27,6 +27,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -74,7 +75,6 @@ public abstract class BasePage {
 
 	public LoginPage logout() {
 		clickUserTab();
-//		waitForElement(driver.findElementById("configurationHeader"));
 		sleep(2000);
 		driver.findElementById("logoutLink").click();
 		sleep(6000);
@@ -103,12 +103,6 @@ public abstract class BasePage {
     public TeamIndexPage clickTeamsTab() {
         driver.findElementById("orgHeader").click();
         return new TeamIndexPage(driver);
-    }
-
-    public ScanIndexPage clickScansHeaderLink(){
-        driver.findElementById("scansHeader").click();
-        sleep(3000);
-        return new ScanIndexPage(driver);
     }
 
     public WafIndexPage clickWafsHeaderLink() {
@@ -227,24 +221,6 @@ public abstract class BasePage {
         return RandomStringUtils.random(length,"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
     }
 
-    public String tryGetText(By by) {
-        int attempts = 0;
-        String result = null;
-        while (attempts < 2) {
-            try {
-                result = driver.findElement(by).getText();
-                break;
-            } catch (StaleElementReferenceException e) {
-                System.err.print("Attempting to avoid StaleElementReferenceException.");
-            }
-            attempts++;
-        }
-        if (result == null) {
-            throw new NoSuchElementException("Element not found.");
-        }
-        return result;
-    }
-
     /*---------------------------- Boolean Methods ----------------------------*/
 
 	public boolean isElementPresent(String elementId) {
@@ -283,9 +259,11 @@ public abstract class BasePage {
 		return driver.findElementById("scansHeader").isDisplayed();
 	}
 	
-	public boolean isScansMenuLinkClickable(){
-        return isClickable("scansHeader");
-	}
+	public boolean isScansMenuLinkClickable(){ return isClickable("scansHeader");}
+
+    public boolean isTagsPageLinkPresent() {return driver.findElementById("tagsLink").isDisplayed();}
+
+    public boolean isTagsPageLinkClickable() {return isClickable("tagsLink");}
 	
 	public boolean isReportsMenuLinkPresent(){
 		return driver.findElementById("reportsHeader").isDisplayed();
@@ -442,23 +420,6 @@ public abstract class BasePage {
         return false;
     }
 
-    public boolean tryClick(By by) {
-        int attempts = 0;
-        boolean result = false;
-        while (attempts < 2) {
-            try {
-                driver.findElement(by).click();
-                result = true;
-                break;
-            } catch (StaleElementReferenceException e) {
-                System.err.print("Attempting to avoid StaleElementReferenceException.");
-            }
-            attempts++;
-        }
-        return result;
-    }
-
-
     /*--------------------------------- Helper Methods ---------------------------------*/
 	public void sleep(int num) {
 		try {
@@ -525,11 +486,81 @@ public abstract class BasePage {
 
     public void checkForAlert() {
         try {
-            WebDriverWait wait = new WebDriverWait(driver, 60);
+            WebDriverWait wait = new WebDriverWait(driver, 240);
             wait.until(ExpectedConditions.alertIsPresent());
-        } catch (NoAlertPresentException e) {
+        } catch (TimeoutException e) {
+            takeScreenShot();
             throw new RuntimeException("Alert was not displayed as it should have been.", e);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends BasePage> T clickSVGElement(String id) {
+        return (T) clickSVGElement(id, this.getClass());
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends BasePage> T clickSVGElement(String ID, Class<T> targetClass) {
+        WebElement d3Object = driver.findElementById(ID);
+        Actions builder = new Actions(driver);
+        builder.clickAndHold(d3Object).build().perform();
+        builder.release(d3Object).build().perform();
+        waitForElement(driver.findElementById("myModalLabel"));
+        return (T) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends BasePage> T hoverOverSVGElement(String id) {
+        return (T) hoverOverSVGElement(id, this.getClass());
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends BasePage> T hoverOverSVGElement(String ID, Class<T> targetClass) {
+        WebElement d3Object = driver.findElementById(ID);
+        Actions builder = new Actions(driver);
+        builder.click(d3Object).build().perform();
+        return (T) this;
+    }
+
+    public void hover(String ID) {
+        Actions action = new Actions(driver);
+        action.moveToElement(driver.findElementById(ID), 2, 2);
+        action.perform();
+        sleep(1500);
+    }
+
+    public boolean tryClick(By by) {
+        int attempts = 0;
+        boolean result = false;
+        while (attempts < 2) {
+            try {
+                driver.findElement(by).click();
+                result = true;
+                break;
+            } catch (StaleElementReferenceException e) {
+                System.err.print("Attempting to avoid StaleElementReferenceException.");
+            }
+            attempts++;
+        }
+        return result;
+    }
+
+    public String tryGetText(By by) {
+        int attempts = 0;
+        String result = null;
+        while (attempts < 2) {
+            try {
+                result = driver.findElement(by).getText();
+                break;
+            } catch (StaleElementReferenceException e) {
+                System.err.print("Attempting to avoid StaleElementReferenceException.");
+            }
+            attempts++;
+        }
+        if (result == null) {
+            throw new NoSuchElementException("Element not found.");
+        }
+        return result;
     }
 
     @SuppressWarnings("unchecked")

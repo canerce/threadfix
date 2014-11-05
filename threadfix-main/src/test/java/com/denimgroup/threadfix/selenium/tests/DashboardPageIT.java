@@ -24,11 +24,17 @@
 package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.CommunityTests;
+import com.denimgroup.threadfix.selenium.pages.AnalyticsPage;
+import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
+import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
 import static org.junit.Assert.assertTrue;
 
@@ -46,7 +52,7 @@ public class DashboardPageIT extends BaseDataTest {
 
     @Test
     public void testTeamIndexHeaderNavigation() {
-        assertTrue("Dashboard link is not present", dashboardPage.isDashboardMenuLinkPresent() );
+        assertTrue("Dashboard link is not present", dashboardPage.isDashboardMenuLinkPresent());
         assertTrue("Dashboard link is not clickable", dashboardPage.isDashboardMenuLinkClickable());
         assertTrue("Application link is not present", dashboardPage.isApplicationMenuLinkPresent());
         assertTrue("Application link is not clickable", dashboardPage.isApplicationMenuLinkClickable());
@@ -93,5 +99,4 @@ public class DashboardPageIT extends BaseDataTest {
         assertTrue("View Error Log is not present", dashboardPage.isLogsLinkPresent());
         assertTrue("View Error Log is not clickable", dashboardPage.isLogsMenuLinkClickable());
     }
-
 }

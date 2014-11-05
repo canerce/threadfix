@@ -6,11 +6,14 @@ import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
 import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
-public class TeamIndexPageIT extends BaseIT {
+public class TeamIndexPageIT extends BaseDataTest {
 
     private DashboardPage dashboardPage;
     private String teamName = createTeam();
@@ -177,5 +180,88 @@ public class TeamIndexPageIT extends BaseIT {
         int numUpdatedVulns = Integer.parseInt(teamIndexPage.getApplicationSpecificVulnerabilityCount(teamName, appName, "Total"));
 
         assertTrue("Old scan replaced newer scan", numOriginalVulns == numUpdatedVulns);
+    }
+
+    @Test
+    public void testTeamPieGraphNav() {
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
+        AnalyticsPage analyticsPage;
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Burp Suite"));
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("WebInspect"));
+        String[] levels = {"Info","Low","Medium","High","Critical"};
+
+        TeamIndexPage teamIndexPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName);
+        sleep(1000);
+
+        for(int i = 0; i < 5; i++) {
+            String numVulns = driver.findElement(By.id("num" + levels[i] + "Vulns" + teamName + "-" + appName))
+                    .getText().trim();
+
+            teamIndexPage.clickSVGElement(teamName + levels[i] + "Arc");
+
+            analyticsPage = teamIndexPage.clickDetails();
+
+            assertTrue("Navigation @ level " + levels[i] + " failed", analyticsPage.checkCorrectFilterLevel(levels[i]));
+            assertTrue("Number of badge vulnerabilities at level " + levels[i] + "is incorrect",
+                    analyticsPage.isVulnerabilityCountCorrect(levels[i],numVulns));
+
+            teamIndexPage = analyticsPage.clickOrganizationHeaderLink()
+                    .expandTeamRowByName(teamName);
+            sleep(1000);
+        }
+    }
+
+    @Test
+    public void testTeamPieGraphTips() {
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Burp Suite"));
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("WebInspect"));
+        String[] levels = {"Info","Low","Medium","High","Critical"};
+
+        TeamIndexPage teamIndexPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName);
+
+        for(int i = 0; i < 5; i++) {
+            teamIndexPage.hoverOverSVGElement(teamName + levels[i] + "Arc");
+            sleep(2000);
+            String numTip = driver.findElement(By.id("pointInTimeTip")).getText().split("\\s+")[1];
+
+            assertTrue("Tip value at level " + levels[i] + " does not match badge",
+                    driver.findElement(By.id("num" + levels[i] + "Vulns" + teamName + "-" + appName))
+                            .getText().trim().equals(numTip));
+        }
+    }
+
+    @Test
+    public void testTeamPieGraphModalNum() {
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
+        AnalyticsPage analyticsPage;
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Burp Suite"));
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("WebInspect"));
+        String[] levels = {"Info","Low","Medium","High","Critical"};
+
+        TeamIndexPage teamIndexPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName);
+
+        for(int i = 0; i < 5; i++) {
+            String numVulns = driver.findElement(By.id("num" + levels[i] + "Vulns" + teamName + "-" + appName))
+                    .getText().trim();
+
+            teamIndexPage.clickSVGElement(teamName + levels[i] + "Arc");
+
+            assertTrue("Number of modal vulnerabilities does not match",
+                    driver.findElement(By.id("header1")).getText().split("\\s+")[1].trim().equals(numVulns));
+
+            analyticsPage = teamIndexPage.clickDetails();
+            teamIndexPage = analyticsPage.clickOrganizationHeaderLink()
+                    .expandTeamRowByName(teamName);
+        }
     }
 }

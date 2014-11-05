@@ -11,7 +11,9 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                 width: '@',
                 height: '@',
                 margin: '=',
-                tableInfo: '='
+                tableInfo: '=',
+                startDate: '=',
+                endDate: '='
             },
             link: function(scope, ele, attrs) {
                 var svgWidth = scope.width,
@@ -46,9 +48,8 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
 
                 var svg = d3.select(ele[0]).append("svg")
                     .attr("width", w + m[1] + m[3])
-                    .attr("height", h + m[0] + m[2])
-                    .append("g")
-                    .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+                    .attr("height", h + m[0] + m[2]);
+                var svg1;
 
                 var monthList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
                 var fieldOrderMap = {
@@ -96,12 +97,19 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                     _data = angular.copy(reportData);
 
                     svg.selectAll('*').remove();
+                    svg.append("g").attr("id","trendingScanSvg");
+                    svg1 = d3.select("#trendingScanSvg")
+                        .append("svg")
+                        .attr("width", w + m[1] + m[3])
+                        .attr("height", h + m[0] + m[2])
+                        .append("g")
+                        .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
                     if (scope.label)
-                        reportUtilities.drawTitle(svg, w, scope.label, "Trending Report", -30);
+                        reportUtilities.drawTitle(svg1, w, scope.label, "Trending Report", -30);
 
                     if (_data.length === 0) {
-                        svg.append("g")
+                        svg1.append("g")
                             .append("text")
                             .attr("x", w/2)
                             .attr("y", 70)
@@ -112,7 +120,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
 
                     var colorDomain = d3.keys(_data[0]).filter(function(key){return key !== "importTime";});
                     if (colorDomain.length === 0) {
-                        svg.append("g")
+                        svg1.append("g")
                             .append("text")
                             .attr("x", w/2)
                             .attr("y", 70)
@@ -122,7 +130,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                     }
 
                     color.domain(colorDomain);
-                    svg.selectAll('*').remove();
+                    svg1.selectAll('*').remove();
                     drawReport();
                     drawTable();
                 }
@@ -147,7 +155,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
 
                     stack(stackedData);
 
-                    svg.selectAll("g")
+                    svg1.selectAll("g")
                         .data(stackedData)
                         .enter().append("g")
                         .attr("class", "symbol");
@@ -155,37 +163,53 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                     var xMin = d3.min(stackedData, function(d) { return d.values[0].date; });
                     var xMax = d3.max(stackedData, function(d) { return d.values[d.values.length - 1].date; });
 
+                    var startAxis = (scope.startDate) ? scope.startDate : xMin;
+                    var endAxis = (scope.endDate) ? scope.endDate : xMax;
+
+//                    //If there is only one scan for whole history
+//                    if (endAxis === startAxis) {
+//                        endAxis = (new Date()).getTime();
+//                        var startDate = new Date(startAxis);
+//                        startDate = new Date(startDate.getFullYear(),  startDate.getMonth()-1, 1);
+//                        startAxis = startDate.getTime();
+//                    }
+
                     // Compute the minimum and maximum date across scans.
-                    x.domain([xMin, xMax]);
+                    x.domain([startAxis, endAxis]);
                     y.domain([0, d3.max(stackedData[0].values.map(function(d) { return d.noOfVulns + d.noOfVulns0; }))]);
 
-                    var diffMonths = monthDiff(new Date(xMin), new Date(xMax)),
+                    var diffMonths = monthDiff(new Date(startAxis), new Date(endAxis)),
                         intervalMonths = Math.round(diffMonths/6);
                     intervalMonths = (intervalMonths===5 ? 4 : intervalMonths);
                     intervalMonths = (intervalMonths>6 ? 12 : intervalMonths);
                     xAxis.ticks(d3.time.month, intervalMonths);
 
-                    var g = svg.selectAll(".symbol");
-                    svg.call(tip);
+                    var g = svg1.selectAll(".symbol");
+                    svg1.call(tip);
                     if (scope.label)
-                        reportUtilities.drawTitle(svg, w, scope.label, "Trending Report", -30);
+                        reportUtilities.drawTitle(svg1, w, scope.label, "Trending Report", -30);
 
                     // Add the x-axis.
-                    svg.append("g")
+                    svg1.append("g")
                         .attr("class", "x axis")
                         .attr("transform", "translate(0," + h + ")")
                         .transition()
                         .duration(duration)
-                        .call(xAxis);
+                        .call(xAxis)
+                        .selectAll("text")
+                        .style("text-anchor", "end")
+                        .attr("transform", function(d) {
+                            return "rotate(-35)"
+                        });
 
                     // Add the y-axis.
-                    svg.append("g")
+                    svg1.append("g")
                         .attr("class", "y axis")
                         .transition()
                         .duration(duration)
                         .call(yAxis);
 
-                    var focus = svg.append("g")
+                    var focus = svg1.append("g")
                         .attr("class", "focus")
                         .style("display", "none");
 
@@ -205,6 +229,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                         .y0(function(d) { return y(d.noOfVulns0); })
                         .y1(function(d) { return y(d.noOfVulns0 + d.noOfVulns); });
 
+                    var textPosMap = {};
                     g.each(function(d) {
                         var e = d3.select(this);
                         e.selectAll(".area")
@@ -235,7 +260,27 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                             .text(d.key)
                             .attr("transform", function() {
                                 d = d.values[d.values.length - 1];
-                                return "translate(" + (w) + "," + y(d.noOfVulns / 2 + d.noOfVulns0) + ")";
+                                var y0 = Math.round(y(d.noOfVulns / 2 + d.noOfVulns0));
+                                var pos, pos1;
+                                var i = 0, found,j;
+
+                                for (j=0;j<10;j++) {
+                                    pos1 = (w) + "," + (y0 - j);
+                                    if (textPosMap[pos1]) {
+                                        found = true;
+                                        break;
+                                    }
+                                }
+                                if (found)
+                                    y0 = y0-j;
+                                pos = (w) + "," + (y0);
+
+                                while (textPosMap[pos]) {
+                                    i++;
+                                    pos = (w) + "," + (y0+i*10);
+                                }
+                                textPosMap[pos] = true;
+                                return "translate(" + pos + ")";
                             });
                     });
 
@@ -250,10 +295,10 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                         reportUtilities.drawTable(d3, scope.tableInfo, "complianceTable");
                 }
 
-                d3.select("#exportCSVButton").on('click', function(){
+                d3.select("#exportPNGButtonReport").on('click', function(){
                     var teamsName = (scope.label.teams) ? "_" + scope.label.teams : "";
                     var appsName = (scope.label.apps) ? "_" + scope.label.apps : "";
-                    reportExporter.exportPDF(d3, svgWidth, svgHeight,
+                    reportExporter.exportPDFSvg(d3, svg, svgWidth, svgHeight,
                             "TrendingScans" + teamsName + appsName);
                 });
 
