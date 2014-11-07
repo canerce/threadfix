@@ -244,109 +244,109 @@ public abstract class BasePage {
 	public boolean isLoggedInUser(String user){
 		return driver.findElementById("tabUserAnchor").getText().trim().contains(user);
 	}
-	
+
 	public boolean isDashboardMenuLinkPresent(){
 		return driver.findElementById("dashboardHeader").isDisplayed();
 	}
-	
+
 	public boolean isDashboardMenuLinkClickable(){
         return isClickable("dashboardHeader");
 	}
-	
+
 	public boolean isApplicationMenuLinkPresent(){
 		return driver.findElementById("orgHeader").isDisplayed();
 	}
-	
+
 	public boolean isApplicationMenuLinkClickable(){
         return isClickable("orgHeader");
 	}
-	
+
 	public boolean isScansMenuLinkPresent(){
 		return driver.findElementById("scansHeader").isDisplayed();
 	}
-	
+
 	public boolean isScansMenuLinkClickable(){ return isClickable("scansHeader");}
 
     public boolean isTagsPageLinkPresent() {return driver.findElementById("tagsLink").isDisplayed();}
 
     public boolean isTagsPageLinkClickable() {return isClickable("tagsLink");}
-	
+
 	public boolean isReportsMenuLinkPresent(){
 		return driver.findElementById("reportsHeader").isDisplayed();
 	}
-	
+
 	public boolean isReportsMenuLinkClickable(){
         return isClickable("reportsHeader");
 	}
-	
+
 	public boolean isUsersMenuLinkPresent(){
 		return driver.findElementById("tabUserAnchor").isDisplayed();
 	}
-	
+
 	public boolean isUsersMenuLinkClickable(){
         return isClickable("tabUserAnchor");
 	}
-	
+
 	public boolean isConfigMenuLinkPresent(){
 		return driver.findElementById("tabConfigAnchor").isDisplayed();
 	}
-	
+
 	public boolean isConfigMenuLinkClickable(){
         return isClickable("tabConfigAnchor");
 	}
-	
+
 	public boolean isLogoPresent(){
 		return driver.findElementById("logo").isDisplayed();
 	}
-	
+
 	public boolean isLogoClickable(){
         return isClickable("logo");
 	}
-	
+
 	public boolean isApiKeysLinkPresent(){
 		return driver.findElementById("apiKeysLink").isDisplayed();
 	}
-	
+
 	public boolean isApiKeysMenuLinkClickable(){
         return isClickable("apiKeysLink");
 	}
-	
+
 	public boolean isWafsLinkPresent(){
 		return driver.findElementById("wafsLink").isDisplayed();
 	}
-	
+
 	public boolean isWafsMenuLinkClickable(){
         return isClickable("wafsLink");
 	}
-	
+
 	public boolean isDefectTrackerLinkPresent(){
 		return driver.findElementById("defectTrackersLink").isDisplayed();
 	}
-	
+
 	public boolean isDefectTrackerMenuLinkClickable(){
         return isClickable("defectTrackersLink");
 	}
-	
+
 	public boolean isRemoteProvidersLinkPresent(){
 		return driver.findElementById("remoteProvidersLink").isDisplayed();
 	}
-	
+
 	public boolean isRemoteProvidersMenuLinkClickable(){
         return isClickable("remoteProvidersLink");
 	}
-	
+
 	public boolean isManageUsersLinkPresent(){
 		return driver.findElementById("manageUsersLink").isDisplayed();
 	}
-	
+
 	public boolean isManageUsersMenuLinkClickable(){
         return isClickable("manageUsersLink");
 	}
-	
+
 	public boolean isManageRolesLinkPresent(){
 		return driver.findElementById("manageRolesLink").isDisplayed();
 	}
-	
+
 	public boolean isManageRolesMenuLinkClickable(){
         return isClickable("manageRolesLink");
 	}
@@ -362,7 +362,7 @@ public abstract class BasePage {
 	public boolean isLogsLinkPresent(){
 		return driver.findElementById("viewLogsLink").isDisplayed();
 	}
-	
+
 	public boolean isLogsMenuLinkClickable(){
         return isClickable("viewLogsLink");
 	}
@@ -370,23 +370,23 @@ public abstract class BasePage {
     public boolean isButtonEnabled() {
         return driver.findElementsByCssSelector("#submit.disabled").isEmpty();
     }
-	
+
 	public boolean isConfigureDefaultsLinkPresent(){
 		return driver.findElementById("configureDefaultsLink").isDisplayed();
 	}
-	
+
 	public boolean isConfigureDefaultsMenuLinkClickable(){
         return isClickable("configureDefaultsLink");
 	}
-	
+
 	public boolean isConfigDropDownPresent(){
 		return driver.findElementById("configurationHeader").isDisplayed();
 	}
-	
+
 	public boolean isChangePasswordLinkPresent(){
 		return driver.findElementById("changePasswordLink").isDisplayed();
 	}
-	
+
 	public boolean isChangePasswordMenuLinkClickable(){
         return isClickable("changePasswordLink");
 	}
@@ -394,11 +394,11 @@ public abstract class BasePage {
 	public boolean isLogoutLinkPresent(){
 		return driver.findElementById("logoutLink").isDisplayed();
 	}
-	
+
 	public boolean isLogoutMenuLinkClickable(){
         return isClickable("logoutLink");
 	}
-	
+
 	public boolean isUserDropDownPresent(){
         return driver.findElementById("userConfigurationHeader").isDisplayed();
 	}
@@ -434,7 +434,7 @@ public abstract class BasePage {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void waitForElementPresence(String element, int number) {
 		int count = 0;
 		// wait til jsonResult2 is present
@@ -445,7 +445,7 @@ public abstract class BasePage {
 			}
 		}
 	}
-	
+
 	protected void handleAlert() {
 		sleep(3000);
 		WebDriverWait wait = new WebDriverWait(driver,10);
@@ -463,7 +463,7 @@ public abstract class BasePage {
         alert.dismiss();
         sleep(2000);
     }
-	
+
 	public void waitForElement(WebElement e){
 		WebDriverWait wait = new WebDriverWait(driver,30);
 		wait.until(ExpectedConditions.visibilityOf(e));
