@@ -110,10 +110,9 @@ public class TeamIT extends BaseDataTest {
     @Test
     public void editTeamWithApplicationTest() {
         String teamName = createTeam();
-        createApplication(teamName);
         String editedTeamName = getName();
 
-        teamIndexPage.refreshPage();
+        driver.navigate().refresh();
 
         TeamDetailPage teamDetailPage = teamIndexPage.clickViewTeamLink(teamName)
                 .clickEditOrganizationLink()

@@ -24,7 +24,6 @@
 
 package com.denimgroup.threadfix.framework.engine.cleaner;
 
-import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
 import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 import com.denimgroup.threadfix.framework.util.CommonPathFinder;
 
@@ -103,10 +102,6 @@ public class DefaultPathCleaner implements PathCleaner {
 		
 		return cleanedPath;
 	}
-
-    public void setEndpointGenerator(EndpointGenerator generator) {
-        // we don't care about this
-    }
 
     @Nullable
     @Override

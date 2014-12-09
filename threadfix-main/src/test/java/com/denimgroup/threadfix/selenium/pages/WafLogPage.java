@@ -11,8 +11,6 @@ public class WafLogPage extends BasePage{
         super(webdriver);
     }
 
-    /*------------------------------------ Action Methods ------------------------------------*/
-
     public WafIndexPage clickContinue() {
         driver.findElementByLinkText("Continue").click();
         return new WafIndexPage(driver);

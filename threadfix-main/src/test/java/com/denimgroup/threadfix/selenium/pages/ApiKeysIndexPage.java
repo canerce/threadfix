@@ -34,8 +34,7 @@ public class ApiKeysIndexPage extends BasePage {
 	private WebElement createNewKeyLink;
 
 
-    /*---------------------------- Action Methods ----------------------------*/
-
+    /* _____________________ Action Methods _____________________ */
 	public ApiKeysIndexPage(WebDriver webdriver) {
 		super(webdriver);
 		createNewKeyLink = driver.findElementById("createNewKeyModalButton");
@@ -82,8 +81,7 @@ public class ApiKeysIndexPage extends BasePage {
         return new ApiKeysIndexPage(driver);
     }
 
-    /*---------------------------- Boolean Methods ----------------------------*/
-
+    /* _____________________ Boolean Methods _____________________ */
 	public boolean isCreationSuccessAlertPresent(){
 		return driver.findElementByClassName("alert-success").getText().contains("Successfully created key");
 	}

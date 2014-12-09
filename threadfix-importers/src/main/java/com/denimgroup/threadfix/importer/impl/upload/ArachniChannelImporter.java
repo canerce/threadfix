@@ -147,8 +147,7 @@ public class ArachniChannelImporter extends AbstractChannelImporter {
 
 	}
 
-    public static final String FORMAT_STRING = "yyyy-MM-dd'T'HH:mm:ss";
-    private static final String TIME_ZONE_PATTERN = ".*[0-9]T[0-9].*";
+    public static final String FORMAT_STRING = "yyyy-MM-DD'T'kk:mm:ssX";
 
     public ArachniChannelImporter() {
         super(ScannerType.ARACHNI);
@@ -334,7 +333,7 @@ public class ArachniChannelImporter extends AbstractChannelImporter {
 	}
 
     Calendar getDateFromString(String tempDateString) {
-        if (tempDateString.matches(TIME_ZONE_PATTERN)) {
+        if (tempDateString.contains("T")) {
             return DateUtils.getCalendarFromString(FORMAT_STRING, tempDateString);
         } else {
             return DateUtils.getCalendarFromString("EEE MMM dd kk:mm:ss yyyy", tempDateString);

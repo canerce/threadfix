@@ -32,16 +32,6 @@ public class ScanAgentTasksPage extends BasePage{
         super(webdriver);
     }
 
-    /*----------------------------------- Action Methods -----------------------------------*/
-
-    public ScanAgentTasksPage clickDeleteScan(int scanId) {
-        driver.findElementById("deleteButton" + scanId).click();
-        handleAlert();
-        return new ScanAgentTasksPage(driver);
-    }
-
-    /*----------------------------------- Get Methods -----------------------------------*/
-
     public int getScanAgentTaskId(String date) {
         int rowCnt = driver.findElementsByClassName("bodyRow").size();
         for (int i = 0; i < rowCnt; i++) {
@@ -57,12 +47,17 @@ public class ScanAgentTasksPage extends BasePage{
         return -1;
     }
 
+    public ScanAgentTasksPage clickDeleteScan(int scanId) {
+        driver.findElementById("deleteButton" + scanId).click();
+        handleAlert();
+        return new ScanAgentTasksPage(driver);
+    }
+
     public String successAlert() {
         return driver.findElementByClassName("alert-success").getText().trim();
     }
 
-    /*----------------------------------- Boolean Methods -----------------------------------*/
-
+    /*________________ Boolean Functions ________________*/
     public boolean isScanAgentTaskPresent(String date) {
         int rowCnt = driver.findElementsByClassName("bodyRow").size();
         for (int i = 0; i < rowCnt; i++) {

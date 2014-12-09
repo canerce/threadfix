@@ -38,6 +38,15 @@
     </div>
 
     <div id="complianceFilterDiv" class="filter-controls">
+        <h3>Filters</h3>
+
+        <tabset ng-init="showFilterSections = true" ng-hide="remediationEnterpriseActive">
+            <tab heading="Filters" ng-click="$parent.showFilterSections = true; $parent.showSavedFilters = false">
+            </tab>
+            <tab heading="Load Filters" ng-click="$parent.showFilterSections = false; $parent.showSavedFilters = true">
+            </tab>
+        </tabset>
+
         <%@ include file="filter.jsp" %>
     </div>
 

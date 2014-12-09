@@ -24,7 +24,6 @@
 package com.denimgroup.threadfix.framework.impl.spring;
 
 import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
-import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
 import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 import com.denimgroup.threadfix.framework.util.CommonPathFinder;
 
@@ -90,11 +89,6 @@ public class SpringPathCleaner implements PathCleaner {
 
         return escaped;
 	}
-
-    @Override
-    public void setEndpointGenerator(EndpointGenerator generator) {
-        // we don't care about this
-    }
 
     @Nullable
     @Override

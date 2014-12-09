@@ -37,7 +37,6 @@ public class DashboardPage extends BasePage{
 
     /*---------------------------- Action Methods ----------------------------*/
 
-    //CLICK FUNCTIONS
 	public AnalyticsPage clickLeftViewMore(){
 		driver.findElementById("leftViewMore").click();
         waitForElement(driver.findElementById("trendingFilterDiv"));
@@ -76,9 +75,7 @@ public class DashboardPage extends BasePage{
         driver.findElementById("submit").click();
         return new AnalyticsPage(driver);
     }
-
-    /*---------------------------- Get Methods ----------------------------*/
-
+	
 	public int getNumUploads(){
 		return driver.findElementById("wafTableBody").findElements(By.className("bodyRow")).size();
 	}

@@ -128,10 +128,6 @@ public class EndpointDatabaseFactory {
 		
 		log.info("Returning database with generator: " + generator);
 
-        if (cleaner != null) {
-            cleaner.setEndpointGenerator(generator);
-        }
-
 		if (generator == null) {
             return null;
         } else {

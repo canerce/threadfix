@@ -27,9 +27,12 @@ import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openqa.selenium.By;
+
+import javax.validation.constraints.AssertTrue;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -82,15 +85,11 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         assertTrue("Qualys was not configured properly",
                 remoteProvidersIndexPage.successAlert().contains("Successfully edited remote provider QualysGuard WAS"));
-        assertTrue("Qualys configured message is not correct.",
-                remoteProvidersIndexPage.checkConfigurationMessage(0,"Yes"));
 
         remoteProvidersIndexPage = remoteProvidersIndexPage.clearQualys();
 
         assertTrue("Qualys configuration was not cleared properly",
                 remoteProvidersIndexPage.successAlert().contains("QualysGuard WAS configuration was cleared successfully."));
-        assertTrue("Qualys configured message is not correct.",
-                remoteProvidersIndexPage.checkConfigurationMessage(0, "No"));
     }
 
     @Test
@@ -114,15 +113,11 @@ public class RemoteProvidersIT extends BaseDataTest {
 
 		assertTrue("WhiteHat Sentinel was not configured properly",
                 remoteProvidersIndexPage.successAlert().contains("Successfully edited remote provider WhiteHat Sentinel"));
-        assertTrue("WhiteHat Sentinel configured message is not correct.",
-                remoteProvidersIndexPage.checkConfigurationMessage(3, "Yes"));
 		
 		remoteProvidersIndexPage = remoteProvidersIndexPage.clearWhiteHat();
 		
 		assertTrue("WhiteHat Sentinel configuration was not cleared properly",
                 remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
-        assertTrue("WhiteHat Sentinel configured message is not correct.",
-                remoteProvidersIndexPage.checkConfigurationMessage(3, "No"));
 	}
 
 	@Test
@@ -147,15 +142,11 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         assertTrue("Veracode was not configured properly",
                 remoteProvidersIndexPage.successAlert().contains("Successfully edited remote provider Veracode"));
-        assertTrue("Veracode configured message is not correct.",
-                remoteProvidersIndexPage.checkConfigurationMessage(2, "Yes"));
 
         remoteProvidersIndexPage = remoteProvidersIndexPage.clearVeraCode();
 
         assertTrue("Veracode configuration was not cleared properly",
                 remoteProvidersIndexPage.successAlert().contains("Veracode configuration was cleared successfully."));
-        assertTrue("Veracode configured message is not correct.",
-                remoteProvidersIndexPage.checkConfigurationMessage(2, "No"));
 	}
 	
 	@Test
@@ -652,11 +643,6 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         assertTrue("Modal does not contain app name",
                 driver.findElement(By.id("myModalLabel")).getText().contains("PHP Demo site"));
-
-        remoteProvidersIndexPage = remoteProvidersIndexPage.closeModal().clearQualys();
-
-        assertTrue("Qualys configuration was not cleared properly",
-                remoteProvidersIndexPage.successAlert().contains("QualysGuard WAS configuration was cleared successfully."));
     }
 
     @Test
@@ -671,11 +657,6 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         assertTrue("Modal does not contain app name",
                 driver.findElement(By.id("myModalLabel")).getText().contains("Apache"));
-
-        remoteProvidersIndexPage = remoteProvidersIndexPage.closeModal().clearVeraCode();
-
-        assertTrue("Veracode configuration was not cleared properly",
-                remoteProvidersIndexPage.successAlert().contains("Veracode configuration was cleared successfully."));
     }
 
     @Test
@@ -688,10 +669,5 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         assertTrue("Modal does not contain app name",
                 driver.findElement(By.id("myModalLabel")).getText().contains("Demo Site BE"));
-
-        remoteProvidersIndexPage = remoteProvidersIndexPage.closeModal().clearWhiteHat();
-
-        assertTrue("WhiteHat Sentinel configuration was not cleared properly",
-                remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
     }
 }

@@ -83,9 +83,7 @@ class FullSourceFindingProcessor implements FindingProcessor {
             if (finding.getSurfaceLocation() != null) {
                 parameter = parameterParser.parse(ThreadFixInterface.toEndpointQuery(finding));
                 foundParameter++;
-                if (parameter != null) {
-                    finding.getSurfaceLocation().setParameter(parameter);
-                }
+                finding.getSurfaceLocation().setParameter(parameter);
             }
         }
 

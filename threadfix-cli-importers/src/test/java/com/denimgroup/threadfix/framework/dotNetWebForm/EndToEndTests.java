@@ -105,7 +105,7 @@ public class EndToEndTests {
 
     @Test
     public void testXSSVulnsMerge() {
-        Application application = Merger.mergeFromDifferentScanners(TestConstants.WEB_FORMS_DROP_DOWN,
+        Application application = Merger.mergeFromDifferentScanners(TestConstants.WEB_FORMS_ROOT,
                 "SBIR/webform.xml", "SBIR/webform.fpr");
 
         List<Scan> scans = application.getScans();

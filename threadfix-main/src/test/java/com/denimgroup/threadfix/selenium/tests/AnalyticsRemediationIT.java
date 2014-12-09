@@ -50,9 +50,9 @@ public class AnalyticsRemediationIT extends BaseDataTest {
 
         analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .sleepOnArrival(5000)
+                .sleepOnArrival(15000)
                 .clickRemediationTab(true)
-                .sleepOnArrival(5000)
+                .sleepOnArrival(3000)
                 .expandTagFilter("complianceFilterDiv")
                 .addTagFilter(tagName,"complianceFilterDiv")
                 .expandAgingFilterReport("complianceFilterDiv")

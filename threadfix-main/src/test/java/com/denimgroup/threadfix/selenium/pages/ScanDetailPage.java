@@ -29,35 +29,9 @@ import org.openqa.selenium.WebDriver;
 
 public class ScanDetailPage extends BasePage {
 
-    /*----------------------------------- Action Methods -----------------------------------*/
-
     public ScanDetailPage(WebDriver webdriver) {
         super(webdriver);
     }
-
-    public FindingDetailPage clickViewFinding() {
-        driver.findElementById("mappedVulnType").click();
-        sleep(3000);
-        return new FindingDetailPage(driver);
-    }
-
-    public ScanDetailPage toggleStatistics() {
-        driver.findElementById("statisticButton").click();
-        sleep(500);
-        return new ScanDetailPage(driver);
-    }
-
-    public ApplicationDetailPage clickApplicationNav() {
-        driver.findElementByPartialLinkText("Application:").click();
-        return new ApplicationDetailPage(driver);
-    }
-
-    public TeamDetailPage clickTeamNav() {
-        driver.findElementByPartialLinkText("Team:").click();
-        return new TeamDetailPage(driver);
-    }
-
-    /*----------------------------------- Get Methods -----------------------------------*/
 
     public String getScanHeader() {
         return getH2Tag().trim();
@@ -85,7 +59,27 @@ public class ScanDetailPage extends BasePage {
         return driver.findElementById("mappedSeverity" + row).getText();
     }
 
-    /*----------------------------------- Boolean Methods -----------------------------------*/
+    public FindingDetailPage clickViewFinding() {
+        driver.findElementById("mappedVulnType").click();
+        sleep(3000);
+        return new FindingDetailPage(driver);
+    }
+
+    public ScanDetailPage toggleStatistics() {
+        driver.findElementById("statisticButton").click();
+        sleep(500);
+        return new ScanDetailPage(driver);
+    }
+
+    public ApplicationDetailPage clickApplicationNav() {
+        driver.findElementByPartialLinkText("Application:").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public TeamDetailPage clickTeamNav() {
+        driver.findElementByPartialLinkText("Team:").click();
+        return new TeamDetailPage(driver);
+    }
 
     public boolean isViewFindingPresent() {
         return driver.findElementById("mappedVulnType").isDisplayed();

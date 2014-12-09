@@ -36,8 +36,7 @@ public class ApplicationDetailPage extends BasePage {
         super(webdriver);
     }
 
-    /*---------------------------- Boolean Methods ----------------------------*/
-
+    /* _____________________ Action Methods _____________________ */
     public ApplicationDetailPage clickAddDefectTrackerButton() {
         driver.findElementById("addDefectTrackerButton").click();
         sleep(1000);
@@ -124,6 +123,10 @@ public class ApplicationDetailPage extends BasePage {
         driver.findElementById("userListModelButton").click();
         waitForElement(driver.findElementById("myModalLabel"));
         return new ApplicationDetailPage(driver);
+    }
+
+    public int getNumPermUsers() {
+        return driver.findElementById("userTableBody").findElements(By.className("bodyRow")).size();
     }
 
     public ApplicationDetailPage clickEditDeleteBtn() {
@@ -825,12 +828,7 @@ public class ApplicationDetailPage extends BasePage {
         return new TagDetailPage(driver);
     }
 
-    /*---------------------------- Get Methods ----------------------------*/
-
-    public int getNumPermUsers() {
-        return driver.findElementById("userTableBody").findElements(By.className("bodyRow")).size();
-    }
-
+    /*________________________________________ Get Methods ________________________________________*/
     public String checkWafName() {
         waitForElement(driver.findElementById("wafNameText"));
         return driver.findElementById("wafNameText").getText();
@@ -973,10 +971,7 @@ public class ApplicationDetailPage extends BasePage {
         return driver.findElementByClassName("alert-error").getText();
     }
 
-
-
-    /*---------------------------- Boolean Methods ----------------------------*/
-
+    /* _____________________ Boolean Methods _____________________ */
     public boolean vulnsFilteredOpen(int count) {
         return driver.findElementByLinkText(count + " Vulnerabilities").isDisplayed();
     }

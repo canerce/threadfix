@@ -36,7 +36,39 @@ public class UserIndexPage extends BasePage {
 
     /*------------------------------------ Action Methods ------------------------------------*/
 
-    //SET FUNCTIONS
+    public UserIndexPage clickDeleteButton(String roleName) {
+		clickEditLink(roleName);
+		sleep(500);
+		driver.findElementById("delete" + (roleName)).click();
+		handleAlert();
+		return new UserIndexPage(driver);
+	}
+
+    public UserIndexPage clickDelete(String user){
+        driver.findElementById("delete" + user).click();
+        handleAlert();
+        return new UserIndexPage(driver);
+    }
+
+	public UserPermissionsPage clickEditPermissions(String name){
+		driver.findElementById("editPermissions" + name).click();
+		//waitForElement(driver.findElementById("addPermissionButton"));
+        sleep(1000);
+        return new UserPermissionsPage(driver);
+	}
+
+	public UserIndexPage clickAddUserLink() {
+		driver.findElementById("newUserModalLink").click();
+		waitForElement(driver.findElementById("submit"));
+		return new UserIndexPage(driver);
+	}
+	
+	public UserIndexPage clickCloseAddUserModal(){
+		driver.findElementById("newUserModal").findElement(By.className("modal-footer")).findElements(By.className("btn")).get(0).click();
+		sleep(1000);
+		return new UserIndexPage(driver);
+	}
+
     public UserIndexPage setName(String username) {
         WebElement nameField = driver.findElementById("name");
         nameField.clear();
@@ -70,40 +102,6 @@ public class UserIndexPage extends BasePage {
         driver.findElementById("roleSelect").sendKeys(role);
         return this;
     }
-
-    //CLICK FUNCTIONS
-    public UserIndexPage clickDeleteButton(String roleName) {
-		clickEditLink(roleName);
-		sleep(500);
-		driver.findElementById("delete" + (roleName)).click();
-		handleAlert();
-		return new UserIndexPage(driver);
-	}
-
-    public UserIndexPage clickDelete(String user){
-        driver.findElementById("delete" + user).click();
-        handleAlert();
-        return new UserIndexPage(driver);
-    }
-
-	public UserPermissionsPage clickEditPermissions(String name){
-		driver.findElementById("editPermissions" + name).click();
-		//waitForElement(driver.findElementById("addPermissionButton"));
-        sleep(1000);
-        return new UserPermissionsPage(driver);
-	}
-
-	public UserIndexPage clickAddUserLink() {
-		driver.findElementById("newUserModalLink").click();
-		waitForElement(driver.findElementById("submit"));
-		return new UserIndexPage(driver);
-	}
-	
-	public UserIndexPage clickCloseAddUserModal(){
-		driver.findElementById("newUserModal").findElement(By.className("modal-footer")).findElements(By.className("btn")).get(0).click();
-		sleep(1000);
-		return new UserIndexPage(driver);
-	}
 	
 	public UserIndexPage clickAddNewUserBtn() {
         waitForElement(driver.findElementById("submit"));
@@ -137,25 +135,17 @@ public class UserIndexPage extends BasePage {
 		driver.findElementById("submit").click();
 		return new UserIndexPage(driver);
 	}
-
-    public UserIndexPage clickEditLink(String userName) {
-        waitForElement(driver.findElementById("editUserModal"+userName));
-        driver.findElementById("editUserModal"+userName).click();
-        sleep(1000);
-        waitForElement(driver.findElementById("myModalLabel"));
-        return new UserIndexPage(driver);
-    }
-
-    public UserIndexPage clickCancel(String name){
-        driver.findElementByClassName("modal-footer").click();
-        sleep(1000);
-        return new UserIndexPage(driver);
-    }
-
-    /*------------------------------------ Get Methods ------------------------------------*/
-
+	
 	public String getGlobalAccessRole(String name){
 		return new Select(driver.findElementById("roleSelect"+(name))).getAllSelectedOptions().get(0).getText().trim();
+	}
+
+	public UserIndexPage clickEditLink(String userName) {
+        waitForElement(driver.findElementById("editUserModal"+userName));
+		driver.findElementById("editUserModal"+userName).click();
+		sleep(1000);
+        waitForElement(driver.findElementById("myModalLabel"));
+		return new UserIndexPage(driver);
 	}
 	
 	public String getNameError(){
@@ -184,6 +174,12 @@ public class UserIndexPage extends BasePage {
     public String getConfirmPasswordRequiredError() {
         return driver.findElementById("confirmPassword.error").getText().trim();
     }
+	
+	public UserIndexPage clickCancel(String name){
+		driver.findElementByClassName("modal-footer").click();
+		sleep(1000);
+		return new UserIndexPage(driver);	
+	}
 
     /*----------------------------------- Boolean Methods -----------------------------------*/
 

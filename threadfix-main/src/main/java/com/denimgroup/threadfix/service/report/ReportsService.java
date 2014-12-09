@@ -54,11 +54,20 @@ public interface ReportsService {
 		public String toString() { return text; }
 	}
 	
+	ReportCheckResultBean generateReport(ReportParameters parameters, HttpServletRequest request);
+
     ReportCheckResultBean generateDashboardReport(ReportParameters parameters, HttpServletRequest request);
 
     Map<String, Object> generateTrendingReport(ReportParameters parameters, HttpServletRequest request);
 
     Map<String, Object> generateSnapshotReport(ReportParameters parameters, HttpServletRequest request);
+
+    Map<String, Object> scannerComparisonByVulnerability(Model model,
+			ReportParameters reportParameters);
+
+    Map<String, Object> vulnerabilityList(Model model, ReportParameters reportParameters);
+
+    String getExportFileName(ReportParameters reportParameters);
 
     ReportCheckResultBean generateSearchReport(List<Vulnerability> vulnerabilityList);
 

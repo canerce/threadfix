@@ -1,6 +1,6 @@
 var module = angular.module('threadfix');
 
-module.controller('ReportFilterController', function($http, $scope, $rootScope, filterService, vulnSearchParameterService, tfEncoder, reportExporter) {
+module.controller('ReportFilterController', function($scope, $rootScope, filterService) {
 
     $scope.parameters = undefined;
 
@@ -52,14 +52,12 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
             || $scope.showDetailsControls
             || $scope.showDateControls
             || $scope.showDateRange
-            || $scope.showTypeAndMergedControls
             || $scope.showTagControls) {
             $scope.showTeamAndApplicationControls = false;
             $scope.showDetailsControls = false;
             $scope.showDateControls = false;
             $scope.showDateRange = false;
             $scope.showSaveFilter = false;
-            $scope.showTypeAndMergedControls = false;
             $scope.showTagControls = false;
         } else {
             $scope.showTeamAndApplicationControls = true;
@@ -67,7 +65,6 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
             $scope.showDateControls = true;
             $scope.showDateRange = true;
             $scope.showSaveFilter = true;
-            $scope.showTypeAndMergedControls = true;
             $scope.showTagControls = true;
         }
     };
@@ -92,7 +89,6 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
 
     var resetAging = function() {
         $scope.parameters.daysOldModifier = undefined;
-        $scope.parameters.daysOld = undefined;
     };
 
 
@@ -132,40 +128,16 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
 
     };
 
-    $scope.setDaysOldModifier = function(modifier) {
-        resetDateRange();
-        if ($scope.parameters.daysOldModifier === modifier) {
-            $scope.parameters.daysOldModifier = undefined;
-            $rootScope.$broadcast("resetParameters", $scope.parameters);
-        } else {
-            $scope.parameters.daysOldModifier = modifier;
-            if ($scope.parameters.daysOld || modifier === 'LastYear' || modifier === 'LastQuarter' || modifier === 'Forever') {
-                $rootScope.$broadcast("resetParameters", $scope.parameters);
-            }
-        }
-    };
-
     $scope.setDaysOld = function(days) {
         resetDateRange();
-        if ($scope.parameters.daysOld === days) {
-            $scope.parameters.daysOld = undefined;
-            $rootScope.$broadcast("resetParameters", $scope.parameters);
+        if ($scope.parameters.daysOldModifier === days) {
+            $scope.parameters.daysOldModifier = undefined;
         } else {
-            $scope.parameters.daysOld = days;
-            if ($scope.parameters.daysOldModifier) {
-                $rootScope.$broadcast("resetParameters", $scope.parameters);
-            }
-        }
-    };
+            $scope.parameters.daysOldModifier = days;
 
-    $scope.setNumberMerged = function(numberMerged) {
-        if ($scope.parameters.numberMerged === numberMerged) {
-            $scope.parameters.numberMerged = undefined;
-            $rootScope.$broadcast("resetParameters", $scope.parameters);
-        } else {
-            $scope.parameters.numberMerged = numberMerged;
-            $rootScope.$broadcast("resetParameters", $scope.parameters);
         }
+        $rootScope.$broadcast("resetParameters", $scope.parameters);
+
     };
 
     $scope.deleteCurrentFilter = function() {
@@ -195,8 +167,6 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
             $scope.parameters.filterType = {isSnapshotFilter : true};
         else if ($scope.$parent.complianceActive)
             $scope.parameters.filterType = {isComplianceFilter : true};
-        else
-            $scope.parameters.filterType = {isVulnSearchFilter : true};
 
         filterService.saveCurrentFilters($scope, filterSavedFilters);
 
@@ -214,7 +184,7 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
             else if ($scope.$parent.complianceActive)
                 return (parameters.filterType.isComplianceFilter);
             else
-                return (!parameters.filterType || parameters.filterType.isVulnSearchFilter);
+                return false;
         }
     }
 
@@ -225,48 +195,5 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
         $scope.parameters.endDate = null;
         $scope.endDateOpened = false;
     };
-
-    $scope.exportCSV = function(reportId) {
-
-        if (reportId === 3) {
-            $scope.$parent.exportCSV();
-        } else {
-            console.log('Downloading vulnerabilities list');
-
-            var parameters = angular.copy($scope.parameters);
-
-            vulnSearchParameterService.updateParameters($scope, parameters);
-
-            $http.post(tfEncoder.encode("/reports/search/export/csv"), parameters).
-                success(function(data, status, headers, config, response) {
-
-                    var octetStreamMime = "application/octet-stream";
-
-                    // Get the headers
-                    headers = headers();
-
-                    // Get the filename from the x-filename header or default to "download.bin"
-                    var filename = headers["x-filename"] || "search_export.csv";
-
-                    // Determine the content type from the header or default to "application/octet-stream"
-                    var contentType = headers["content-type"] || octetStreamMime;
-
-                    if(navigator.msSaveBlob)
-                    {
-                        // Save blob is supported, so get the blob as it's contentType and call save.
-                        var blob = new Blob([data], { type: contentType });
-                        navigator.msSaveBlob(blob, filename);
-                        console.log("SaveBlob Success");
-                    }
-                    else {
-                        reportExporter.exportCSV(data, contentType, filename);
-                    }
-                }).
-                error(function(data, status, headers, config) {
-                    $scope.errorMessage = "Failed to retrieve vulnerability report. HTTP status was " + status;
-                    $scope.loadingTree = false;
-                });
-        };
-    }
 
 });

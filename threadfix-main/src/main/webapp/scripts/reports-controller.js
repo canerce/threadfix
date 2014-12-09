@@ -100,9 +100,7 @@ myAppModule.controller('ReportsController', function ($scope, $window, threadfix
             $scope.rightReport = null;
 
             $scope.topAppsData = null;
-            $scope.trendingScansData = null;
-            $scope.noData = true;
-            $scope.allScans = null;
+            $scope.trendingData = null;
 
             $scope.empty = true;
         }

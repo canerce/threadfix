@@ -109,8 +109,7 @@ public class ScanDetailIT extends BaseDataTest {
     }
 
     @Test
-    public void testApplicationLinkNav() {
-        ScanDetailPage scanDetailPage = applicationDetailPage.clickScansTab().clickViewScan();
+    public void testApplicationLinkNav() {ScanDetailPage scanDetailPage = applicationDetailPage.clickScansTab().clickViewScan();
 
         ApplicationDetailPage applicationDetailPage2 = scanDetailPage.clickApplicationNav();
 
@@ -120,8 +119,7 @@ public class ScanDetailIT extends BaseDataTest {
     }
 
     @Test
-    public void testTeamLinkNav() {
-        ScanDetailPage scanDetailPage = applicationDetailPage.clickScansTab().clickViewScan();
+    public void testTeamLinkNav() {ScanDetailPage scanDetailPage = applicationDetailPage.clickScansTab().clickViewScan();
 
         TeamDetailPage teamDetailPage = scanDetailPage.clickTeamNav();
 

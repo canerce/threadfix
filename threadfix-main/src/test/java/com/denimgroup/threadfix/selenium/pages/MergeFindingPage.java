@@ -26,9 +26,7 @@ package com.denimgroup.threadfix.selenium.pages;
 import org.openqa.selenium.WebDriver;
 
 public class MergeFindingPage extends BasePage {
-
-    /*------------------------------------- Action Functions ------------------------------*/
-
+	
 	public MergeFindingPage(WebDriver webdriver) {
 		super(webdriver);
 
@@ -44,10 +42,8 @@ public class MergeFindingPage extends BasePage {
         return new VulnerabilityDetailPage(driver);
     }
 
-    /*------------------------------------- Boolean Functions ------------------------------*/
-
+    //-------------------------------------Boolean Functions-------------------------------------------------------------
     public boolean isMergeFindingPagePresent() {
         return driver.findElementByClassName("dataTable").isDisplayed();
     }
-
 }

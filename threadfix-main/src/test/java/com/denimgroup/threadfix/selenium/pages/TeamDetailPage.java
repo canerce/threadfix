@@ -39,6 +39,15 @@ public class TeamDetailPage extends BasePage {
 
     /*------------------------------ Action Methods ------------------------------*/
 
+    public String getOrgName() {
+        return driver.findElementById("name").getText();
+    }
+
+    public String successAlert(){
+        waitForElement(driver.findElementByClassName("alert-success"));
+        return driver.findElementByClassName("alert-success").getText().trim();
+    }
+
     public TeamDetailPage clickActionButton(){
         driver.findElementById("actionButton").click();
         waitForElement(driver.findElementById("teamModalButton"));
@@ -357,15 +366,6 @@ public class TeamDetailPage extends BasePage {
 
     public String getErrorMessage(String key) {
         return driver.findElementById(key).getText().trim();
-    }
-
-    public String getOrgName() {
-        return driver.findElementById("name").getText();
-    }
-
-    public String successAlert(){
-        waitForElement(driver.findElementByClassName("alert-success"));
-        return driver.findElementByClassName("alert-success").getText().trim();
     }
 
     public int getNumTeamRows() {

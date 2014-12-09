@@ -34,27 +34,6 @@ public class WafIndexPage extends BasePage {
 
     /*------------------------------------ Action Methods ------------------------------------*/
 
-    //SET FUNCTIONS
-    public WafIndexPage setWafName(String name){
-        driver.findElementById("wafCreateNameInput").clear();
-        driver.findElementById("wafCreateNameInput").sendKeys(name);
-        return this;
-    }
-
-    public WafIndexPage setWafType(String type){
-        new Select(driver.findElementById("typeSelect")).selectByVisibleText(type);
-        return this;
-    }
-
-    public WafIndexPage editWaf(String wafName, String newName, String type){
-        waitForElement(driver.findElementById("myModalLabel"));
-        driver.findElementById("wafCreateNameInput").clear();
-        driver.findElementById("wafCreateNameInput").sendKeys(newName);
-        new Select(driver.findElementById("typeSelect")).selectByVisibleText(type);
-        return new WafIndexPage(driver);
-    }
-
-    //CLICK FUNCTIONS
 	public WafRulesPage clickRules(String wafName){
 		driver.findElementById("rulesButton" + wafName).click();
 		return new WafRulesPage(driver);
@@ -88,6 +67,17 @@ public class WafIndexPage extends BasePage {
 		setWafType(type);
 		return this;
 	}
+
+    public WafIndexPage setWafName(String name){
+        driver.findElementById("wafCreateNameInput").clear();
+        driver.findElementById("wafCreateNameInput").sendKeys(name);
+        return this;
+    }
+
+    public WafIndexPage setWafType(String type){
+        new Select(driver.findElementById("typeSelect")).selectByVisibleText(type);
+        return this;
+    }
 	
 	public WafIndexPage clickCreateWaf(){
 		driver.findElementById("submit").click();
@@ -108,21 +98,27 @@ public class WafIndexPage extends BasePage {
         waitForElement(driver.findElementByCssSelector("td[id*='"+ editedWaf +"']"));
         return new WafIndexPage(driver);
     }
-
-    public WafIndexPage clickCloseWafModal(){
-        driver.findElementByLinkText("Close").click();
-        sleep(1000);
-        return new WafIndexPage(driver);
-    }
-
-    /*------------------------------------ Get Methods ------------------------------------*/
-
+	
+	public WafIndexPage editWaf(String wafName, String newName, String type){
+        waitForElement(driver.findElementById("myModalLabel"));
+		driver.findElementById("wafCreateNameInput").clear();
+		driver.findElementById("wafCreateNameInput").sendKeys(newName);
+        new Select(driver.findElementById("typeSelect")).selectByVisibleText(type);
+		return new WafIndexPage(driver);
+	}
+	
 	public String getNameErrorsText(){
 		return driver.findElementById("nameRequiredError").getText();
 	}
 
 	public String getNameText(int row){
 		return  driver.findElementById("wafName" + row).getText();
+	}
+
+	public WafIndexPage clickCloseWafModal(){
+		driver.findElementByLinkText("Close").click();
+		sleep(1000);
+		return new WafIndexPage(driver);
 	}
 
 	public int getWafEditHeaderWidth(String wafName) {

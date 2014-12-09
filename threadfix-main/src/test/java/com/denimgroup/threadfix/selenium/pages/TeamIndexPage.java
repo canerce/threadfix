@@ -37,6 +37,13 @@ public class TeamIndexPage extends BasePage {
 
     /*------------------------------------ Action Methods ----------------------------------------*/
 
+    public int getNumTeamRows() {
+        if (!(driver.findElementById("teamTable").getText().equals("Add Team"))) {
+            return driver.findElementsByClassName("pointer").size();
+        }
+        return 0;
+    }
+
     public TeamIndexPage clickAddTeamButton() {
         driver.findElementById("addTeamModalButton").click();
         waitForElement(driver.findElementById("myModalLabel"));
@@ -268,21 +275,6 @@ public class TeamIndexPage extends BasePage {
         return driver.findElementByClassName("alert-error").getText().trim();
     }
 
-    public String getApplicationSpecificVulnerabilityCount(String teamName, String appName, String level) {
-        return driver.findElement(By.id("num" + level + "Vulns" + teamName + "-" + appName)).getText().trim();
-    }
-
-    public String getUrlRepositoryError() {
-        return driver.findElementById("sourceUrlValidError").getText().trim();
-    }
-
-    public int getNumTeamRows() {
-        if (!(driver.findElementById("teamTable").getText().equals("Add Team"))) {
-            return driver.findElementsByClassName("pointer").size();
-        }
-        return 0;
-    }
-
     /*----------------------------------- Boolean Methods -----------------------------------*/
 
     public boolean isAppPresent(String teamName, String appName) {
@@ -312,6 +304,10 @@ public class TeamIndexPage extends BasePage {
 
     public boolean isAddApplicationButtonClickable() {
         return driver.findElementsByCssSelector("#submit.disabled").isEmpty();
+    }
+
+    public String getUrlRepositoryError() {
+        return driver.findElementById("sourceUrlValidError").getText().trim();
     }
 
     public boolean isTeamsExpanded(String teamName, String appName) {
@@ -347,6 +343,10 @@ public class TeamIndexPage extends BasePage {
 
     public boolean applicationVulnerabilitiesFiltered(String teamName, String appName, String level, String expected) {
         return getApplicationSpecificVulnerabilityCount(teamName, appName, level).equals(expected);
+    }
+
+    public String getApplicationSpecificVulnerabilityCount(String teamName, String appName, String level) {
+        return driver.findElement(By.id("num" + level + "Vulns" + teamName + "-" + appName)).getText().trim();
     }
 
     public boolean isUploadButtonPresent(String teamName, String appName) {

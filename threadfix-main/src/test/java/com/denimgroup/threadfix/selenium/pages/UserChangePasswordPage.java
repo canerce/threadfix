@@ -33,8 +33,6 @@ public class UserChangePasswordPage extends BasePage {
 	private WebElement updatePasswordButton;
 	private WebElement backToConfigurationLink;
 
-    /*----------------------------------- Action Methods -----------------------------------*/
-
 	public UserChangePasswordPage(WebDriver webDriver) {
 		super(webDriver);
 		currentPassword = driver.findElementById("currentPasswordInput");
@@ -79,9 +77,7 @@ public class UserChangePasswordPage extends BasePage {
 		backToConfigurationLink.click();
 		return new ConfigurationIndexPage(driver);
 	}
-
-    /*----------------------------------- Get Methods -----------------------------------*/
-
+	
 	public String getErrorText(String path) {
         String toReturn = driver.findElementById(path).getText();
 		return toReturn;
@@ -90,9 +86,7 @@ public class UserChangePasswordPage extends BasePage {
     public String getPasswordRequiredError() {
         return driver.findElementById("passwordRequiredError").getText();
     }
-
-    /*----------------------------------- Boolean Methods -----------------------------------*/
-
+	
 	public boolean isSaveSuccessful(){
 		return driver.findElementByClassName("alert-success").getText().trim().contains("The password change was successful");
 	}

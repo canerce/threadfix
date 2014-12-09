@@ -240,12 +240,23 @@ public class RemoteProvidersIndexPage extends BasePage {
         waitForElement(driver.findElementById("addImportQueueLink"));
         return new RemoteProvidersSchedulePage(driver);
     }
+
+	public String getErrorMessage(){
+        waitForElementPresence("errorSpan", 60);
+		return driver.findElementById("errorSpan").getText();
+	}
 	
 	public RemoteProvidersIndexPage clearWhiteHat(){
 		driver.findElementById("clearConfig1").click();
 		handleAlert();
 		return new RemoteProvidersIndexPage(driver);
 	}
+
+    public RemoteProvidersIndexPage clearQualysGuard(){
+        driver.findElementById("clearConfig3").click();
+        handleAlert();
+        return new RemoteProvidersIndexPage(driver);
+    }
 
     public RemoteProvidersIndexPage clearPreviousWhiteHat() {
         if (driver.findElementById("clearConfig1").isDisplayed()) {
@@ -275,7 +286,6 @@ public class RemoteProvidersIndexPage extends BasePage {
 
     public RemoteProvidersIndexPage clickEditName(String provider, String appNum) {
         driver.findElementById("provider" + provider + "updateName" + appNum).click();
-        waitForElement(driver.findElementById("myModalLabel"));
         return new RemoteProvidersIndexPage(driver);
     }
 
@@ -284,13 +294,7 @@ public class RemoteProvidersIndexPage extends BasePage {
 		return driver.findElementByClassName("alert-success").getText().trim();
 	}
 
-    public String getErrorMessage(){
-        waitForElementPresence("errorSpan", 60);
-        return driver.findElementById("errorSpan").getText();
-    }
-
     /*------------------------------ Boolean Methods ------------------------------*/
-
     //Note: Qualys = 3, Veracode = 2, Whitehat = 1
     public boolean isMappingCorrect(int provider, int appRow, String teamName, String appName) {
         if(!driver.findElementById("provider"+ provider + "tfteamname" + appRow).getText().contains(teamName) ||
@@ -302,10 +306,6 @@ public class RemoteProvidersIndexPage extends BasePage {
 
     public boolean isApplicationLinkPresent(String appName) {
         return driver.findElementsByLinkText(appName).size() != 0;
-    }
-
-    public boolean checkConfigurationMessage(int provider, String status) {
-        return driver.findElementById("apiKey" + provider).getText().contains(status);
     }
 
     public boolean isTeamLinkPresent(String teamName) {

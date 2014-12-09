@@ -37,9 +37,6 @@ public class WafRulesPage extends BasePage {
     private WebElement lastItemFoundInApplicationsTableBodyLink;
     private WebElement deleteButton;
 
-
-    /*------------------------------------ Action Methods ------------------------------------*/
-
     public WafRulesPage(WebDriver webdriver) {
         super(webdriver);
 
@@ -47,24 +44,15 @@ public class WafRulesPage extends BasePage {
         wafTypeText = driver.findElementById("wafTypeText");
     }
 
-    //SET FUNCTIONS
-    public WafRulesPage setWafDirectiveSelect(String code) {
-        new Select(driver.findElementById("wafDirectiveSelect")).selectByVisibleText(code);
-        return new WafRulesPage(driver);
+    public String getNameText() {
+        return nameText.getText();
     }
 
-    public WafRulesPage setWafApplicationSelect(String teamName, String appName) {
-        new Select(driver.findElementById("wafApplicationSelect")).selectByVisibleText(teamName + "/" + appName);
-        return new WafRulesPage(driver);
+    public String getWafTypeText() {
+        return wafTypeText.getText();
     }
 
-    public WafRulesPage setLogFile(String file) {
-        waitForElement(driver.findElementById("fileInput"));
-        driver.findElementById("fileInput").sendKeys(file);
-        return new WafRulesPage(driver);
-    }
 
-    //CLICK FUNCTIONS
     public WafRulesPage clickGenerateWafRulesButton() {
         sleep(2000);
         driver.findElementById("generateWafRulesButton").click();
@@ -72,9 +60,24 @@ public class WafRulesPage extends BasePage {
         return new WafRulesPage(driver);
     }
 
+    public boolean checkFiredWafNav(String wafCode) {
+        driver.findElementByPartialLinkText(wafCode).click();
+        return driver.findElementByCssSelector("h3").getAttribute("innerHTML").contains(wafCode);
+    }
+
+    public boolean clickDownloadWafRulesEnabled() {
+        return driver.findElementByLinkText("Download Waf Rules").isDisplayed();
+    }
+
     public WafIndexPage clickCancelButton() {
         driver.findElementByLinkText("Cancel").click();
         return new WafIndexPage(driver);
+    }
+
+    public WafRulesPage setLogFile(String file) {
+        waitForElement(driver.findElementById("fileInput"));
+        driver.findElementById("fileInput").sendKeys(file);
+        return new WafRulesPage(driver);
     }
 
     public WafLogPage clickUploadLogFile() {
@@ -98,6 +101,28 @@ public class WafRulesPage extends BasePage {
         return new TeamIndexPage(driver);
     }
 
+    public boolean isTextPresentInApplicationsTableBody(String text) {
+        if (isElementPresent("applicationsTableBody")) {
+            for (WebElement element : driver.findElementById("applicationsTableBody").findElements(By.xpath(".//tr/td/a"))) {
+                if (element.getText().contains(text)) {
+                    lastItemFoundInApplicationsTableBodyLink = element;
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public ApplicationDetailPage clickTextLinkInApplicationsTableBody(String text) {
+        if (isTextPresentInApplicationsTableBody(text)) {
+            lastItemFoundInApplicationsTableBodyLink.click();
+            return new ApplicationDetailPage(driver);
+        } else {
+            return null;
+        }
+    }
+
     public ApplicationDetailPage clickAppName(String appName) {
         driver.findElementByLinkText(appName).click();
         return new ApplicationDetailPage(driver);
@@ -112,49 +137,34 @@ public class WafRulesPage extends BasePage {
         return new WafIndexPage(driver);
     }
 
-    /*------------------------------------ Get Methods ------------------------------------*/
+    public WafRulesPage clickDeleteButtonInvalid() {
+        deleteButton.click();
 
-    public String getNameText() {
-        return nameText.getText();
-    }
+        Alert alert = driver.switchTo().alert();
+        alert.accept();
 
-    public String getWafTypeText() {
-        return wafTypeText.getText();
+        return new WafRulesPage(driver);
     }
 
     public String getWafDirectiveSelect() {
         return new Select(driver.findElementById("wafDirectiveSelect")).getFirstSelectedOption().getText();
     }
 
-    /*------------------------------------ Boolean Methods ------------------------------------*/
+    public WafRulesPage setWafDirectiveSelect(String code) {
+        new Select(driver.findElementById("wafDirectiveSelect")).selectByVisibleText(code);
+        return new WafRulesPage(driver);
+    }
+
+    public WafRulesPage setWafApplicationSelect(String teamName, String appName) {
+        new Select(driver.findElementById("wafApplicationSelect")).selectByVisibleText(teamName + "/" + appName);
+        return new WafRulesPage(driver);
+    }
 
     public boolean isDownloadWafRulesDisplay() {
         return driver.findElementByLinkText("Download Waf Rules").isDisplayed();
     }
-
     public boolean isLogsNumberPresent() {
         return driver.findElementByLinkText("100000 - fired 52 times").isDisplayed();
     }
 
-    public boolean checkFiredWafNav(String wafCode) {
-        driver.findElementByPartialLinkText(wafCode).click();
-        return driver.findElementByCssSelector("h3").getAttribute("innerHTML").contains(wafCode);
-    }
-
-    public boolean clickDownloadWafRulesEnabled() {
-        return driver.findElementByLinkText("Download Waf Rules").isDisplayed();
-    }
-
-    public boolean isTextPresentInApplicationsTableBody(String text) {
-        if (isElementPresent("applicationsTableBody")) {
-            for (WebElement element : driver.findElementById("applicationsTableBody").findElements(By.xpath(".//tr/td/a"))) {
-                if (element.getText().contains(text)) {
-                    lastItemFoundInApplicationsTableBodyLink = element;
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
 }
