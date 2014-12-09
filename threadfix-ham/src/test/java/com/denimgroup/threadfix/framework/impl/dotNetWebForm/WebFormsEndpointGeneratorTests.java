@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.framework.impl.dotNetWebForm;
 import com.denimgroup.threadfix.data.interfaces.Endpoint;
 import com.denimgroup.threadfix.framework.TestConstants;
 import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -52,6 +53,25 @@ public class WebFormsEndpointGeneratorTests {
     }
 
     @Test
+    public void testBasicDirectoryResolution() {
+        EndpointGenerator endpointGenerator = new WebFormsEndpointGenerator(new File(TestConstants.RISK_E_UTILITY));
+
+        List<Endpoint> endpoints = endpointGenerator.generateEndpoints();
+        assert !endpoints.isEmpty() : "Got empty endpoints for " + TestConstants.RISK_E_UTILITY;
+
+        boolean gotPage = false;
+
+        for (Endpoint endpoint : endpoints) {
+            if (endpoint.getUrlPath().equals("/AHiddenDirectory/HiddenLaunchPage.aspx")) {
+                gotPage = true;
+            }
+        }
+
+        assert gotPage : "Didn't get /AHiddenDirectory/HiddenLaunchPage.aspx";
+    }
+
+    @Test
+    @Ignore // this works locally but breaks in our CI
     public void testAtLeastOneEndpointPerProject() {
         for (File file : getSampleProjects()) {
             WebFormsEndpointGenerator endpointGenerator = new WebFormsEndpointGenerator(file);

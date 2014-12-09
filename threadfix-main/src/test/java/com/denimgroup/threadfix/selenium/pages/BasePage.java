@@ -115,6 +115,7 @@ public abstract class BasePage {
     public AnalyticsPage clickAnalyticsLink() {
         driver.findElementById("reportsHeader").click();
         waitForElement(driver.findElementByTagName("h2"));
+        sleep(5000);
         return new AnalyticsPage(driver);
     }
 
@@ -469,6 +470,11 @@ public abstract class BasePage {
 		wait.until(ExpectedConditions.visibilityOf(e));
 	}
 
+    public void waitForClickableElement(WebElement e){
+        WebDriverWait wait = new WebDriverWait(driver, 30);
+        wait.until(ExpectedConditions.elementToBeClickable(e));
+    }
+
 	public void waitForInvisibleElement(WebElement e){
 		WebDriverWait wait = new WebDriverWait(driver,10);
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(e.getAttribute("id"))));
@@ -525,6 +531,19 @@ public abstract class BasePage {
         WebElement d3Object = driver.findElementById(ID);
         Actions builder = new Actions(driver);
         builder.click(d3Object).build().perform();
+        return (T) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends BasePage> T hoverRealOverSVGElement(String id) {
+        return (T) hoverRealOverSVGElement(id, this.getClass());
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends BasePage> T hoverRealOverSVGElement(String ID, Class<T> targetClass) {
+        WebElement d3Object = driver.findElementById(ID);
+        Actions builder = new Actions(driver);
+        builder.moveToElement(d3Object).build().perform();
         return (T) this;
     }
 

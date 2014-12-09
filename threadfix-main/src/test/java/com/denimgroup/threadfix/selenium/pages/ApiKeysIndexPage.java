@@ -82,16 +82,6 @@ public class ApiKeysIndexPage extends BasePage {
         return new ApiKeysIndexPage(driver);
     }
 
-    /*---------------------------- Get Methods ----------------------------*/
-
-    public String getNoteError() {
-        return driver.findElementById("lengthLimitError").getText();
-    }
-
-    public int getTableWidth(){
-        return driver.findElementById("table").getSize().width;
-    }
-
     /*---------------------------- Boolean Methods ----------------------------*/
 
 	public boolean isCreationSuccessAlertPresent(){
@@ -119,8 +109,12 @@ public class ApiKeysIndexPage extends BasePage {
 		return driver.findElementById("note" + note).getText().trim().length()<=255;
 	}
 
-
+    /* _____________________ Get Methods _____________________ */
+    public String getNoteError() {
+        return driver.findElementById("lengthLimitError").getText();
+    }
 	
-
-	
+	public int getTableWidth(){
+		return driver.findElementById("table").getSize().width;
+	}
 }

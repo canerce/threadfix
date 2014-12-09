@@ -23,7 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.defects.utils.tfs;
 
-import com.denimgroup.threadfix.service.defects.DefectMetadata;
+import com.denimgroup.threadfix.viewmodel.DefectMetadata;
 
 import java.util.List;
 import java.util.Map;

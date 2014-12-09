@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.selenium.tests;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.apache.commons.lang.RandomStringUtils;
-import org.easymock.internal.RuntimeExceptionWrapper;
 import org.junit.After;
 import org.junit.Before;
 import org.openqa.selenium.WebDriver;
@@ -162,4 +161,12 @@ public abstract class BaseIT {
         DatabaseUtils.createRole(roleName, true);
         return roleName;
     }
+
+    protected String createTag() {
+        String tagName = getName();
+        DatabaseUtils.createTag(tagName);
+        return tagName;
+    }
+
+
 }

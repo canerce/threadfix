@@ -111,7 +111,7 @@ public class TagsController {
                     result.rejectValue("name", MessageConstants.ERROR_NAMETAKEN);
                 }
                 databaseTag = tagService.loadTag(tagId);
-                if (databaseTag == null) {
+                if (databaseTag == null || (databaseTag.getEnterpriseTag() != null && databaseTag.getEnterpriseTag())) {
                     result.rejectValue("name", MessageConstants.ERROR_INVALID, new String[]{"Tag Id"}, null);
                 }
             }
@@ -155,11 +155,10 @@ public class TagsController {
         }
 
         int numApps = tag.getApplications().size();
-        int numVulnComments = tag.getVulnerabilityComments().size();
 
         ModelAndView mav = new ModelAndView("tags/detail");
         mav.addObject("numApps", numApps);
-        mav.addObject("numVulnComments", numVulnComments);
+        mav.addObject("numVulnComments", tag.getVulnCommentsCount());
         mav.addObject(tag);
         return mav;
     }

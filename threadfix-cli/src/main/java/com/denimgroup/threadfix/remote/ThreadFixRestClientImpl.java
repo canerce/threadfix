@@ -133,23 +133,28 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
             for (Organization team : teams.object) {
                 List<Application> applications = team.getApplications();
 
-                if (team.isActive() && !applications.isEmpty()) {
+                if (team.isActive()) {
                     String teamName = team.getName();
 
-                    for (Application application : applications) {
-                        boolean applicationActive = application.isActive();
+                    if (!applications.isEmpty()) {
+                        for (Application application : applications) {
+                            boolean applicationActive = application.isActive();
 
-                        if (applicationActive) {
-                            String applicationName = application.getName();
-                            Integer id = application.getId();
+                            if (applicationActive) {
+                                String applicationName = application.getName();
+                                Integer id = application.getId();
 
-                            outputBuilder.append(teamName);
-                            outputBuilder.append(";");
-                            outputBuilder.append(applicationName);
-                            outputBuilder.append(";");
-                            outputBuilder.append(id);
-                            outputBuilder.append("\n");
+                                outputBuilder.append(teamName);
+                                outputBuilder.append(";");
+                                outputBuilder.append(applicationName);
+                                outputBuilder.append(";");
+                                outputBuilder.append(id);
+                                outputBuilder.append("\n");
+                            }
                         }
+                    } else {
+                        outputBuilder.append(teamName);
+                        outputBuilder.append(": No Applications Found \n");
                     }
                 }
             }
@@ -278,6 +283,14 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 
     // QA only
     @Override
+    public RestResponse<User> addUserTeamAppPermission(String userName, String roleName, String teamName, String appName) {
+        return httpRestUtils.httpPost("/user/permission",
+                new String[] {"username", "rolename", "teamname", "appname"},
+                new String[] {userName, roleName, teamName, appName}, User.class);
+    }
+
+    // QA only
+    @Override
     public RestResponse<Role> createRole(String roleName, Boolean allPermissions) {
         return httpRestUtils.httpPost("/role/create",
                 new String[] {"roleName", "allPermissions"},
@@ -298,6 +311,22 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
         return httpRestUtils.httpPost("/role/edit",
                 new String[] {"roleName", "permission"},
                 new String[] {roleName, permission}, Role.class);
+    }
+
+    //QA only
+    @Override
+    public RestResponse<Tag> createTag(String tagname) {
+        return httpRestUtils.httpPost("/tag/create",
+                new String[] {"tagname"},
+                new String[] {tagname}, Tag.class);
+    }
+
+    //QA only
+    @Override
+    public RestResponse<Tag> attachAppToTag(String tagname, String appname, String teamname) {
+        return httpRestUtils.httpPost("/tag/attach",
+                new String[] {"tagname", "appname", "teamname"},
+                new String[] {tagname, appname, teamname}, Tag.class);
     }
 
     public RestResponse<Finding> addDynamicFinding(String applicationId, String vulnType, String severity,

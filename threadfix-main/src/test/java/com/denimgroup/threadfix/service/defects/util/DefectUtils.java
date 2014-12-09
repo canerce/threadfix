@@ -27,8 +27,8 @@ import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.GenericSeverity;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.service.defects.DefectMetadata;
-import com.denimgroup.threadfix.service.defects.ProjectMetadata;
+import com.denimgroup.threadfix.viewmodel.DefectMetadata;
+import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
 
 import java.util.HashMap;
 import java.util.List;
@@ -70,12 +70,15 @@ public class DefectUtils {
             // TODO create default field map
             return new DefectMetadata("test", "test", null, null, null, null, null, new HashMap<String, Object>());
         } else {
-            return new DefectMetadata("Dummy Description", "simple preamble",
+            DefectMetadata defectMetadata = new DefectMetadata("Dummy Description", "simple preamble",
                     projectMetadata.getComponents().get(0),
                     projectMetadata.getVersions().get(0),
                     projectMetadata.getSeverities().get(0),
                     projectMetadata.getPriorities().get(0),
                     projectMetadata.getStatuses().get(0));
+            defectMetadata.setFullDescription("Test");
+
+            return defectMetadata;
         }
 
     }

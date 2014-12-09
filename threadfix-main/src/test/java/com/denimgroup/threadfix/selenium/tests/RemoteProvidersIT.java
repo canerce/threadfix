@@ -27,9 +27,9 @@ import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.openqa.selenium.By;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -82,11 +82,15 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         assertTrue("Qualys was not configured properly",
                 remoteProvidersIndexPage.successAlert().contains("Successfully edited remote provider QualysGuard WAS"));
+        assertTrue("Qualys configured message is not correct.",
+                remoteProvidersIndexPage.checkConfigurationMessage(0,"Yes"));
 
         remoteProvidersIndexPage = remoteProvidersIndexPage.clearQualys();
 
         assertTrue("Qualys configuration was not cleared properly",
                 remoteProvidersIndexPage.successAlert().contains("QualysGuard WAS configuration was cleared successfully."));
+        assertTrue("Qualys configured message is not correct.",
+                remoteProvidersIndexPage.checkConfigurationMessage(0, "No"));
     }
 
     @Test
@@ -110,11 +114,15 @@ public class RemoteProvidersIT extends BaseDataTest {
 
 		assertTrue("WhiteHat Sentinel was not configured properly",
                 remoteProvidersIndexPage.successAlert().contains("Successfully edited remote provider WhiteHat Sentinel"));
+        assertTrue("WhiteHat Sentinel configured message is not correct.",
+                remoteProvidersIndexPage.checkConfigurationMessage(3, "Yes"));
 		
 		remoteProvidersIndexPage = remoteProvidersIndexPage.clearWhiteHat();
 		
 		assertTrue("WhiteHat Sentinel configuration was not cleared properly",
                 remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
+        assertTrue("WhiteHat Sentinel configured message is not correct.",
+                remoteProvidersIndexPage.checkConfigurationMessage(3, "No"));
 	}
 
 	@Test
@@ -127,7 +135,7 @@ public class RemoteProvidersIT extends BaseDataTest {
         remoteProvidersIndexPage.sleep(1000);
 
 		assertTrue("Incorrect credentials accepted",
-                remoteProvidersIndexPage.getErrorMessage().contains("Failure. Message was : undefined"));
+                remoteProvidersIndexPage.getErrorMessage().contains("Failure. undefined"));
 	}
 
 	@Test
@@ -139,11 +147,15 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         assertTrue("Veracode was not configured properly",
                 remoteProvidersIndexPage.successAlert().contains("Successfully edited remote provider Veracode"));
+        assertTrue("Veracode configured message is not correct.",
+                remoteProvidersIndexPage.checkConfigurationMessage(2, "Yes"));
 
         remoteProvidersIndexPage = remoteProvidersIndexPage.clearVeraCode();
 
         assertTrue("Veracode configuration was not cleared properly",
                 remoteProvidersIndexPage.successAlert().contains("Veracode configuration was cleared successfully."));
+        assertTrue("Veracode configured message is not correct.",
+                remoteProvidersIndexPage.checkConfigurationMessage(2, "No"));
 	}
 	
 	@Test
@@ -514,7 +526,7 @@ public class RemoteProvidersIT extends BaseDataTest {
                 .clickRemoteProvidersLink()
                 .clickScheduleTab();
 
-        assertTrue("New Schedule wasn't Created", remoteProvidersSchedulePage.isNewSchedulePresent("_9_30_AM"));
+        assertTrue("New Schedule wasn't created", remoteProvidersSchedulePage.isNewSchedulePresent("_9_30_AM"));
 
         remoteProvidersSchedulePage.clickScheduleNewImportButton()
                 .setFrequency(frequency)
@@ -523,7 +535,7 @@ public class RemoteProvidersIT extends BaseDataTest {
                 .setPeriodOfDay(periodOfDay)
                 .clickAddScheduledUpdated();
 
-        assertTrue("Same Schedule was Created",
+        assertTrue("Same Schedule was created",
                 remoteProvidersSchedulePage.isErrorPresent("Another remote provider import is scheduled at that time/frequency"));
     }
 
@@ -623,5 +635,63 @@ public class RemoteProvidersIT extends BaseDataTest {
         assertFalse("success message is present",
                 remoteProvidersIndexPage.isSuccessMessagePresent("Weekly Scheduled Remote Provider Import successfully deleted."));
 
+    }
+
+    @Test
+    public void checkQualysEditNameModalHeader() {
+        remoteProvidersIndexPage.clickConfigureQualys()
+                .setQualysUsername(QUALYS_USER)
+                .setQualysPassword(QUALYS_PASS)
+                .setQualysPlatform(QUALYS_PLATFORM)
+                .clickModalSubmitInvalid();
+
+        assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(),
+                remoteProvidersIndexPage.successAlert().contains("QualysGuard WAS"));
+
+        remoteProvidersIndexPage.clickEditName("3","0");
+
+        assertTrue("Modal does not contain app name",
+                driver.findElement(By.id("myModalLabel")).getText().contains("PHP Demo site"));
+
+        remoteProvidersIndexPage = remoteProvidersIndexPage.closeModal().clearQualys();
+
+        assertTrue("Qualys configuration was not cleared properly",
+                remoteProvidersIndexPage.successAlert().contains("QualysGuard WAS configuration was cleared successfully."));
+    }
+
+    @Test
+    public void checkVeracodeEditNameModalHeader() {
+        remoteProvidersIndexPage.clickConfigureVeracode()
+                .setVeraUsername(VERACODE_USER)
+                .setVeraPassword(VERACODE_PASSWORD)
+                .saveVera()
+                .mapVeracodeToTeamAndApp(0, teamName, appName);
+
+        remoteProvidersIndexPage.clickEditName("2","0");
+
+        assertTrue("Modal does not contain app name",
+                driver.findElement(By.id("myModalLabel")).getText().contains("Apache"));
+
+        remoteProvidersIndexPage = remoteProvidersIndexPage.closeModal().clearVeraCode();
+
+        assertTrue("Veracode configuration was not cleared properly",
+                remoteProvidersIndexPage.successAlert().contains("Veracode configuration was cleared successfully."));
+    }
+
+    @Test
+    public void checkWhiteHatEditNameModalHeader() {
+        remoteProvidersIndexPage.clickConfigureWhiteHat()
+                .setWhiteHatAPI(SENTINEL_API_KEY)
+                .saveWhiteHat();
+
+        remoteProvidersIndexPage.clickEditName("1","0");
+
+        assertTrue("Modal does not contain app name",
+                driver.findElement(By.id("myModalLabel")).getText().contains("Demo Site BE"));
+
+        remoteProvidersIndexPage = remoteProvidersIndexPage.closeModal().clearWhiteHat();
+
+        assertTrue("WhiteHat Sentinel configuration was not cleared properly",
+                remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
     }
 }

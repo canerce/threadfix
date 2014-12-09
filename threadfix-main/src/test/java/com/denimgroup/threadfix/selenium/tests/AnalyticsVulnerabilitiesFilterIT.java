@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.selenium.tests;
 import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -46,12 +47,12 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
                 .clickVulnerabilitySearchTab();
 
         int filtersCollapsedSize = analyticsPage.getFilterDivHeight("vulnSearchFilterDiv");
-        analyticsPage.toggleAllFilter("vulnSearchFilterDiv");
+        analyticsPage.toggleAllFilter("vulnSearchFilterDiv", true);
 
         int filtersExpandedSize = analyticsPage.getFilterDivHeight("vulnSearchFilterDiv");
         assertFalse("Filters were not expanded.", filtersCollapsedSize == filtersExpandedSize);
 
-        analyticsPage = analyticsPage.toggleAllFilter("vulnSearchFilterDiv");
+        analyticsPage = analyticsPage.toggleAllFilter("vulnSearchFilterDiv", false);
         assertFalse("Filters were not collapsed.",
                 filtersExpandedSize == analyticsPage.getFilterDivHeight("vulnSearchFilterDiv"));
     }
@@ -136,7 +137,8 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
 
         analyticsPage.expandTeamApplicationFilter("vulnSearchFilterDiv")
                 .addApplicationFilter(appName, "vulnSearchFilterDiv");
-        assertTrue("Only 10 critical vulnerabilities should be shown.",
+
+        assertTrue("Only 9 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "9"));
     }
 

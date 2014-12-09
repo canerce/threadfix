@@ -49,6 +49,12 @@ public class DatabaseUtils {
         assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
     }
 
+    public static void addUserWithTeamAppPermission(String userName, String roleName, String teamName, String appName) {
+        RestResponse<User> response = CLIENT.addUserTeamAppPermission(userName, roleName, teamName, appName);
+
+        assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
+    }
+
     public static void createRole(String roleName, boolean allPermissions) {
         RestResponse<Role> response = CLIENT.createRole(roleName, allPermissions);
 
@@ -63,6 +69,18 @@ public class DatabaseUtils {
 
     public static void removePermission(String roleName, String permission) {
         RestResponse<Role> response = CLIENT.removePermission(roleName, permission);
+
+        assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
+    }
+
+    public static void createTag(String tagName) {
+        RestResponse<Tag> response = CLIENT.createTag(tagName);
+
+        assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
+    }
+
+    public static void attachAppToTag(String tagName, String appName, String teamName) {
+        RestResponse<Tag> response = CLIENT.attachAppToTag(tagName, appName, teamName);
 
         assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
     }

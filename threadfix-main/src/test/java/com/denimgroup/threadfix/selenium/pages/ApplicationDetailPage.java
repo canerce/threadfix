@@ -774,6 +774,7 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage uploadScan(String file) {
         driver.findElementById("scanFileInput").sendKeys(file);
         waitForElement(driver.findElementById("toggleVulnTree"));
+        sleep(1000);
         return new ApplicationDetailPage(driver);
     }
 
@@ -1017,6 +1018,10 @@ public class ApplicationDetailPage extends BasePage {
             }
         }
         return false;
+    }
+
+    public boolean isTeamDisplayedinEditDeleteDropdown(String teamName) {
+        return driver.findElementById("organizationId").getText().contains(teamName);
     }
 
     public boolean isUserPresentPerm(String user) {
