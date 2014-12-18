@@ -24,7 +24,6 @@
 package com.denimgroup.threadfix.data.dao.hibernate;
 
 import com.denimgroup.threadfix.data.dao.RealtimeMetaDataScanDao;
-import com.denimgroup.threadfix.data.entities.RealtimeMetaDataScan;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.Scan;
@@ -81,7 +80,7 @@ public class HibernateRealtimeMetaDataScanDao implements RealtimeMetaDataScanDao
 
     @Override
     public Scan reteriveByApplicationChannelID(final ApplicationChannel channel) {
-        return (RealtimeMetaDataScan) sessionFactory
+        return (Scan) sessionFactory
                 .getCurrentSession()
                 .createQuery("from Scan as realtime " +
                         "where realtime.applicationChannel = :applicationChannel  ")
@@ -95,7 +94,7 @@ public class HibernateRealtimeMetaDataScanDao implements RealtimeMetaDataScanDao
     }
 
     @Override
-    public RealtimeMetaDataScan retrieveById(final int id) {
+    public Scan retrieveById(final int id) {
         return null;
     }
 

@@ -24,7 +24,6 @@
 package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.dao.RealtimeMetaDataScanDao;
-import com.denimgroup.threadfix.data.entities.RealtimeMetaDataScan;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.Scan;
