@@ -43,13 +43,13 @@ public interface RemoteProviderTypeService {
 	
 	/**
 	 * 
-	 * @param appId
+	 * @param remoteProviderTypeId
 	 */
 	ResponseCode importScansForApplications(Integer remoteProviderTypeId);
 	
 	/**
 	 * 
-	 * @param appId
+	 * @param remoteProviderApplication
 	 */
 	ResponseCode importScansForApplication(RemoteProviderApplication remoteProviderApplication);
 
@@ -88,11 +88,10 @@ public interface RemoteProviderTypeService {
 	/**
 	 * Checks over the remote configuration and puts any errors into the result.
 	 * This is to tidy up the controller layer.
-	 * @param remoteProviderType
 	 */
 	ResponseCode checkConfiguration(String username, String password, String apiKey, String matchSourceNumber,
-                                    String platform, int typeId);
-	
+                                    String platform, int typeId, String url);
+
 	/**
 	 * Deletes all apps and username / password / API key
 	 * @param id
