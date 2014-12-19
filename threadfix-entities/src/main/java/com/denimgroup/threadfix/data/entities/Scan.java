@@ -298,9 +298,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 
 	public void setNumberTotalVulnerabilities(Integer numberTotalVulnerabilities) {
-		if (!lockedMetadata) {
-			this.numberTotalVulnerabilities = numberTotalVulnerabilities;
-		}
+		this.numberTotalVulnerabilities = numberTotalVulnerabilities;
 	}
 
     @JsonView(AllViews.RestView2_1.class)
@@ -357,9 +355,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	
 	public void setTotalNumberFindingsMergedInScan(
 			Integer totalNumberFindingsMergedInScan) {
-		if (!lockedMetadata) {
-			this.totalNumberFindingsMergedInScan = totalNumberFindingsMergedInScan;
-		}
+		this.totalNumberFindingsMergedInScan = totalNumberFindingsMergedInScan;
 	}
 
 	// These two functions establish the order the integers come in and this
@@ -409,9 +405,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 
 	public void setNumberInfoVulnerabilities(Long numberInfoVulnerabilities) {
-		if (!lockedMetadata) {
-			this.numberInfoVulnerabilities = numberInfoVulnerabilities;
-		}
+		this.numberInfoVulnerabilities = numberInfoVulnerabilities;
 	}
 	
 	@Column
@@ -421,9 +415,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 
 	public void setNumberLowVulnerabilities(Long numberLowVulnerabilities) {
-		if (!lockedMetadata) {
-			this.numberLowVulnerabilities = numberLowVulnerabilities;
-		}
+		this.numberLowVulnerabilities = numberLowVulnerabilities;
 	}
 	
 	@Column
@@ -433,9 +425,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 
 	public void setNumberMediumVulnerabilities(Long numberMediumVulnerabilities) {
-		if (!lockedMetadata) {
-			this.numberMediumVulnerabilities = numberMediumVulnerabilities;
-		}
+		this.numberMediumVulnerabilities = numberMediumVulnerabilities;
 	}
 	
 	@Column
@@ -445,9 +435,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 
 	public void setNumberHighVulnerabilities(Long numberHighVulnerabilities) {
-		if (!lockedMetadata) {
-			this.numberHighVulnerabilities = numberHighVulnerabilities;
-		}
+		this.numberHighVulnerabilities = numberHighVulnerabilities;
 	}
 	
 	@Column
@@ -458,9 +446,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 
 	public void setNumberCriticalVulnerabilities(
 			Long numberCriticalVulnerabilities) {
-		if (!lockedMetadata) {
-			this.numberCriticalVulnerabilities = numberCriticalVulnerabilities;
-		}
+		this.numberCriticalVulnerabilities = numberCriticalVulnerabilities;
 	}
 	
 	@Column
@@ -475,9 +461,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 
 	public void setNumberHiddenVulnerabilities(
 			Integer numberHiddenVulnerabilities) {
-		if (!lockedMetadata) {
-			this.numberHiddenVulnerabilities = numberHiddenVulnerabilities;
-		}
+		this.numberHiddenVulnerabilities = numberHiddenVulnerabilities;
 	}
 
 	@Transient
@@ -554,9 +538,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 
 	public void setNumberAuditedInfoVulnerabilities(Long numberAuditedInfoVulnerabilities) {
-		if (!lockedMetadata) {
-			this.numberAuditedInfoVulnerabilities = numberAuditedInfoVulnerabilities;
-		}
+		this.numberAuditedInfoVulnerabilities = numberAuditedInfoVulnerabilities;
 	}
 
 	@Column
@@ -565,9 +547,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 
 	public void setNumberAuditedLowVulnerabilities(Long numberAuditedLowVulnerabilities) {
-		if (!lockedMetadata) {
-			this.numberAuditedLowVulnerabilities = numberAuditedLowVulnerabilities;
-		}
+		this.numberAuditedLowVulnerabilities = numberAuditedLowVulnerabilities;
 	}
 
 	@Column
@@ -576,9 +556,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 
 	public void setNumberAuditedMediumVulnerabilities(Long numberAuditedMediumVulnerabilities) {
-		if (!lockedMetadata) {
-			this.numberAuditedMediumVulnerabilities = numberAuditedMediumVulnerabilities;
-		}
+		this.numberAuditedMediumVulnerabilities = numberAuditedMediumVulnerabilities;
 	}
 
 	@Column
@@ -587,9 +565,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 
 	public void setNumberAuditedHighVulnerabilities(Long numberAuditedHighVulnerabilities) {
-		if (!lockedMetadata) {
-			this.numberAuditedHighVulnerabilities = numberAuditedHighVulnerabilities;
-		}
+		this.numberAuditedHighVulnerabilities = numberAuditedHighVulnerabilities;
 	}
 
 	@Column
@@ -598,9 +574,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 
 	public void setNumberAuditedCriticalVulnerabilities(Long numberAuditedCriticalVulnerabilities) {
-		if (!lockedMetadata) {
-			this.numberAuditedCriticalVulnerabilities = numberAuditedCriticalVulnerabilities;
-		}
+		this.numberAuditedCriticalVulnerabilities = numberAuditedCriticalVulnerabilities;
 	}
 
 	@Column
@@ -609,9 +583,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 
 	public void setNumberTotalAuditedVulnerabilities(Long numberTotalAuditedVulnerabilities) {
-		if (!lockedMetadata) {
-			this.numberTotalAuditedVulnerabilities = numberTotalAuditedVulnerabilities;
-		}
+		this.numberTotalAuditedVulnerabilities = numberTotalAuditedVulnerabilities;
 	}
 
 	@Column
