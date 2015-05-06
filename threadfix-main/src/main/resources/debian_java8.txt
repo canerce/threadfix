@@ -1,0 +1,60 @@
+/**********************/
+/**DEBIAN INSTRUCTIONS*/
+/**********************/
+
+Step 1:
+Make appropriate changes to /etc/apt/sources.list :
+
+#sid
+deb http://ftp.us.debian.org/debian sid main contrib non-free
+deb-src http://ftp.us.debian.org/debian sid main contrib non-free
+
+Step 2:
+Make appropriate additions to etc/apt/preferences(touch preferences). Add the following lines to the prefrences file.
+
+Package: *
+Pin: release a=stable
+Pin-Priority: 800
+
+Package: *
+Pin: release a=testing
+Pin-Priority: 650
+
+Package: *
+Pin: release a=unstable
+Pin-Priority: 600
+
+Step 3:
+Update aptitude and search the available packages.
+
+  aptitude update
+  aptitude search '?provides(java-runtime)'
+
+Step 4: Follow instructions online.
+
+/*********************/
+/*UBUNTU INSTRUCTIONS*/
+/*********************/
+
+Step 1:
+Add repository for openjdk8. Run the following commands:
+
+sudo add-apt-repository ppa:openjdk-r/ppa
+sudo apt-get update
+
+Step 2:
+Ensure that openjdk8 is in the available repositories. Run the following command:
+
+sudo apt-cache search "java-runtime"
+
+Step 3: Follow instructions online. An error will appear complaining about JAVA_HOME not being set.
+
+Step 4: Do not attempt to reinstall in the Software Update Center, instead run the following command:
+
+sudo apt-get install debconf --reinstall
+
+Step 5: A pop-up will appear informing you of all the configurations that can/must be made.
+Setting the memory and JAVA_HOME option in the Tomcat7 configuration must be done before clicking "Ok"
+
+
+
