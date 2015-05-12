@@ -250,7 +250,7 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
         $scope.endDateOpened = false;
     };
 
-    $scope.exportCSV = function(reportId) {
+    $scope.exportCSV = function(reportId, DISA_STIG) {
 
         if (reportId === 3) {
             // Progress By Vulnerability report
@@ -273,16 +273,32 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
                 });
             }
 
-            $http.post(tfEncoder.encode("/reports/search/export/csv"), parameters).
-                success(function(data, status, headers, config, response)
-                {
-                    reportExporter.exportCSV(data, "application/octet-stream", "search_export.csv");
-                }).
-                error(function(data, status, headers, config) {
-                    $scope.errorMessage = "Failed to retrieve vulnerability report. HTTP status was " + status;
-                    $scope.loadingTree = false;
+            // DISA STIG report
+            if (reportId === 13) {
+                parameters.genericVulnerabilities = [];
+                DISA_STIG.forEach(function(cat){
+                    cat.members.forEach(function(stig){
+                        stig.cweIds.forEach(function(cweId){
+                            parameters.genericVulnerabilities.push({id: cweId});
+                        });
+                    });
                 });
-        };
+            }
+
+            if (reportExporter.checkOldIE()) {
+                window.location.href = tfEncoder.encode("/reports/search/export/csv");
+            } else {
+                $http.post(tfEncoder.encode("/reports/search/export/csv"), parameters).
+                    success(function(data, status, headers, config, response)
+                    {
+                        reportExporter.exportCSV(data, "application/octet-stream", "search_export.csv");
+                    }).
+                    error(function(data, status, headers, config) {
+                        $scope.errorMessage = "Failed to retrieve vulnerability report. HTTP status was " + status;
+                        $scope.loadingTree = false;
+                    });
+            }
+        }
     };
 
 });

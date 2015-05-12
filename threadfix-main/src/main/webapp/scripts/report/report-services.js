@@ -41,7 +41,9 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
         // IE <10, unsupported
          return (typeof navigator !== "undefined" &&
             /MSIE [1-9]\./.test(navigator.userAgent));
-    }
+    };
+
+    reportExporter.checkOldIE = checkOldIE;
 
     var selectSvg = function(svgId) {
         var svg = d3.select("svg");
@@ -123,6 +125,7 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
 
         //Retrieving table data
         vulnSearchParameterService.updateParameters($scope, parameters);
+        var isDISASTIG = parameters.isDISASTIG;
 
         $http.post(tfEncoder.encode("/reports/search/export/pdf"), parameters).
             success(function(data, status, headers, config) {
@@ -135,7 +138,7 @@ threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, v
                         element.vulnCount = info.vulnCount;
                         exportList.push(element);
                     });
-                    $scope.exportVulnTree = vulnTreeTransformer.transform(exportList, parameters.owasp);
+                    $scope.exportVulnTree = vulnTreeTransformer.transform(exportList, parameters.owasp, isDISASTIG ? $scope.DISA_STIG : undefined);
                     //$scope.$apply();
 
                     reportExporter.exportPDFTableFromId($scope, exportInfo, null, function() {
