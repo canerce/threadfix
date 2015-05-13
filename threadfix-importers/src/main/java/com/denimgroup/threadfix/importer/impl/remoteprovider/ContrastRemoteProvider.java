@@ -39,7 +39,10 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
             EVENTS_SUMMARY_URL = "https://app.contrastsecurity.com/Contrast/api/ng/traces/",
             TRACE_WEB_URL = "https://app.contrastsecurity.com/Contrast/static/ng/index.html#/applications/",
             FILE_PATTERN = "@(.+?):",
-            LINE_PATTERN = ":([0-9]*)";
+            LINE_PATTERN = ":([0-9]*)",
+            APP_ID_DIVISOR = ",";
+
+    private Map<String, String> groupMap = map();
 
     public ContrastRemoteProvider() {
         super(ScannerType.CONTRAST);
@@ -66,6 +69,14 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
                     applicationList.add(getApplicationFromJson(object));
                 }
 
+                // Add Contrast Groups as Remote Applications
+                for (Object groupName: groupMap.keySet()){
+                    RemoteProviderApplication groupApp = new RemoteProviderApplication();
+                    groupApp.setNativeName(groupName + "(Group)");
+                    groupApp.setNativeId(groupMap.get(groupName));
+                    applicationList.add(groupApp);
+                }
+
                 return applicationList;
 
             } else {
@@ -88,9 +99,18 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
 
     private RemoteProviderApplication getApplicationFromJson(JSONObject object) throws JSONException {
         RemoteProviderApplication application = new RemoteProviderApplication();
+        String appId = object.getString("app-id");
+        String groupName = object.getString("group-name");
 
         application.setNativeName(object.getString("name"));
-        application.setNativeId(object.getString("app-id"));
+        application.setNativeId(appId);
+
+        if (groupName != null) {
+            if (groupMap.containsKey(groupName))
+                groupMap.put(groupName, groupMap.get(groupName) + APP_ID_DIVISOR + appId);
+            else
+                groupMap.put(groupName, appId);
+        }
 
         return application;
     }
@@ -104,41 +124,38 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
     public List<Scan> getScans(RemoteProviderApplication remoteProviderApplication) {
         assert remoteProviderType != null : "Remote Provider Type was null.";
 
-        HttpResponse response = makeRequest(TRACES_URL + remoteProviderApplication.getNativeId());
+        List<Finding> findingList = list();
+        Scan scan = new Scan();
+        String[] remoteAppIds = remoteProviderApplication.getNativeId().split(APP_ID_DIVISOR);
 
-        try {
-            if (response.isValid()) {
+        for (String remoteAppId: remoteAppIds) {
+            HttpResponse response = makeRequest(TRACES_URL + remoteAppId);
 
-                List<Finding> findingList = list();
+            try {
+                if (response.isValid()) {
+                    for (JSONObject object : toJSONObjectIterable(response.getBodyAsString())) {
+                        findingList.add(getFindingFromObject(object, remoteAppId));
+                    }
+                } else {
+                    String body = response.getBodyAsString();
+                    log.info("Contents:\n" + body);
+                    String errorMessageOrNull = getErrorOrNull(body);
 
-                Scan scan = new Scan();
+                    if (errorMessageOrNull == null) {
+                        errorMessageOrNull =
+                                "Invalid response received from Contrast servers, check the logs for more details.";
+                    }
 
-                for (JSONObject object : toJSONObjectIterable(response.getBodyAsString())) {
-                    findingList.add(getFindingFromObject(object, remoteProviderApplication.getNativeId()));
+                    throw new RestIOException(errorMessageOrNull, response.getStatus());
                 }
 
-                scan.setFindings(findingList);
-
-                return list(scan);
-
-            } else {
-                String body = response.getBodyAsString();
-                log.info("Contents:\n" + body);
-                String errorMessageOrNull = getErrorOrNull(body);
-
-                if (errorMessageOrNull == null) {
-                    errorMessageOrNull =
-                            "Invalid response received from Contrast servers, check the logs for more details.";
-                }
-
-                throw new RestIOException(errorMessageOrNull, response.getStatus());
+            } catch (JSONException e) {
+                throw new RestIOException(e, "Invalid response received: not JSON.");
             }
-
-        } catch (JSONException e) {
-            throw new RestIOException(e, "Invalid response received: not JSON.");
         }
 
-
+        scan.setFindings(findingList);
+        return list(scan);
     }
 
     private Finding getFindingFromObject(JSONObject object, String remoteAppId) throws JSONException {
@@ -186,7 +203,7 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
 
     private List<DataFlowElement> getEventsSummary(String traceId) {
 
-        LOG.warn("About to get trace story/static information for trace Id " + traceId);
+        LOG.warn("About to get trace events/static information for trace Id " + traceId);
         List<DataFlowElement> dataFlowElementList = list();
 
         HttpResponse response = makeRequest(EVENTS_SUMMARY_URL + traceId + "/events/summary");
@@ -208,12 +225,12 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
                     dataFlowElementList.add(element);
                 }
             } catch (JSONException e) {
-                LOG.warn("Can't parse trace " + traceId + ". Trace story response isn't valid.");
+                LOG.warn("Can't parse trace " + traceId + "events.");
                 return dataFlowElementList;
             }
 
         } else {
-            LOG.warn("Trace story response isn't valid.");
+            LOG.warn("Trace events response isn't valid.");
         }
 
         return dataFlowElementList;
