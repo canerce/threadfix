@@ -58,7 +58,7 @@ public class RemoteProvidersIndexPage extends BasePage {
 	}
 	
 	public RemoteProvidersIndexPage clickConfigureWhiteHat(){
-		driver.findElementById("configure5").click();
+		driver.findElementById("configure6").click();
 		waitForElement(driver.findElementById("myModalLabel"));
 		return new RemoteProvidersIndexPage(driver);
 	}
