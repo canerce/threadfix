@@ -21,13 +21,14 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service;
+package com.denimgroup.threadfix.service.impl;
 
 import com.denimgroup.threadfix.data.dao.*;
 import com.denimgroup.threadfix.data.entities.*;
-import com.denimgroup.threadfix.importer.util.IntegerUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.FindingService;
 import com.denimgroup.threadfix.service.beans.TableSortBean;
+import com.denimgroup.threadfix.util.IntegerUtils;
 import com.denimgroup.threadfix.webapp.utils.MessageConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -42,11 +43,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.data.entities.GenericSeverity.REVERSE_MAP;
-import static com.denimgroup.threadfix.webapp.controller.rest.AddFindingRestController.*;
 
 @Service
 @Transactional(readOnly = false) // used to be true
@@ -253,7 +254,18 @@ public class FindingServiceImpl implements FindingService {
 		
 		return finding;
 	}
-	
+
+	public static final String CREATION_FAILED = "New Finding creation failed.";
+	public static final String INVALID_DESCRIPTION = "The longDescription parameter " +
+			"needs to be set to a String between 1 and " +
+			Finding.LONG_DESCRIPTION_LENGTH + " characters long.";
+
+	public static final String INVALID_VULN_NAME = "The vulnType parameter needs to be " +
+			"set to a valid CWE vulnerability name.";
+
+	public static final String INVALID_SEVERITY = "The severity parameter needs to be one of [1,2,3,4,5].";
+	public static final String PASSED_CHECK = "The request passed the check for Finding parameters.";
+
 	/**
 	 * 
 	 */
@@ -417,6 +429,7 @@ public class FindingServiceImpl implements FindingService {
 	private List<String> removeDuplicates(List<String> stringList) {
 		if (stringList == null)
 			return list();
+
 		List<String> distinctStringList = list();
 		for (int i = 0; i < stringList.size(); i++) {
 			int j = 0;
@@ -445,5 +458,10 @@ public class FindingServiceImpl implements FindingService {
 	@Override
 	public long getTotalUnmappedFindings() {
 		return findingDao.getTotalUnmappedFindings();
+	}
+
+	@Override
+	public void deleteFindingAndRelations(Finding finding) {
+		findingDao.deleteFindingAndRelations(finding);
 	}
 }

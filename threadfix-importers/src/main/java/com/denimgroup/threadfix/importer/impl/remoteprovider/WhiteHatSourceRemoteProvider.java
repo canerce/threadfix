@@ -29,7 +29,7 @@ import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.HttpResponse;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtils;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
-import com.denimgroup.threadfix.importer.util.IntegerUtils;
+import com.denimgroup.threadfix.util.IntegerUtils;
 import com.denimgroup.threadfix.importer.util.ScanUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringEscapeUtils;

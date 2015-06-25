@@ -69,6 +69,7 @@ public class HttpRestUtils {
 		PostMethod filePost = new PostMethod(completeUrl);
 
 		filePost.setRequestHeader("Accept", "application/json");
+//		filePost.setRequestHeader("Content-Length", "" + file.length());
 
         RestResponse<T> response;
         int status = -1;

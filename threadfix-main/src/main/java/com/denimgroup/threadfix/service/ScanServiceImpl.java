@@ -66,7 +66,7 @@ public class ScanServiceImpl implements ScanService {
     private QueueSender            queueSender            = null;
     @Autowired(required = false)
     @Nullable
-    private PermissionService      permissionService      = null;
+    private PermissionService permissionService      = null;
     @Autowired
     private ChannelImporterFactory channelImporterFactory = null;
 

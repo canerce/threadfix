@@ -88,4 +88,6 @@ public interface FindingDao extends GenericObjectDao<Finding> {
 	List<Finding> retrieveByChannelVulnerabilityAndApplication(Integer channelVulnerabilityId, Integer applicationId);
 
 	long getTotalUnmappedFindings();
+
+	void deleteFindingAndRelations(Finding finding);
 }

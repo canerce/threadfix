@@ -22,7 +22,7 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-package com.denimgroup.threadfix.importer.util;
+package com.denimgroup.threadfix.util;
 
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 

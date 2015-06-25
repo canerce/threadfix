@@ -25,8 +25,7 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 
 import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
 import com.denimgroup.threadfix.data.dao.FindingDao;
-import com.denimgroup.threadfix.data.entities.DeletedFinding;
-import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.data.entities.*;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -282,5 +281,17 @@ public class HibernateFindingDao
 				.setProjection(Projections.rowCount())
 				.uniqueResult();
 		return maybeLong == null ? 0 : maybeLong;
+	}
+
+	@Override
+	public void deleteFindingAndRelations(Finding finding) {
+		for (DataFlowElement dataFlowElement : finding.getDataFlowElements()) {
+			sessionFactory.getCurrentSession().delete(dataFlowElement);
+		}
+
+		sessionFactory.getCurrentSession().delete(finding);
+		finding.getScan().getFindings().remove(finding);
+
+		sessionFactory.getCurrentSession().delete(finding.getVulnerability());
 	}
 }

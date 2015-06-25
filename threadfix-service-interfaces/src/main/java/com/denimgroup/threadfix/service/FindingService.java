@@ -164,4 +164,6 @@ public interface FindingService {
 	List<String> getAllManualUrls(Integer appId);
 
 	long getTotalUnmappedFindings();
+
+	void deleteFindingAndRelations(Finding finding);
 }

@@ -36,6 +36,22 @@ import java.util.List;
 
 public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 
+    public static void main(String... args) {
+        ThreadFixRestClientImpl threadFixRestClient = new ThreadFixRestClientImpl();
+        threadFixRestClient.setUrl("http://localhost:8080/threadfix/rest");
+        threadFixRestClient.setKey("EoDfraFriu0UKirnInCewAIl57KjTztecNjcDrTMWOU");
+        try
+        {
+            //RestResponse<Organization[]> allTeams = threadFixRestClient.getAllTeams();
+            // System.out.println(allTeams); => ok
+            threadFixRestClient.uploadScan("1", "/Users/mcollins/git/scanfiles/Dynamic/Nessus/Lair_Scan_Test_v6.2.1.nessus");
+        }
+        finally {
+            System.out.println("done");
+        }
+    }
+
+
     private static final SanitizedLogger LOGGER = new SanitizedLogger(ThreadFixRestClientImpl.class);
 
     final HttpRestUtils httpRestUtils;

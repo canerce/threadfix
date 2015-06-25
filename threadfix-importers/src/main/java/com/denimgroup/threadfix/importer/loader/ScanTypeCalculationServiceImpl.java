@@ -33,7 +33,7 @@ import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.importer.interop.ScanTypeCalculationService;
-import com.denimgroup.threadfix.importer.util.IntegerUtils;
+import com.denimgroup.threadfix.util.IntegerUtils;
 import com.denimgroup.threadfix.importer.util.ScanUtils;
 import com.denimgroup.threadfix.importer.util.ZipFileUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;

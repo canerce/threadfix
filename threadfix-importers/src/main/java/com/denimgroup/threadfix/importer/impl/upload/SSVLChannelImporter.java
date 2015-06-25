@@ -52,7 +52,7 @@ import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.map;
-import static com.denimgroup.threadfix.importer.util.IntegerUtils.getPrimitive;
+import static com.denimgroup.threadfix.util.IntegerUtils.getPrimitive;
 
 @ScanImporter(
         scannerName = ScannerDatabaseNames.SSVL_DB_NAME,

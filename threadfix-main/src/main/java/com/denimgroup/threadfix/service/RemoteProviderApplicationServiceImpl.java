@@ -299,6 +299,9 @@ public class RemoteProviderApplicationServiceImpl implements
 		remoteProviderApplication.setApplication(null);
 		remoteProviderApplication.setApplicationChannel(null);
 
+		remoteProviderApplication.setApplication(null);
+		remoteProviderApplication.setApplicationChannel(null);
+
 		store(remoteProviderApplication);
 		applicationDao.saveOrUpdate(application);
 

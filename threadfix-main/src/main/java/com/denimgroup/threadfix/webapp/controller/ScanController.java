@@ -111,7 +111,7 @@ public class ScanController {
 		if (!PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
 			return RestResponse.failure("You do not have permission to delete scans.");
 		}
-		
+
 		if (scanId != null) {
 			Scan scan = scanService.loadScan(scanId);
 			if (scan != null) {

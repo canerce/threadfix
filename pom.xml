@@ -31,6 +31,7 @@
         <module>threadfix-cli-importers</module>
         <module>threadfix-data-migration</module>
         <module>threadfix-main</module>
+        <module>threadfix-database-repair</module>
     </modules>
 
     <licenses>
