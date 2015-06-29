@@ -37,6 +37,8 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 @Entity
 @Table(name = "Application")
 public class Application extends AuditableEntity {
@@ -373,6 +375,8 @@ public class Application extends AuditableEntity {
 	@OrderBy("importTime DESC")
     @JsonView(AllViews.RestViewApplication2_1.class)
     public List<Scan> getScans() {
+		if (scans == null)
+			scans = list();
 		return scans;
 	}
 
@@ -842,7 +846,7 @@ public class Application extends AuditableEntity {
 
     @Column
     public Boolean isUseDefaultProject() {
-        return useDefaultProject;
+        return useDefaultProject != null && useDefaultProject;
     }
 
     public void setUseDefaultProject(Boolean useDefaultProject) {
@@ -851,7 +855,7 @@ public class Application extends AuditableEntity {
 
     @Column
     public Boolean isUseDefaultCredentials() {
-        return useDefaultCredentials;
+        return useDefaultCredentials != null && useDefaultCredentials;
     }
 
     public void setUseDefaultCredentials(Boolean useDefaultCredentials) {
