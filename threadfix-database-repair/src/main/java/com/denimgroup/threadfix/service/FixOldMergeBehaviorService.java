@@ -25,16 +25,14 @@ package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.dao.ScanDao;
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.ScanRepeatFindingMap;
+import com.denimgroup.threadfix.data.entities.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static com.denimgroup.threadfix.CollectionUtils.*;
 import static java.util.Collections.reverse;
@@ -67,24 +65,43 @@ public class FixOldMergeBehaviorService {
 
         Map<String, Finding> nativeIdMap = map();
         Map<String, List<Scan>> nativeIdToScansMap = map();
-        List<Finding> findingsToDelete = list();
-        List<String> falsePositiveList = list();
+        Map<String, Defect> defectMap = map();
+        Map<String, List<VulnerabilityComment>> commentMap = map();
+        Set<Finding> findingsToDelete = set();
+        Set<String> falsePositiveList = set();
 
         List<Scan> scans = listFrom(application.getScans());
         reverse(scans);
 
         for (Scan scan : scans) {
             for (Finding finding : scan) {
-                if (!nativeIdMap.containsKey(finding.getNativeId())) {
-                    nativeIdMap.put(finding.getNativeId(), finding);
+                String nativeId = finding.getNativeId();
+                if (!nativeIdMap.containsKey(nativeId)) {
+                    nativeIdMap.put(nativeId, finding);
                 } else {
-                    if (!nativeIdToScansMap.containsKey(finding.getNativeId())) {
-                        nativeIdToScansMap.put(finding.getNativeId(), listOf(Scan.class));
+                    if (!nativeIdToScansMap.containsKey(nativeId)) {
+                        nativeIdToScansMap.put(nativeId, listOf(Scan.class));
                     }
-                    nativeIdToScansMap.get(finding.getNativeId()).add(scan);
+                    nativeIdToScansMap.get(nativeId).add(scan);
                     findingsToDelete.add(finding);
-                    if (finding.getVulnerability().getIsFalsePositive()) {
-                        falsePositiveList.add(finding.getNativeId());
+
+                    Vulnerability vulnerability = finding.getVulnerability();
+                    if (vulnerability == null) {
+                        continue;
+                    }
+                    if (vulnerability.getIsFalsePositive()) {
+                        falsePositiveList.add(nativeId);
+                    }
+
+                    if (vulnerability.getDefect() != null) {
+                        defectMap.put(nativeId, vulnerability.getDefect());
+                    }
+
+                    if (vulnerability.getVulnerabilityComments() != null) {
+                        if (!commentMap.containsKey(nativeId)) {
+                            commentMap.put(nativeId, listOf(VulnerabilityComment.class));
+                        }
+                        commentMap.get(nativeId).addAll(vulnerability.getVulnerabilityComments());
                     }
                 }
             }
@@ -103,6 +120,32 @@ public class FixOldMergeBehaviorService {
 
         for (Finding finding : findingsToDelete) {
             findingService.deleteFindingAndRelations(finding);
+        }
+
+        for (Map.Entry<String, Finding> entry : nativeIdMap.entrySet()) {
+            String nativeId = entry.getKey();
+            Finding finding = entry.getValue();
+
+            if (finding == null ) {
+                System.out.println("Encountered error, id = " + nativeId);
+                continue;
+            }
+
+            if (falsePositiveList.contains(nativeId)) {
+                finding.getVulnerability().setIsFalsePositive(true);
+                findingService.storeFinding(finding);
+            }
+
+            if (defectMap.containsKey(nativeId)) {
+                finding.getVulnerability().setDefect(defectMap.get(nativeId));
+            }
+
+            if (commentMap.containsKey(nativeId)) {
+                if (finding.getVulnerability().getVulnerabilityComments() == null) {
+                    finding.getVulnerability().setVulnerabilityComments(listOf(VulnerabilityComment.class));
+                }
+                finding.getVulnerability().getVulnerabilityComments().addAll(commentMap.get(nativeId));
+            }
         }
 
         for (String nativeId : falsePositiveList) {

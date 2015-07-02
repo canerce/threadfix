@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.cli;
 
 import com.denimgroup.threadfix.service.FixOldMergeBehaviorService;
 
+import java.io.File;
 import java.util.List;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
@@ -36,13 +37,36 @@ import static com.denimgroup.threadfix.cli.SpringConfigurationJDBCProperties.get
 public class RepairToolMain {
 
     public static void main(String[] args) {
+        if (insanityCheck(args)) return;
+
+        System.out.println("Starting offline Hibernate...");
         FixOldMergeBehaviorService fixItService = getSpringBean(FixOldMergeBehaviorService.class);
+        System.out.println("Started");
 
         List<Integer> ints = getInts(args);
 
         for (Integer id : ints) {
             fixItService.fixOldBehavior(id);
         }
+    }
+
+    private static boolean insanityCheck(String[] args) {
+        if (args.length == 0) {
+            System.out.println("No arguments given, " +
+                    "please supply the numeric id of the applications you'd like to fix.");
+            return true;
+        }
+
+        System.out.println("Checking for jdbc.properties.");
+        if (new File("jdbc.properties").exists()) {
+            System.out.println("Found jdbc.properties.");
+        } else {
+            System.out.println("jdbc.properties not present.\n" +
+                    "Please put jdbc.properties from your ThreadFix installation in this directory and try again.\n" +
+                    "jdbc.properties is found in {tomcatBase}/webapps/threadfix/WEB-INF/classes/jdbc.properties.");
+            return true;
+        }
+        return false;
     }
 
     private static List<Integer> getInts(String[] args) {

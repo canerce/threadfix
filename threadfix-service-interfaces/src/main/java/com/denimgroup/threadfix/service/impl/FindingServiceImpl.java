@@ -43,7 +43,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
