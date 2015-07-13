@@ -294,6 +294,20 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
                 new String[] { username}, User.class);
     }
 
+    //QA only
+    public RestResponse<User> deleteUser(String userId) {
+        return httpRestUtils.httpPost("/user/delete/"+userId,
+                new String[] {},
+                new String[] {}, User.class);
+    }
+
+    //QA only
+    public RestResponse<User[]> listUsers() {
+        return httpRestUtils.httpPost("/user/list",
+                new String[] {},
+                new String[] {}, User[].class);
+    }
+
     // QA only
     @Override
     public RestResponse<User> addUserTeamAppPermission(String userName, String roleName, String teamName, String appName) {
@@ -324,6 +338,13 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
         return httpRestUtils.httpPost("/role/edit",
                 new String[] {"roleName", "permission"},
                 new String[] {roleName, permission}, Role.class);
+    }
+
+    //QA only
+    public RestResponse<Organization> deleteTeam(String teamId) {
+        return httpRestUtils.httpPost("/teams/delete/"+teamId,
+                new String[] {},
+                new String[] {}, Organization.class);
     }
 
     //QA only
