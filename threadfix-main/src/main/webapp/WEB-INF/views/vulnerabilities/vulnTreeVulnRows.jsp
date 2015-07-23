@@ -10,7 +10,7 @@
     </span>
 
     <!-- Path + Parameter -->
-    <div ng-if="!vulnerability.dependency">
+    <div ng-if="!vulnerability.dependency" style="word-wrap:break-word;">
         <div ng-if="vulnerability.path || vulnerability.parameter">
             <div class="vuln-tree-label">Path</div>
             <span id="path{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}">{{ vulnerability.path }}</span>
@@ -91,7 +91,10 @@
         {{ vulnerability.staticFindings.length || vulnerability.dynamicFindings.length ? vulnerability.staticFindings.length + vulnerability.dynamicFindings.length : 0 }} <span class="icon icon-list"></span>
     </span>
 
-    <span class="pointer"><a id="viewMoreLink{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}" ng-click="goTo(vulnerability)">View More</a></span>
+    <span class="pointer">
+        <a id="viewMoreLink{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}"
+           ng-href="{{ vulnerability.viewMoreLink }}">View More</a>
+    </span>
     <br>
 
     <!-- Comments body -->
