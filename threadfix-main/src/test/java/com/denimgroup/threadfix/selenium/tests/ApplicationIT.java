@@ -746,9 +746,8 @@ public class ApplicationIT extends BaseDataTest {
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
-        assertTrue("There should be twenty high vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("High", "20"));
-        assertTrue("There should be sixteen medium vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("Medium", "16"));
-        assertTrue("There should be two info vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("Info", "2"));
+        assertTrue("There should be 20 high vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("High", "20"));
+        assertTrue("There should be 6 medium vulnerabilities.", applicationDetailPage.isVulnerabilityCountCorrect("Medium", "6"));
     }
 
     //===========================================================================================================

@@ -399,11 +399,11 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         TeamDetailPage teamDetailPage = remoteProvidersIndexPage.clickTeamLink(teamName);
 
-        assertTrue("Number of Open Vulnerabilities is not correct", teamDetailPage.isNumberOfOpenVulnerabilityCorrect("14", 0));
-        assertTrue("Number of Critical Vulnerability is not correct", teamDetailPage.isNumberOfCriticalCorrect("2", 0));
-        assertTrue("Number of High Vulnerability is not correct", teamDetailPage.isNumberOfHighCorrect("8", 0));
-        assertTrue("Number of Medium Vulnerability is not correct", teamDetailPage.isNumberOfMediumCorrect("4", 0));
-        assertTrue("Number of Low Vulnerability is not correct", teamDetailPage.isNumberOfLowCorrect("0", 0));
+        assertTrue("Number of Open Vulnerabilities is not correct", teamDetailPage.isNumberOfOpenVulnerabilityCorrect("53", 0));
+        assertTrue("Number of Critical Vulnerability is not correct", teamDetailPage.isNumberOfCriticalCorrect("10", 0));
+        assertTrue("Number of High Vulnerability is not correct", teamDetailPage.isNumberOfHighCorrect("11", 0));
+        assertTrue("Number of Medium Vulnerability is not correct", teamDetailPage.isNumberOfMediumCorrect("31", 0));
+        assertTrue("Number of Low Vulnerability is not correct", teamDetailPage.isNumberOfLowCorrect("1", 0));
         assertTrue("Number of Info Vulnerability is not correct", teamDetailPage.isNumberOfInfoCorrect("0", 0));
 
         remoteProvidersIndexPage = teamDetailPage.clickRemoteProvidersLink()
@@ -685,7 +685,7 @@ public class RemoteProvidersIT extends BaseDataTest {
         remoteProvidersIndexPage.clickEditName("1","0");
 
         assertTrue("Modal does not contain app name",
-                driver.findElement(By.id("myModalLabel")).getText().contains("Demo Site BE"));
+                driver.findElement(By.id("myModalLabel")).getText().contains("DAST App"));
 
         remoteProvidersIndexPage = remoteProvidersIndexPage.closeModal().clearWhiteHat();
 
@@ -751,10 +751,10 @@ public class RemoteProvidersIT extends BaseDataTest {
                 .setContrastService(CONTRAST_SERVICE_KEY)
                 .saveContrast();
 
-        remoteProvidersIndexPage.clickEditName("6","0").setNewName(newName);
+        remoteProvidersIndexPage.clickEditName("4","0").setNewName(newName);
 
         assertTrue("Application name did not update properly",
-                driver.findElement(By.cssSelector("td[id^=provider6appid]")).getText().equals(newName));
+                driver.findElement(By.cssSelector("td[id^=provider4appid]")).getText().equals(newName));
 
         remoteProvidersIndexPage.clearContrast();
     }
