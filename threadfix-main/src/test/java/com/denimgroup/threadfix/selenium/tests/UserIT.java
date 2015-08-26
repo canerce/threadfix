@@ -337,7 +337,7 @@ public class UserIT extends BaseDataTest {
                 .createUser(userName2, "", password2);
 
         userIndexPage.editUser(userName1, userName1,changedName,password1)
-                .editUser(userName2, userName2,"",changedPassword);
+                .editUser(userName2, userName2, "", changedPassword);
 
         assertTrue("Second user's display name was changed to the first user's name when attempting to change only password.",
                 driver.findElements(By.id(displayCssId)).size() < 2);
@@ -378,10 +378,17 @@ public class UserIT extends BaseDataTest {
         String password = getName();
 
         userIndexPage.createUser(userName,displayName,password)
-                .clickEditLink(userName)
-                .toggleGlobalAccess()
-                .getGlobalAccessRole("Administrator")
-                .clickUpdateUserBtn();
+                .clickEditLink(userName);
+
+        if (userIndexPage.isGlobalRolePresent()) {
+            userIndexPage.toggleGlobalAccess()
+                    .getGlobalAccessRole("Administrator")
+                    .clickUpdateUserBtn();
+        } else {
+            userIndexPage.clickUpdateUserBtn();
+            System.out.println("Role select not found.  Assuming build is Community version.");
+        }
+
 
         ApplicationDetailPage applicationDetailPage = userIndexPage.logout()
                 .login(userName, password)
