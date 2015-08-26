@@ -158,7 +158,7 @@ public class AnalyticsRemediationIT extends BaseDataTest {
         initialize();
 
         assertTrue("There aren't enough vulnerabilities shown on the page.",
-                !driver.findElements(By.id("vulnName44")).isEmpty());
+                !driver.findElements(By.id("vulnName43")).isEmpty());
         assertTrue("There are too many vulnerabilities shown.", driver.findElements(By.id("vulnName50")).isEmpty());
     }
 }

@@ -40,6 +40,7 @@ public class TeamIT extends BaseDataTest {
 
     @Before
     public void initialNavigation() {
+        initializeTeamAndApp();
         teamIndexPage = loginPage.defaultLogin().clickOrganizationHeaderLink();
     }
 
@@ -92,11 +93,10 @@ public class TeamIT extends BaseDataTest {
 
     @Test
     public void testEditTeam(){
-        String newTeamName = createTeam();
         String editedTeamName = getName();
 
         TeamDetailPage teamDetailPage = teamIndexPage.clickOrganizationHeaderLink()
-                .clickViewTeamLink(newTeamName)
+                .clickViewTeamLink(teamName)
                 .clickEditOrganizationLink()
                 .setNameInput(editedTeamName)
                 .clickUpdateButtonValid();
@@ -109,7 +109,6 @@ public class TeamIT extends BaseDataTest {
 
     @Test
     public void testEditTeamWithApplication() {
-        String teamName = createTeam();
         String editedTeamName = getName();
 
         driver.navigate().refresh();
@@ -125,7 +124,6 @@ public class TeamIT extends BaseDataTest {
 
     @Test
     public void testEditTeamValidation(){
-        String orgName = createTeam();
         String orgNameDuplicateTest = createTeam();
 
         teamIndexPage.refreshPage();
@@ -135,12 +133,12 @@ public class TeamIT extends BaseDataTest {
         String longInput = getRandomString(119);
 
         TeamDetailPage teamDetailPage = teamIndexPage
-                .clickViewTeamLink(orgName);
+                .clickViewTeamLink(teamName);
 
         // Test edit with no changes
         teamDetailPage = teamDetailPage.clickEditOrganizationLink()
                 .clickUpdateButtonValid();
-        assertTrue("Organization Page did not save the name correctly.",teamDetailPage.getOrgName().contains(orgName));
+        assertTrue("Organization Page did not save the name correctly.",teamDetailPage.getOrgName().contains(teamName));
 
         // Test empty input
         teamDetailPage = teamDetailPage.clickEditOrganizationLink()
@@ -153,7 +151,7 @@ public class TeamIT extends BaseDataTest {
                 .clickUpdateButtonInvalid();
         assertTrue("The correct error text was not present", emptyInputError.equals(teamDetailPage.getErrorMessage("requiredError")));
 
-        orgName = longInput.substring(0, 60);
+         String orgName = longInput.substring(0, 60);
 
         teamDetailPage = teamDetailPage.setNameInput(orgName)
                 .clickUpdateButtonValid();
@@ -163,10 +161,6 @@ public class TeamIT extends BaseDataTest {
 
     @Test
     public void testViewMore() {
-        String teamName = createTeam();
-
-        teamIndexPage.refreshPage();
-
         TeamDetailPage teamDetailPage = teamIndexPage.clickViewTeamLink(teamName);
 
         assertTrue("View Team link did not work properly.", teamDetailPage.isTeamNameDisplayedCorrectly(teamName));
@@ -190,10 +184,6 @@ public class TeamIT extends BaseDataTest {
 
     @Test
     public void testExpandAndCollapseSingleTeam() {
-        initializeTeamAndApp();
-
-        teamIndexPage.refreshPage();
-
         teamIndexPage.expandTeamRowByName(teamName);
 
         assertTrue("Team was not expanded properly.", teamIndexPage.isAppDisplayed(teamName, appName));
@@ -224,10 +214,6 @@ public class TeamIT extends BaseDataTest {
 
     @Test
     public void testDeleteTeam() {
-        String teamName = createTeam();
-
-        teamIndexPage.refreshPage();
-
         TeamDetailPage teamDetailPage = teamIndexPage.clickViewTeamLink(teamName);
 
         TeamIndexPage teamIndexPage = teamDetailPage.clickDeleteButton();

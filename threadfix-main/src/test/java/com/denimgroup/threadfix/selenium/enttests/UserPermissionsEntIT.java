@@ -41,6 +41,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
 
     @Test
     public void testBasicNavigation() {
+        initializeTeamAndApp();
         String userName = createRegularUser();
 
         UserPermissionsPage userPermissionsPage = loginPage.defaultLogin()
