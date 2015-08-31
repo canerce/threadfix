@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.selenium.pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
@@ -105,7 +106,8 @@ public class UserIndexPage extends BasePage {
     }
 
     public UserIndexPage chooseRoleForGlobalAccess(String role) {
-        driver.findElementById("roleSelect").sendKeys(role);
+        waitForClickableElement(driver.findElementById("roleSelect"));
+        new Select(driver.findElementById("roleSelect")).selectByVisibleText(role);
         return this;
     }
 	
@@ -229,6 +231,15 @@ public class UserIndexPage extends BasePage {
 	public boolean isGlobalAccessErrorPresent(){
 		return driver.findElementById("hasGlobalGroupAccessErrors").getText().contains("This would leave users unable to access the user management portion of ThreadFix.");
 	}
+
+    public boolean isGlobalRolePresent(){
+        try {
+            driver.findElementById("roleSelect");
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+        return true;
+    }
 	
 	public boolean isRoleSelected(String oldName,String role){
 		waitForElement(driver.findElementById("roleSelect"));
