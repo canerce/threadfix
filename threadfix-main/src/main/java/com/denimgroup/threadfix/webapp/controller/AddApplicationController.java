@@ -74,7 +74,8 @@ public class AddApplicationController {
 		dataBinder.setAllowedFields("name", "url", "defectTracker.id", "uniqueId",
                 "userName", "password", "waf.id", "projectName", "applicationCriticality.id",
                 "frameworkType", "repositoryUrl", "repositoryBranch",
-                "repositoryUserName", "repositoryPassword", "repositoryFolder", "skipApplicationMerge", "tags[*].id", "tags[*].name");
+                "repositoryUserName", "repositoryPassword", "repositoryFolder", "skipApplicationMerge",
+                "tags[*].id", "tags[*].name", "tags[*].enterpriseTag", "tags[*].defaultJsonFilter");
 	}
 
 	public AddApplicationController(){}
@@ -133,7 +134,7 @@ public class AddApplicationController {
             map.put("uploadScan", PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId,
                     application.getId()));
 
-            if (PermissionUtils.isAuthorized(Permission.CAN_MANAGE_SYSTEM_SETTINGS)) {
+            if (licenseService != null && PermissionUtils.isAuthorized(Permission.CAN_MANAGE_SYSTEM_SETTINGS)) {
                 map.put("applicationsAllowed", licenseService.getAppLimit());
                 map.put("applicationCount", applicationService.getApplicationCount());
             }
