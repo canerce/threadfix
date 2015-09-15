@@ -1,4 +1,4 @@
-<div class="vuln-tree" ng-controller="VulnSearchTreeController">
+<%--<div class="vuln-tree" ng-controller="VulnSearchTreeController">--%>
     <h3 ng-hide="hideTitle">
         <span style="float:left">
             Results
@@ -99,4 +99,4 @@
     </table>
 
 
-</div>
+<%--</div>--%>

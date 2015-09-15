@@ -25,26 +25,36 @@
         </table>
     </div>
 
-    <div ng-controller="VulnerabilityCommentsTableController" ng-init="vulnType='openVulns'; init()">
+    <%--<div ng-controller="VulnerabilityCommentsTableController" ng-init="vulnType='openVulns'; init()">--%>
+        <%--<h4 style="padding-top:10px">Open Vulnerabilities</h4>--%>
+        <%--<%@ include file="/WEB-INF/views/tags/commentTable.jsp" %>--%>
+    <%--</div>--%>
+<%----%>
+    <%--<div ng-controller="VulnerabilityCommentsTableController" ng-init="vulnType='closedVulns'; init()">--%>
+        <%--<h4 style="padding-top:10px">Closed Vulnerabilities</h4>--%>
+        <%--<%@ include file="/WEB-INF/views/tags/commentTable.jsp" %>--%>
+    <%--</div>--%>
+
+    <%--<div id="{{sumTableDivId}}Cmt" ng-if="exportingPDF">--%>
+        <%--<div ng-controller="VulnerabilityCommentsTableController" ng-init="vulnType='openVulns';onPdfExport()">--%>
+            <%--<h4 style="padding-top:10px">Open Vulnerabilities</h4>--%>
+            <%--<%@ include file="/WEB-INF/views/tags/commentTablePdf.jsp" %>--%>
+        <%--</div>--%>
+
+        <%--<div ng-controller="VulnerabilityCommentsTableController" ng-init="vulnType='closedVulns';onPdfExport()">--%>
+            <%--<h4 style="padding-top:10px">Closed Vulnerabilities</h4>--%>
+            <%--<%@ include file="/WEB-INF/views/tags/commentTablePdf.jsp" %>--%>
+        <%--</div>--%>
+    <%--</div>--%>
+
+    <div class="vuln-tree" ng-controller="VulnSearchTreeController" ng-init="vulnType='openVulns';init()">
         <h4 style="padding-top:10px">Open Vulnerabilities</h4>
-        <%@ include file="/WEB-INF/views/tags/commentTable.jsp" %>
+        <%@ include file="/WEB-INF/views/vulnerabilities/vulnSearchTree.jsp"%>
     </div>
 
-    <div ng-controller="VulnerabilityCommentsTableController" ng-init="vulnType='closedVulns'; init()">
+    <div class="vuln-tree" ng-controller="VulnSearchTreeController" ng-init="vulnType='closedVulns';init()">
         <h4 style="padding-top:10px">Closed Vulnerabilities</h4>
-        <%@ include file="/WEB-INF/views/tags/commentTable.jsp" %>
-    </div>
-
-    <div id="{{sumTableDivId}}Cmt" ng-if="exportingPDF">
-        <div ng-controller="VulnerabilityCommentsTableController" ng-init="vulnType='openVulns';onPdfExport()">
-            <h4 style="padding-top:10px">Open Vulnerabilities</h4>
-            <%@ include file="/WEB-INF/views/tags/commentTablePdf.jsp" %>
-        </div>
-
-        <div ng-controller="VulnerabilityCommentsTableController" ng-init="vulnType='closedVulns';onPdfExport()">
-            <h4 style="padding-top:10px">Closed Vulnerabilities</h4>
-            <%@ include file="/WEB-INF/views/tags/commentTablePdf.jsp" %>
-        </div>
+        <%@ include file="/WEB-INF/views/vulnerabilities/vulnSearchTree.jsp"%>
     </div>
 
 </div>

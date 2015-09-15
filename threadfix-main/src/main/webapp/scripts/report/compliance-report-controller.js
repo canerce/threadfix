@@ -1,6 +1,6 @@
 var module = angular.module('threadfix');
 
-module.controller('ComplianceReportController', function($scope, $rootScope, $window, $http, tfEncoder, reportUtilities, trendingUtilities, reportConstants, reportExporter) {
+module.controller('ComplianceReportController', function($scope, $rootScope, $window, $http, tfEncoder, reportUtilities, trendingUtilities, reportConstants, reportExporter, vulnSearchParameterService) {
 
     $scope.parameters = {};
     $scope.filterScans = [];
@@ -91,7 +91,9 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
         $scope.filterScans = trendingUtilities.filterByTag($scope.allScans, $scope.parameters.tags);
         $scope.trendingScansData = trendingUtilities.refreshScans($scope);
         renderTable();
-        $scope.$broadcast("updateTableVulnerabilities");
+        var parameters = angular.copy($scope.parameters);
+        vulnSearchParameterService.updateParameters($scope, parameters);
+        $scope.$broadcast("refreshVulnSearchTree", parameters);
     };
 
     $scope.$on('updateDisplayData', function(event, parameters) {
@@ -103,7 +105,9 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
         $scope.parameters = angular.copy(parameters);
         $scope.trendingScansData = trendingUtilities.refreshScans($scope);
         renderTable();
-        $scope.$broadcast("updateTableVulnerabilities");
+        var parameters = angular.copy($scope.parameters);
+        vulnSearchParameterService.updateParameters($scope, parameters);
+        $scope.$broadcast("refreshVulnSearchTree", parameters);
     });
 
     var severityOrder = {'Info': 1, 'Low': 2, 'Medium': 3, 'High': 4, 'Critical': 5};

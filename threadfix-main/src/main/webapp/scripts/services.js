@@ -357,6 +357,18 @@ threadfixModule.factory('vulnSearchParameterService', function() {
                 parameters.startDate = date.getTime();
             }
         }
+
+        if (parameters.daysOldModifier) {
+            var endDate = new Date();
+            if (parameters.daysOldModifier === "LastYear") {
+                parameters.endDate = endDate.getTime();
+                parameters.startDate = (new Date(endDate.getFullYear(), endDate.getMonth() - 11, 1)).getTime();
+            } else if ($scope.parameters.daysOldModifier === "LastQuarter") {
+                parameters.endDate = endDate.getTime();
+                parameters.startDate = (new Date(endDate.getFullYear(), endDate.getMonth() - 2, 1)).getTime();
+            };
+        } ;
+
     };
 
 

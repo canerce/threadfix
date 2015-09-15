@@ -48,6 +48,8 @@
     <div id="vulnSearchDiv" class="filter-controls">
         <%@ include file="/WEB-INF/views/reports/filter.jsp" %>
     </div>
-    <%@ include file="vulnSearchTree.jsp" %>
+    <div class="vuln-tree" ng-controller="VulnSearchTreeController">
+        <%@ include file="vulnSearchTree.jsp" %>
+    </div>
 
 </div>

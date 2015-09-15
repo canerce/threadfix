@@ -119,49 +119,69 @@ module.controller('VulnSearchTreeController', function($log, $scope, $rootScope,
     };
 
     $scope.$on('refreshVulnSearchTree', function(event, parameters) {
-        $scope.loadingTree = true;
 
-        $http.post(tfEncoder.encode("/reports/tree"), parameters).
-            success(function(data, status, headers, config) {
-                if (data.success) {
-                    $scope.vulnTree = vulnTreeTransformer.transform(data.object, parameters.owasp, parameters.disaStig);
+        pullData(parameters);
 
-                    $scope.$parent.vulnTree = $scope.vulnTree;
-                    $scope.badgeWidth = 0;
-                    if ($scope.vulnTree) {
-                        $scope.vulnTree.forEach(function(treeElement) {
-                            var size = 7;
-                            var test = treeElement.total;
-                            while (test >= 10) {
-                                size = size + 7;
-                                test = test / 10;
-                            }
-
-                            //if it is not Top 10 OWASP report, expand each severity level of vulns on page load
-                            if (!parameters.owasp)
-                                treeElement.expanded = true;
-
-                            if (size > $scope.badgeWidth) {
-                                $scope.badgeWidth = size;
-                            }
-                        });
-                    }
-
-                    $scope.checkIfVulnTreeExpanded();
-
-                    $scope.badgeWidth = { "text-align": "right", width: $scope.badgeWidth + 'px' };
-                } else if (data.message) {
-                    $scope.errorMessage = "Failure. Message was : " + data.message;
-                }
-
-                $scope.loadingTree = false;
-            }).
-            error(function(data, status, headers, config) {
-                $log.info("Got " + status + " back.");
-                $scope.errorMessage = "Failed to retrieve vulnerability tree. HTTP status was " + status;
-                $scope.loadingTree = false;
-            });
+        //$scope.loadingTree = true;
+        //
+        //$http.post(tfEncoder.encode("/reports/tree"), parameters).
+        //    success(function(data, status, headers, config) {
+        //        if (data.success) {
+        //            $scope.vulnTree = vulnTreeTransformer.transform(data.object, parameters.owasp, parameters.disaStig);
+        //
+        //            $scope.$parent.vulnTree = $scope.vulnTree;
+        //            $scope.badgeWidth = 0;
+        //            if ($scope.vulnTree) {
+        //                $scope.vulnTree.forEach(function(treeElement) {
+        //                    var size = 7;
+        //                    var test = treeElement.total;
+        //                    while (test >= 10) {
+        //                        size = size + 7;
+        //                        test = test / 10;
+        //                    }
+        //
+        //                    //if it is not Top 10 OWASP report, expand each severity level of vulns on page load
+        //                    if (!parameters.owasp)
+        //                        treeElement.expanded = true;
+        //
+        //                    if (size > $scope.badgeWidth) {
+        //                        $scope.badgeWidth = size;
+        //                    }
+        //                });
+        //            }
+        //
+        //            $scope.checkIfVulnTreeExpanded();
+        //
+        //            $scope.badgeWidth = { "text-align": "right", width: $scope.badgeWidth + 'px' };
+        //        } else if (data.message) {
+        //            $scope.errorMessage = "Failure. Message was : " + data.message;
+        //        }
+        //
+        //        $scope.loadingTree = false;
+        //    }).
+        //    error(function(data, status, headers, config) {
+        //        $log.info("Got " + status + " back.");
+        //        $scope.errorMessage = "Failed to retrieve vulnerability tree. HTTP status was " + status;
+        //        $scope.loadingTree = false;
+        //    });
     });
+
+    $scope.init = function() {
+        //if ($scope.vulnType) {
+        //    if ($scope.vulnType === 'openVulns') {
+        //        $scope.parameters.showOpen = true;
+        //        $scope.parameters.showClosed = false;
+        //        $scope.parameters.startDate = undefined;
+        //    } else if ($scope.vulnType === 'closedVulns') {
+        //        $scope.parameters.showOpen = false;
+        //        $scope.parameters.showClosed = true;
+        //        $scope.parameters.startCloseDate = $scope.parameters.startDate;
+        //        $scope.parameters.endCloseDate = $scope.parameters.endDate;
+        //        $scope.parameters.startDate = undefined;
+        //    }
+            pullData($scope.parameters);
+        //}
+    }
 
     $scope.goTo = function(vuln) {
         $window.location.href = tfEncoder.encode($scope.getUrlBase(vuln));
@@ -247,5 +267,64 @@ module.controller('VulnSearchTreeController', function($log, $scope, $rootScope,
     $scope.toggleFinding = function(finding) {
         $scope['isShowFlow' + finding.id] = $scope['isShowFlow' + finding.id] ? false : true;
     };
+
+    var pullData = function(parameters) {
+        $scope.loadingTree = true;
+
+        if ($scope.vulnType) {
+            if ($scope.vulnType === 'openVulns') {
+                parameters.showOpen = true;
+                parameters.showClosed = false;
+                parameters.startDate = undefined;
+            } else if ($scope.vulnType === 'closedVulns') {
+                parameters.showOpen = false;
+                parameters.showClosed = true;
+                parameters.startCloseDate = parameters.startDate;
+                parameters.endCloseDate = parameters.endDate;
+                parameters.startDate = undefined;
+            }
+        }
+
+        $http.post(tfEncoder.encode("/reports/tree"), parameters).
+            success(function(data, status, headers, config) {
+                if (data.success) {
+                    $scope.vulnTree = vulnTreeTransformer.transform(data.object, parameters.owasp, parameters.disaStig);
+
+                    $scope.$parent.vulnTree = $scope.vulnTree;
+                    $scope.badgeWidth = 0;
+                    if ($scope.vulnTree) {
+                        $scope.vulnTree.forEach(function(treeElement) {
+                            var size = 7;
+                            var test = treeElement.total;
+                            while (test >= 10) {
+                                size = size + 7;
+                                test = test / 10;
+                            }
+
+                            //if it is not Top 10 OWASP report, expand each severity level of vulns on page load
+                            if (!parameters.owasp)
+                                treeElement.expanded = true;
+
+                            if (size > $scope.badgeWidth) {
+                                $scope.badgeWidth = size;
+                            }
+                        });
+                    }
+
+                    $scope.checkIfVulnTreeExpanded();
+
+                    $scope.badgeWidth = { "text-align": "right", width: $scope.badgeWidth + 'px' };
+                } else if (data.message) {
+                    $scope.errorMessage = "Failure. Message was : " + data.message;
+                }
+
+                $scope.loadingTree = false;
+            }).
+            error(function(data, status, headers, config) {
+                $log.info("Got " + status + " back.");
+                $scope.errorMessage = "Failed to retrieve vulnerability tree. HTTP status was " + status;
+                $scope.loadingTree = false;
+            });
+    }
 
 });
