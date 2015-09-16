@@ -260,6 +260,7 @@ public class RemappingServiceImpl implements RemappingService {
             }
 
             oldestFinding.setFirstFindingForVuln(true);
+            newVulnerability.clearOriginalFinding();
         }
     }
 
