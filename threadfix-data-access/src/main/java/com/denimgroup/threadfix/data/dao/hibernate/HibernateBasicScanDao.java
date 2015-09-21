@@ -21,20 +21,40 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service;
+package com.denimgroup.threadfix.data.dao.hibernate;
 
-import com.denimgroup.threadfix.data.entities.Scan;
-
-import java.util.List;
+import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
+import com.denimgroup.threadfix.data.dao.BasicScanDao;
+import com.denimgroup.threadfix.data.entities.BasicScan;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 /**
- * Created by mcollins on 5/13/15.
+ * Hibernate Basic Scan DAO implementation. Most basic methods are implemented in the
+ * AbstractGenericDao
+ * 
+ * @author mcollins
  */
-public interface StatisticsCounterService {
+@Repository
+public class HibernateBasicScanDao
+        extends AbstractObjectDao<BasicScan>
+        implements BasicScanDao {
 
-    void createNewStatistics(List<Scan> scans);
+	@Autowired
+	public HibernateBasicScanDao(SessionFactory sessionFactory) {
+		super(sessionFactory);
+	}
+	
+    @Override
+    protected Order getOrder() {
+        return Order.desc("importTime");
+    }
 
-    void updateStatistics(List<Scan> scan);
+    @Override
+    protected Class<BasicScan> getClassReference() {
+        return BasicScan.class;
+    }
 
-    void checkStatisticsCounters();
 }

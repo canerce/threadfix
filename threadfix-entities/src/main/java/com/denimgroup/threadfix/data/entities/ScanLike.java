@@ -21,20 +21,23 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service;
+package com.denimgroup.threadfix.data.entities;
 
-import com.denimgroup.threadfix.data.entities.Scan;
+import java.util.Calendar;
 
-import java.util.List;
+public interface ScanLike {
+	
+	void setNumberCriticalVulnerabilities(Long numberCriticalVulnerabilities);
+	void setNumberHighVulnerabilities(Long numberCriticalVulnerabilities);
+	void setNumberMediumVulnerabilities(Long numberCriticalVulnerabilities);
+	void setNumberLowVulnerabilities(Long numberCriticalVulnerabilities);
+	void setNumberInfoVulnerabilities(Long numberCriticalVulnerabilities);
 
-/**
- * Created by mcollins on 5/13/15.
- */
-public interface StatisticsCounterService {
+	void setNumberTotalVulnerabilities(Integer numberCriticalVulnerabilities);
+	void setNumberClosedVulnerabilities(Integer numberCriticalVulnerabilities);
+	void setNumberResurfacedVulnerabilities(Integer numberCriticalVulnerabilities);
+	void setNumberHiddenVulnerabilities(Integer numberCriticalVulnerabilities);
 
-    void createNewStatistics(List<Scan> scans);
+	Calendar getImportTime();
 
-    void updateStatistics(List<Scan> scan);
-
-    void checkStatisticsCounters();
 }

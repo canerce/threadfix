@@ -38,7 +38,7 @@ import static com.denimgroup.threadfix.CollectionUtils.map;
 
 @Entity
 @Table(name = "Scan")
-public class Scan extends BaseEntity implements Iterable<Finding> {
+public class Scan extends BaseEntity implements Iterable<Finding>, ScanLike {
 
 	private static final long serialVersionUID = -8461350611851383656L;
 

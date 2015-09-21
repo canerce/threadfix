@@ -21,20 +21,21 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service;
+package com.denimgroup.threadfix.data.dao;
 
-import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * Created by mcollins on 5/13/15.
+ * Basic DAO class for the Basic Scan entity.
+ *
+ * @author stran
  */
-public interface StatisticsCounterService {
+public interface BasicScanDao extends GenericObjectDao<BasicScan> {
+	
 
-    void createNewStatistics(List<Scan> scans);
-
-    void updateStatistics(List<Scan> scan);
-
-    void checkStatisticsCounters();
 }
+

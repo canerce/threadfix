@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -48,6 +49,8 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
     @Autowired
     ScanDao scanDao;
     @Autowired
+    BasicScanDao basicScanDao;
+    @Autowired
     StatisticsCounterDao statisticsCounterDao;
     @Autowired
     FindingDao findingDao;
@@ -61,8 +64,13 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
     ScanResultFilterDao scanResultFilterDao;
 
     @Override
+    public void createNewStatistics(List<Scan> scans) {
+        runQueries(scans, true);
+    }
+
+    @Override
     public void updateStatistics(List<Scan> scans) {
-        runQueries(scans);
+        runQueries(scans, false);
     }
 
     @Override
@@ -135,7 +143,7 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
         LOG.debug("Took " + (System.currentTimeMillis() - start) + " ms to add missing finding counters.");
     }
 
-    private void runQueries(List<Scan> scans) {
+    private void runQueries(List<Scan> scans, boolean isCreateNew) {
 
         long start = System.currentTimeMillis();
 
@@ -162,10 +170,10 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
             }
         }
 
-        processScans(-1, -1, useGlobal);
+        processScans(-1, -1, useGlobal, isCreateNew);
 
         for (Map.Entry<Application, List<Scan>> entry : appToScanMap.entrySet()) {
-            processScans(entry.getKey().getOrganization().getId(), entry.getKey().getId(), entry.getValue());
+            processScans(entry.getKey().getOrganization().getId(), entry.getKey().getId(), entry.getValue(), isCreateNew);
         }
 
         LOG.debug("Critical/High/Medium/Low/Info calculated in " + (System.currentTimeMillis() - start) + " ms.");
@@ -193,7 +201,7 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
         return appsWithTheirOwnFilters;
     }
 
-    private void processScans(int orgID, int appID, List<Scan> scans) {
+    private void processScans(int orgID, int appID, List<Scan> scans, boolean isCreateNew) {
 
         Map<Integer, Long[]> scanStatsMap = getIntegerMap(orgID, appID, scans);
 
@@ -201,79 +209,177 @@ public class StatisticsCounterServiceImpl implements StatisticsCounterService {
 
         Map<Integer, Long> closedMap   = getClosedMap(ignoredVulnerabilityIds);
         Map<Integer, Long> reopenedMap = getReopenedMap(ignoredVulnerabilityIds);
-        applyStatistics(scans, scanStatsMap, closedMap, reopenedMap);
+        applyStatistics(scans, scanStatsMap, closedMap, reopenedMap, isCreateNew);
     }
 
-    private void applyStatistics(List<Scan> scans, Map<Integer, Long[]> scanStatsMap, Map<Integer, Long> closedMap, Map<Integer, Long> reopenedMap) {
+    private void applyStatistics(List<Scan> scans, Map<Integer, Long[]> scanStatsMap, Map<Integer, Long> closedMap, Map<Integer, Long> reopenedMap, boolean isCreateNew) {
 
         Map<Integer, Long> totalsMap = getTotalsMap();
 
         for (Scan scan : scans) {
-            if (scanStatsMap.containsKey(scan.getId())) {
-                Long[] stats = scanStatsMap.get(scan.getId());
-                scan.setNumberCriticalVulnerabilities(stats[4]);
-                scan.setNumberHighVulnerabilities(stats[3]);
-                scan.setNumberMediumVulnerabilities(stats[2]);
-                scan.setNumberLowVulnerabilities(stats[1]);
-                scan.setNumberInfoVulnerabilities(stats[0]);
-                Long total = stats[0] + stats[1] + stats[2] + stats[3] + stats[4];
-                scan.setNumberTotalVulnerabilities(total.intValue());
 
-                Long numberClosed = closedMap.get(scan.getId());
-                if (numberClosed != null) {
-                    scan.setNumberClosedVulnerabilities(numberClosed.intValue());
-                } else {
-                    scan.setNumberClosedVulnerabilities(0);
-                }
-
-                Long numberReopened = reopenedMap.get(scan.getId());
-                if (numberReopened != null) {
-                    scan.setNumberResurfacedVulnerabilities(numberReopened.intValue());
-                } else {
-                    scan.setNumberResurfacedVulnerabilities(0);
-                }
-
-                Long originalTotal = totalsMap.get(scan.getId());
-                if (originalTotal != null) {
-                    scan.setNumberHiddenVulnerabilities(originalTotal.intValue() - total.intValue());
-                } else {
-                    scan.setNumberHiddenVulnerabilities(0);
-                }
-
-                scanDao.saveOrUpdate(scan);
-                LOG.debug("Successfully processed scan with ID " + scan.getId());
+            if (isCreateNew) {
+                BasicScan trendingScan = new BasicScan();
+                trendingScan.setApplicationChannel(scan.getApplicationChannel());
+                trendingScan.setApplication(scan.getApplication());
+                trendingScan.setImportTime(Calendar.getInstance());
+                updateScan(scan, trendingScan, scanStatsMap, closedMap, reopenedMap, totalsMap);
             } else {
-                scan.setNumberCriticalVulnerabilities(0L);
-                scan.setNumberHighVulnerabilities(0L);
-                scan.setNumberMediumVulnerabilities(0L);
-                scan.setNumberLowVulnerabilities(0L);
-                scan.setNumberInfoVulnerabilities(0L);
-                scan.setNumberTotalVulnerabilities(0);
-
-                Long numberClosed = closedMap.get(scan.getId());
-                if (numberClosed != null) {
-                    scan.setNumberClosedVulnerabilities(numberClosed.intValue());
-                } else {
-                    scan.setNumberClosedVulnerabilities(0);
-                }
-
-                Long numberReopened = reopenedMap.get(scan.getId());
-                if (numberReopened != null) {
-                    scan.setNumberResurfacedVulnerabilities(numberReopened.intValue());
-                } else {
-                    scan.setNumberResurfacedVulnerabilities(0);
-                }
-
-                Long originalTotal = totalsMap.get(scan.getId());
-                if (originalTotal != null) {
-                    scan.setNumberHiddenVulnerabilities(originalTotal.intValue());
-                } else {
-                    scan.setNumberHiddenVulnerabilities(0);
-                }
-
-                scanDao.saveOrUpdate(scan);
-                LOG.debug("Unsuccessfully processed scan with ID " + scan.getId());
+                updateScan(scan, scan, scanStatsMap, closedMap, reopenedMap, totalsMap);
             }
+
+
+
+//            if (scanStatsMap.containsKey(scan.getId())) {
+//                Long[] stats = scanStatsMap.get(scan.getId());
+//                scan.setNumberCriticalVulnerabilities(stats[4]);
+//                scan.setNumberHighVulnerabilities(stats[3]);
+//                scan.setNumberMediumVulnerabilities(stats[2]);
+//                scan.setNumberLowVulnerabilities(stats[1]);
+//                scan.setNumberInfoVulnerabilities(stats[0]);
+//                Long total = stats[0] + stats[1] + stats[2] + stats[3] + stats[4];
+//                scan.setNumberTotalVulnerabilities(total.intValue());
+//
+//                Long numberClosed = closedMap.get(scan.getId());
+//                if (numberClosed != null) {
+//                    scan.setNumberClosedVulnerabilities(numberClosed.intValue());
+//                } else {
+//                    scan.setNumberClosedVulnerabilities(0);
+//                }
+//
+//                Long numberReopened = reopenedMap.get(scan.getId());
+//                if (numberReopened != null) {
+//                    scan.setNumberResurfacedVulnerabilities(numberReopened.intValue());
+//                } else {
+//                    scan.setNumberResurfacedVulnerabilities(0);
+//                }
+//
+//                Long originalTotal = totalsMap.get(scan.getId());
+//                if (originalTotal != null) {
+//                    scan.setNumberHiddenVulnerabilities(originalTotal.intValue() - total.intValue());
+//                } else {
+//                    scan.setNumberHiddenVulnerabilities(0);
+//                }
+//
+//                scanDao.saveOrUpdate(scan);
+//                LOG.debug("Successfully processed scan with ID " + scan.getId());
+//            } else {
+//                scan.setNumberCriticalVulnerabilities(0L);
+//                scan.setNumberHighVulnerabilities(0L);
+//                scan.setNumberMediumVulnerabilities(0L);
+//                scan.setNumberLowVulnerabilities(0L);
+//                scan.setNumberInfoVulnerabilities(0L);
+//                scan.setNumberTotalVulnerabilities(0);
+//
+//                Long numberClosed = closedMap.get(scan.getId());
+//                if (numberClosed != null) {
+//                    scan.setNumberClosedVulnerabilities(numberClosed.intValue());
+//                } else {
+//                    scan.setNumberClosedVulnerabilities(0);
+//                }
+//
+//                Long numberReopened = reopenedMap.get(scan.getId());
+//                if (numberReopened != null) {
+//                    scan.setNumberResurfacedVulnerabilities(numberReopened.intValue());
+//                } else {
+//                    scan.setNumberResurfacedVulnerabilities(0);
+//                }
+//
+//                Long originalTotal = totalsMap.get(scan.getId());
+//                if (originalTotal != null) {
+//                    scan.setNumberHiddenVulnerabilities(originalTotal.intValue());
+//                } else {
+//                    scan.setNumberHiddenVulnerabilities(0);
+//                }
+//
+//                scanDao.saveOrUpdate(scan);
+//                LOG.debug("Unsuccessfully processed scan with ID " + scan.getId());
+//            }
+        }
+    }
+
+    private void updateScan(Scan scan, ScanLike trendingScan, Map<Integer, Long[]> scanStatsMap, Map<Integer, Long> closedMap, Map<Integer, Long> reopenedMap, Map<Integer, Long> totalsMap) {
+
+//        if (trendingScan instanceof BasicScan) {
+//            trendingScan = (BasicScan)trendingScan;
+//        } else if (trendingScan instanceof Scan) {
+//            trendingScan = (Scan) trendingScan;
+//        } else {
+//            return;
+//        }
+
+        if (scanStatsMap.containsKey(scan.getId())) {
+            Long[] stats = scanStatsMap.get(scan.getId());
+            trendingScan.setNumberCriticalVulnerabilities(stats[4]);
+            trendingScan.setNumberHighVulnerabilities(stats[3]);
+            trendingScan.setNumberMediumVulnerabilities(stats[2]);
+            trendingScan.setNumberLowVulnerabilities(stats[1]);
+            trendingScan.setNumberInfoVulnerabilities(stats[0]);
+            Long total = stats[0] + stats[1] + stats[2] + stats[3] + stats[4];
+            trendingScan.setNumberTotalVulnerabilities(total.intValue());
+
+            Long numberClosed = closedMap.get(scan.getId());
+            if (numberClosed != null) {
+                trendingScan.setNumberClosedVulnerabilities(numberClosed.intValue());
+            } else {
+                trendingScan.setNumberClosedVulnerabilities(0);
+            }
+
+            Long numberReopened = reopenedMap.get(scan.getId());
+            if (numberReopened != null) {
+                trendingScan.setNumberResurfacedVulnerabilities(numberReopened.intValue());
+            } else {
+                trendingScan.setNumberResurfacedVulnerabilities(0);
+            }
+
+            Long originalTotal = totalsMap.get(scan.getId());
+            if (originalTotal != null) {
+                trendingScan.setNumberHiddenVulnerabilities(originalTotal.intValue() - total.intValue());
+            } else {
+                trendingScan.setNumberHiddenVulnerabilities(0);
+            }
+
+            if (trendingScan instanceof Scan)
+                scanDao.saveOrUpdate((Scan)trendingScan);
+            else
+                basicScanDao.saveOrUpdate((BasicScan)trendingScan);
+
+            LOG.debug("Successfully processed scan with ID " + scan.getId());
+        } else {
+            trendingScan.setNumberCriticalVulnerabilities(0L);
+            trendingScan.setNumberHighVulnerabilities(0L);
+            trendingScan.setNumberMediumVulnerabilities(0L);
+            trendingScan.setNumberLowVulnerabilities(0L);
+            trendingScan.setNumberInfoVulnerabilities(0L);
+            trendingScan.setNumberTotalVulnerabilities(0);
+
+            Long numberClosed = closedMap.get(scan.getId());
+            if (numberClosed != null) {
+                trendingScan.setNumberClosedVulnerabilities(numberClosed.intValue());
+            } else {
+                trendingScan.setNumberClosedVulnerabilities(0);
+            }
+
+            Long numberReopened = reopenedMap.get(scan.getId());
+            if (numberReopened != null) {
+                trendingScan.setNumberResurfacedVulnerabilities(numberReopened.intValue());
+            } else {
+                trendingScan.setNumberResurfacedVulnerabilities(0);
+            }
+
+            Long originalTotal = totalsMap.get(scan.getId());
+            if (originalTotal != null) {
+                trendingScan.setNumberHiddenVulnerabilities(originalTotal.intValue());
+            } else {
+                trendingScan.setNumberHiddenVulnerabilities(0);
+            }
+
+            if (trendingScan instanceof Scan)
+                scanDao.saveOrUpdate((Scan)trendingScan);
+            else
+                basicScanDao.saveOrUpdate((BasicScan)trendingScan);
+
+            LOG.debug("Unsuccessfully processed scan with ID " + scan.getId());
         }
     }
 
