@@ -35,6 +35,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 @Category(CommunityTests.class)
 public class TeamIndexPageIT extends BaseDataTest {
@@ -147,6 +148,20 @@ public class TeamIndexPageIT extends BaseDataTest {
 
         assertTrue("Upload Scan Button is not Available after manual upload",
                 teamIndexPage.isUploadScanButtonDisplay(team, app));
+    }
+
+    @Test
+    public void testApplicationSearch() {
+        String appName2 = createApplication(teamName);
+
+        TeamIndexPage teamIndexPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink();
+
+        teamIndexPage.expandTeamRowByName(teamName)
+                .setApplicationSearchField(teamName, appName);
+
+        assertTrue("Application isn't showing after search is entered.", teamIndexPage.isAppDisplayed(teamName, appName));
+        assertFalse("Application still shows when it doesn't match search criteria.", teamIndexPage.isAppDisplayed(teamName, appName2));
     }
 
     //===========================================================================================================

@@ -23,10 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -270,6 +267,17 @@ public class TeamIndexPage extends BasePage {
 
     public TeamIndexPage waitForClosedModal() {
         waitForInvisibleElement("myModalLabel");
+        return new TeamIndexPage(driver);
+    }
+
+    //===========================================================================================================
+    // Set Methods
+    //===========================================================================================================
+
+    public TeamIndexPage setApplicationSearchField(String teamName, String searchTerm) {
+        WebElement searchField = driver.findElementById("appSelectTypeahead" + teamName);
+        searchField.sendKeys(searchTerm);
+        searchField.sendKeys(Keys.RETURN);
         return new TeamIndexPage(driver);
     }
 
