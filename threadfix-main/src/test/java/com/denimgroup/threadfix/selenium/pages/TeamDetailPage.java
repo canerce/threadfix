@@ -359,6 +359,33 @@ public class TeamDetailPage extends BasePage {
         }
     }
 
+    public TeamDetailPage expandVulnerabilityByType(String type) {
+        waitForElement(By.id("expandVuln" + type));
+        driver.findElementById("expandVuln" + type).click();
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage checkVulnerabilitiesByCategory(String category) {
+        sleep(5000);
+        driver.findElementById("checkCategory" + category).click();
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage clickVulnerabilitiesActionButton() {
+        driver.findElementById("actionItems").click();
+        return new TeamDetailPage(driver);
+    }
+
+    //===========================================================================================================
+    // Set Methods
+    //===========================================================================================================
+
+    public TeamDetailPage setChangeSeverity(String severity) {
+        hover("changeSeverityButton");
+        driver.findElementById("severity" + severity).click();
+        return new TeamDetailPage(driver);
+    }
+
     //===========================================================================================================
     // Get Methods
     //===========================================================================================================
@@ -535,13 +562,8 @@ public class TeamDetailPage extends BasePage {
         return driver.findElementsById("expand" + level).size() != 0;
     }
 
-    //TODO get rid of extra code when debugging is done.
     public boolean isVulnerabilityCountCorrect(String level, String expected) {
-        if (expected.equals(driver.findElementById("totalBadge" + level).getText())) {
-            return true;
-        } else {
-            return false;
-        }
+        return expected.equals(driver.findElementById("totalBadge" + level).getText());
     }
 
     public boolean areAllVulnerabilitiesHidden() {

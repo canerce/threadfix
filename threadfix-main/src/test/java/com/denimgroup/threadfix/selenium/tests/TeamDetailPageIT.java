@@ -128,4 +128,30 @@ public class TeamDetailPageIT extends BaseIT {
         assertTrue("Team Name couldn't Edited properly",
                 teamDetailPage.successAlert().contains("Successfully edited team" + " " + teamName));
     }
+
+    //===========================================================================================================
+    // Vulnerability Tabs
+    //===========================================================================================================
+
+    @Test
+    public void testChangeSeverity() {
+        TeamDetailPage teamDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .clickViewTeamLink(teamName);
+
+        teamDetailPage.clickVulnerabilitiesTab("25");
+
+        assertTrue("Team is not showing expected number of vulnerabilities before test.",
+                teamDetailPage.isVulnerabilityCountCorrect("High", "6"));
+
+        teamDetailPage.expandVulnerabilityByType("High89")
+                .checkVulnerabilitiesByCategory("High89")
+                .clickVulnerabilitiesActionButton()
+                .setChangeSeverity("Critical");
+
+        assertTrue("Critical vuln count was not correct after changing severity of 4 vulns.",
+                teamDetailPage.isVulnerabilityCountCorrect("Critical", "4"));
+        assertTrue("High vuln count was not correct after changing severity of 4 vulns.",
+                teamDetailPage.isVulnerabilityCountCorrect("High", "2"));
+    }
 }
