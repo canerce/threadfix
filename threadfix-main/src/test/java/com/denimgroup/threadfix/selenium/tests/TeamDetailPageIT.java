@@ -130,7 +130,7 @@ public class TeamDetailPageIT extends BaseIT {
     }
 
     //===========================================================================================================
-    // Vulnerability Tabs
+    // Vulnerability Tab
     //===========================================================================================================
 
     // Awaiting ID Change
@@ -150,9 +150,61 @@ public class TeamDetailPageIT extends BaseIT {
                 .clickVulnerabilitiesActionButton()
                 .setChangeSeverity("Critical");
 
+        teamDetailPage.waitForVulnCountUpdate("High", "4", 10);
+
         assertTrue("Critical vuln count was not correct after changing severity of 4 vulns.",
                 teamDetailPage.isVulnerabilityCountCorrect("Critical", "4"));
         assertTrue("High vuln count was not correct after changing severity of 4 vulns.",
                 teamDetailPage.isVulnerabilityCountCorrect("High", "2"));
+    }
+
+    @Test
+    public void testCloseVulnerabilities() {
+        TeamDetailPage teamDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .clickViewTeamLink(teamName);
+
+        teamDetailPage.clickVulnerabilitiesTab("25");
+
+        assertTrue("Team is not showing expected number of vulnerabilities before test.",
+                teamDetailPage.isVulnerabilityCountCorrect("High", "6"));
+
+        teamDetailPage.expandVulnerabilityByType("High89")
+                .checkVulnerabilityByType("High890")
+                .clickVulnerabilitiesActionButton()
+                .clickCloseVulnerabilities();
+
+        teamDetailPage.waitForVulnCountUpdate("High", "5", 10);
+
+        assertTrue("High vuln count is incorrect after closing a high vuln.",
+                teamDetailPage.isVulnerabilityCountCorrect("High", "5"));
+    }
+
+    @Test
+    public void testMarkFalsePositiveVulnerabilities() {
+        TeamDetailPage teamDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .clickViewTeamLink(teamName);
+
+        teamDetailPage.clickVulnerabilitiesTab("25");
+
+        assertTrue("Team is not showing expected number of vulnerabilities before test.",
+                teamDetailPage.isVulnerabilityCountCorrect("High", "6"));
+
+        teamDetailPage.expandVulnerabilityByType("High89")
+                .checkVulnerabilityByType("High890")
+                .clickVulnerabilitiesActionButton()
+                .clickMarkFalseVulnerability();
+
+        teamDetailPage.waitForVulnCountUpdate("High", "5", 10);
+        assertTrue("High vuln count is incorrect after marking a high vuln as false positive.",
+                teamDetailPage.isVulnerabilityCountCorrect("High", "5"));
+
+        teamDetailPage.filterByFalsePositive();
+
+        teamDetailPage.waitForVulnCountUpdate("High", "1", 10);
+        assertTrue("High vuln count is incorrect after marking a high vuln as false positive.",
+                teamDetailPage.isVulnerabilityCountCorrect("High", "1"));
+
     }
 }

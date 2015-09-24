@@ -38,6 +38,16 @@ public class TeamDetailPage extends BasePage {
     }
 
     //===========================================================================================================
+    // Procedure Methods
+    //===========================================================================================================
+
+    public TeamIndexPage filterByFalsePositive() {
+        driver.findElementById("showFieldControls").click();
+        driver.findElementById("showFalsePositive").click();
+        return new TeamIndexPage(driver);
+    }
+
+    //===========================================================================================================
     // Action Methods
     //===========================================================================================================
 
@@ -366,13 +376,33 @@ public class TeamDetailPage extends BasePage {
     }
 
     public TeamDetailPage checkVulnerabilitiesByCategory(String category) {
-        sleep(5000);
         driver.findElementById("checkCategory" + category).click();
         return new TeamDetailPage(driver);
     }
 
+    public TeamDetailPage checkVulnerabilityByType(String type) {
+        driver.findElementById("checkbox" + type).click();
+        return new TeamDetailPage(driver);
+    }
+
+
     public TeamDetailPage clickVulnerabilitiesActionButton() {
         driver.findElementById("actionItems").click();
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage clickCloseVulnerabilities() {
+        driver.findElementById("closeVulnsButton").click();
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage clickMarkFalseVulnerability() {
+        driver.findElementById("markFalsePositivesButton").click();
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage clickUnMarkFalsePositive() {
+        driver.findElementById("unmarkFalsePositivesButton").click();
         return new TeamDetailPage(driver);
     }
 
@@ -621,5 +651,16 @@ public class TeamDetailPage extends BasePage {
 
     public boolean isTeamNamePresent(String teamName) {
         return driver.findElementById("name").isDisplayed();
+    }
+
+    //===========================================================================================================
+    // Helper Methods
+    //===========================================================================================================
+
+    public void waitForVulnCountUpdate(String level, String expected, int pollingIntervals) {
+        int pollCount = 0;
+        while (!isVulnerabilityCountCorrect(level, expected) && pollCount <= pollingIntervals) {
+            sleep(500);
+        }
     }
 }
