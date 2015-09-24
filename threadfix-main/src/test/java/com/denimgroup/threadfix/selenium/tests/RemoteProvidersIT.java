@@ -593,7 +593,7 @@ public class RemoteProvidersIT extends BaseDataTest {
                 .clickCloseNewTeamModal();
 
         assertTrue("Team Name wasn't deleted",
-                teamDetailPage.successAlert().contains("Team" +  " " + teamName + " has been deleted successfully"));
+                teamDetailPage.getSuccessAlert().contains("Team" +  " " + teamName + " has been deleted successfully"));
 
         RemoteProvidersIndexPage remoteProvidersIndexPage = teamIndexPage.clickRemoteProvidersLink()
                 .clickConfigure(WHITEHAT)

@@ -25,15 +25,11 @@
 package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.CommunityTests;
-import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
-import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.openqa.selenium.By;
-import org.openqa.selenium.interactions.Actions;
 
 import static org.junit.Assert.assertTrue;
 
@@ -74,12 +70,12 @@ public class TeamDetailPageIT extends BaseIT {
 
         assertTrue("Edit/Modal was not present.", teamDetailPage.isEditDeleteModalPresent());
         assertTrue("Delete Button was not present.", teamDetailPage.isDeleteTeamButtonPresent());
-        assertTrue("Delete Button was not clickable.", teamDetailPage.EDDeleteClickable());
-        assertTrue("Name input was not present", teamDetailPage.EDNamePresent());
-        assertTrue("Close modal button was not present", teamDetailPage.EDClosePresent());
-        assertTrue("Close modal button was not clickable", teamDetailPage.EDCloseClickable());
-		assertTrue("Save button was not present.", teamDetailPage.EDSavePresent());
-		assertTrue("Save button was not clickable.", teamDetailPage.EDSaveClickable());
+        assertTrue("Delete Button was not clickable.", teamDetailPage.isDeleteClickable());
+        assertTrue("Name input was not present", teamDetailPage.isNamePresent());
+        assertTrue("Close modal button was not present", teamDetailPage.isClosePresent());
+        assertTrue("Close modal button was not clickable", teamDetailPage.isCloseClickable());
+		assertTrue("Save button was not present.", teamDetailPage.isSavePresent());
+		assertTrue("Save button was not clickable.", teamDetailPage.isSaveClickable());
 	}
 	
 	@Test
@@ -126,7 +122,7 @@ public class TeamDetailPageIT extends BaseIT {
                 .clickModalSubmit();
 
         assertTrue("Team Name couldn't Edited properly",
-                teamDetailPage.successAlert().contains("Successfully edited team" + " " + teamName));
+                teamDetailPage.getSuccessAlert().contains("Successfully edited team" + " " + teamName));
     }
 
     //===========================================================================================================

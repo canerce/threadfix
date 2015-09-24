@@ -51,16 +51,7 @@ public class TeamDetailPage extends BasePage {
     // Action Methods
     //===========================================================================================================
 
-    public String getOrgName() {
-        return driver.findElementById("name").getText();
-    }
-
-    public String successAlert(){
-        waitForElement(By.className("alert-success"));
-        return driver.findElementByClassName("alert-success").getText().trim();
-    }
-
-    public TeamDetailPage clickActionButton(){
+    public TeamDetailPage clickActionButton() {
         driver.findElementById("actionButton").click();
         waitForElement(By.id("teamModalButton"));
         return new TeamDetailPage(driver);
@@ -104,30 +95,6 @@ public class TeamDetailPage extends BasePage {
         return new TeamDetailPage(driver);
     }
 
-    public TeamDetailPage setApplicationInfo(String appName, String url, String criticality) {
-        setApplicationName(appName);
-        setApplicationUrl(url);
-        setApplicationCriticality(criticality);
-        return this;
-    }
-
-    public TeamDetailPage setApplicationName(String appName) {
-        driver.findElementById("applicationNameInput").clear();
-        driver.findElementById("applicationNameInput").sendKeys(appName);
-        return this;
-    }
-
-    public TeamDetailPage setApplicationUrl(String url) {
-        driver.findElementById("applicationUrlInput").clear();
-        driver.findElementById("applicationUrlInput").sendKeys(url);
-        return this;
-    }
-
-    public TeamDetailPage setApplicationCriticality(String criticality) {
-        new Select(driver.findElementById("criticalityIdSelect")).selectByVisibleText(criticality);
-        return this;
-    }
-
     public ApplicationDetailPage clickAppLink(String number) {
         driver.findElementById("appLink" + number).click();
         sleep(2000);
@@ -146,15 +113,9 @@ public class TeamDetailPage extends BasePage {
         return new TeamDetailPage(driver);
     }
 
-    public TeamDetailPage clickCloseEditModal(){
+    public TeamDetailPage clickCloseEditModal() {
         driver.findElementById("closeTeamModalButton").click();
         sleep(2000);
-        return new TeamDetailPage(driver);
-    }
-
-    public TeamDetailPage setNameInput(String editedOrgName) {
-        driver.findElementById("teamNameInput").clear();
-        driver.findElementById("teamNameInput").sendKeys(editedOrgName);
         return new TeamDetailPage(driver);
     }
 
@@ -255,20 +216,6 @@ public class TeamDetailPage extends BasePage {
         return new TeamDetailPage(driver);
     }
 
-    public TeamDetailPage setPathFilter(String path) {
-        driver.findElementById("pathInput").sendKeys(path);
-        driver.findElementById("pathInput").sendKeys(Keys.ENTER);
-        waitForResultsToLoad();
-        return new TeamDetailPage(driver);
-    }
-
-    public TeamDetailPage setParameterFilter(String parameter) {
-        driver.findElementById("parameterFilterInput").sendKeys(parameter);
-        driver.findElementById("parameterFilterInput").sendKeys(Keys.ENTER);
-        waitForResultsToLoad();
-        return new TeamDetailPage(driver);
-    }
-
     public TeamDetailPage toggleSeverityFilter(String level) {
         driver.findElementById("show" + level).click();
         waitForResultsToLoad();
@@ -363,12 +310,6 @@ public class TeamDetailPage extends BasePage {
         return new TeamDetailPage(driver);
     }
 
-    public void waitForResultsToLoad() {
-        while (driver.findElementById("vulnTreeLoadingSpinner").isDisplayed()) {
-            sleep(1000);
-        }
-    }
-
     public TeamDetailPage expandVulnerabilityByType(String type) {
         waitForElement(By.id("expandVuln" + type));
         driver.findElementById("expandVuln" + type).click();
@@ -416,6 +357,50 @@ public class TeamDetailPage extends BasePage {
         return new TeamDetailPage(driver);
     }
 
+    public TeamDetailPage setApplicationInfo(String appName, String url, String criticality) {
+        setApplicationName(appName);
+        setApplicationUrl(url);
+        setApplicationCriticality(criticality);
+        return this;
+    }
+
+    public TeamDetailPage setApplicationName(String appName) {
+        driver.findElementById("applicationNameInput").clear();
+        driver.findElementById("applicationNameInput").sendKeys(appName);
+        return this;
+    }
+
+    public TeamDetailPage setApplicationUrl(String url) {
+        driver.findElementById("applicationUrlInput").clear();
+        driver.findElementById("applicationUrlInput").sendKeys(url);
+        return this;
+    }
+
+    public TeamDetailPage setApplicationCriticality(String criticality) {
+        new Select(driver.findElementById("criticalityIdSelect")).selectByVisibleText(criticality);
+        return this;
+    }
+
+    public TeamDetailPage setNameInput(String editedOrgName) {
+        driver.findElementById("teamNameInput").clear();
+        driver.findElementById("teamNameInput").sendKeys(editedOrgName);
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage setPathFilter(String path) {
+        driver.findElementById("pathInput").sendKeys(path);
+        driver.findElementById("pathInput").sendKeys(Keys.ENTER);
+        waitForResultsToLoad();
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage setParameterFilter(String parameter) {
+        driver.findElementById("parameterFilterInput").sendKeys(parameter);
+        driver.findElementById("parameterFilterInput").sendKeys(Keys.ENTER);
+        waitForResultsToLoad();
+        return new TeamDetailPage(driver);
+    }
+
     //===========================================================================================================
     // Get Methods
     //===========================================================================================================
@@ -436,7 +421,7 @@ public class TeamDetailPage extends BasePage {
         return 0;
     }
 
-    public int getNumPermUsers(){
+    public int getNumPermUsers() {
         return driver.findElementById("userTableBody").findElements(By.className("bodyRow")).size();
     }
 
@@ -448,25 +433,26 @@ public class TeamDetailPage extends BasePage {
         return driver.findElementById("editFormDiv").findElement(By.className("ellipsis")).getSize().width;
     }
 
+    public String getOrgName() {
+        return driver.findElementById("name").getText();
+    }
+
+    public String getSuccessAlert() {
+        waitForElement(By.className("alert-success"));
+        return driver.findElementByClassName("alert-success").getText().trim();
+    }
+
     //===========================================================================================================
     // Boolean Methods
     //===========================================================================================================
 
-    public boolean isAppPresent(String appName){
-        return driver.findElementsByLinkText(appName).size() != 0;
-    }
+    public boolean isAppPresent(String appName) { return driver.findElementsByLinkText(appName).size() != 0; }
 
-    public boolean isActionBtnPresent(){
-        return driver.findElementById("actionButton").isDisplayed();
-    }
+    public boolean isActionBtnPresent() { return driver.findElementById("actionButton").isDisplayed(); }
 
-    public boolean isActionBtnClickable(){
-        return isClickable("actionButton");
-    }
+    public boolean isActionBtnClickable() { return isClickable("actionButton"); }
 
-    public boolean isEditDeleteLinkPresent(){
-        return driver.findElementById("teamModalButton").isDisplayed();
-    }
+    public boolean isEditDeleteLinkPresent() { return driver.findElementById("teamModalButton").isDisplayed(); }
 
     public boolean isEditDeleteLinkClickable(){
         return isClickable("teamModalButton");
@@ -480,27 +466,27 @@ public class TeamDetailPage extends BasePage {
         return driver.findElementById("deleteTeamButton").isDisplayed();
     }
 
-    public boolean EDDeleteClickable(){
+    public boolean isDeleteClickable(){
         return isClickable("deleteTeamButton");
     }
 
-    public boolean EDClosePresent(){
+    public boolean isClosePresent(){
         return driver.findElementById("closeModalButton").isDisplayed();
     }
 
-    public boolean EDCloseClickable(){
+    public boolean isCloseClickable(){
         return isClickable("closeModalButton");
     }
 
-    public boolean EDSavePresent(){
+    public boolean isSavePresent(){
         return driver.findElementById("submit").isDisplayed();
     }
 
-    public boolean EDSaveClickable(){
+    public boolean isSaveClickable(){
         return isClickable("submit");
     }
 
-    public boolean EDNamePresent(){
+    public boolean isNamePresent(){
         return driver.findElementById("teamNameInput").isDisplayed();
     }
 
@@ -508,26 +494,6 @@ public class TeamDetailPage extends BasePage {
         String pageName = driver.findElementById("name").getText();
         pageName = pageName.replaceAll("(.*) Action$", "$1");
         return teamName.equals(pageName);
-    }
-
-    public boolean isPUEditPermLinkPresent(){
-        //TODO switch to use user name to check right link
-        return driver.findElementById("editPermissions1").isDisplayed();
-    }
-
-    public boolean isPUEditPermLinkClickable(){
-        //TODO switch to use user name to check right link
-        return isClickable("editPermissions1");
-    }
-
-    public boolean isPUClosePresent(){
-        return driver.findElementByClassName("modal-footer").findElement(By.className("btn")).isDisplayed();
-    }
-
-    //correct to work with classes and stuff expectedConditions
-    @SuppressWarnings("static-access")
-    public boolean isPUCloseClickable(){
-        return ExpectedConditions.elementToBeClickable(By.id("usersModal").className("btn")) != null;
     }
 
     public boolean isleftViewMoreLinkPresent(){
@@ -550,7 +516,7 @@ public class TeamDetailPage extends BasePage {
         return driver.findElementById("rightTileReport").isDisplayed();
     }
 
-    public boolean isAddAppBtnPresent(){
+    public boolean isAddAppBtnPresent() {
         try {
             return driver.findElementById("addApplicationModalButton").isDisplayed();
         } catch (org.openqa.selenium.NoSuchElementException e) {
@@ -566,7 +532,7 @@ public class TeamDetailPage extends BasePage {
         return driver.findElementByLinkText(appName).isDisplayed();
     }
 
-    public boolean isAppLinkClickable(String appName){
+    public boolean isAppLinkClickable(String appName) {
         return ExpectedConditions.elementToBeClickable(By.linkText(appName)) != null;
     }
 
@@ -575,7 +541,7 @@ public class TeamDetailPage extends BasePage {
         return driver.findElementByClassName("alert-success").isDisplayed();
     }
 
-    public boolean isUserPresentPerm(String user){
+    public boolean isUserPresentPerm(String user) {
         for(int i = 1; i <= getNumPermUsers();i++){
             if (driver.findElementById("name"+i).getText().contains(user)){
                 return true;
@@ -649,10 +615,6 @@ public class TeamDetailPage extends BasePage {
         return driver.findElementById("appInfoVulns" + row).getText().trim().equals(expectedNumber);
     }
 
-    public boolean isTeamNamePresent(String teamName) {
-        return driver.findElementById("name").isDisplayed();
-    }
-
     //===========================================================================================================
     // Helper Methods
     //===========================================================================================================
@@ -661,6 +623,12 @@ public class TeamDetailPage extends BasePage {
         int pollCount = 0;
         while (!isVulnerabilityCountCorrect(level, expected) && pollCount <= pollingIntervals) {
             sleep(500);
+        }
+    }
+
+    public void waitForResultsToLoad() {
+        while (driver.findElementById("vulnTreeLoadingSpinner").isDisplayed()) {
+            sleep(1000);
         }
     }
 }
