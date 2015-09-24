@@ -629,14 +629,12 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         TeamDetailPage teamDetailPage = remoteProvidersIndexPage.clickTeamLink(teamName);
 
-        sleep(10000);
-
-        assertTrue("Number of Open Vulnerabilities is not correct", teamDetailPage.isNumberOfOpenVulnerabilityCorrect("77", 0));
-        assertTrue("Number of Critical Vulnerability is not correct", teamDetailPage.isNumberOfCriticalCorrect("10", 0));
-        assertTrue("Number of High Vulnerability is not correct", teamDetailPage.isNumberOfHighCorrect("11", 0));
-        assertTrue("Number of Medium Vulnerability is not correct", teamDetailPage.isNumberOfMediumCorrect("47", 0));
-        assertTrue("Number of Low Vulnerability is not correct", teamDetailPage.isNumberOfLowCorrect("1", 0));
-        assertTrue("Number of Info Vulnerability is not correct", teamDetailPage.isNumberOfInfoCorrect("8", 0));
+        assertTrue("Number of Open vulnerabilities is not correct", teamDetailPage.isNumberOfVulnerabilitiesCorrect("Total", "77", 0));
+        assertTrue("Number of Critical vulnerabilities is not correct", teamDetailPage.isNumberOfVulnerabilitiesCorrect("Critical", "10", 0));
+        assertTrue("Number of High vulnerabilities is not correct", teamDetailPage.isNumberOfVulnerabilitiesCorrect("High", "11", 0));
+        assertTrue("Number of Medium vulnerabilities is not correct", teamDetailPage.isNumberOfVulnerabilitiesCorrect("Medium", "47", 0));
+        assertTrue("Number of Low vulnerabilities is not correct", teamDetailPage.isNumberOfVulnerabilitiesCorrect("Low", "1", 0));
+        assertTrue("Number of Info vulnerabilities is not correct", teamDetailPage.isNumberOfVulnerabilitiesCorrect("Info", "8", 0));
 
         remoteProvidersIndexPage = teamDetailPage.clickRemoteProvidersLink()
                                     .clearConfiguration(WHITEHAT);
