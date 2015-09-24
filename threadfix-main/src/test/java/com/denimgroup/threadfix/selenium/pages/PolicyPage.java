@@ -373,6 +373,15 @@ public class PolicyPage extends BasePage {
         }
     }
 
+    public boolean isAppRemoved(String policyName, String appName) {
+        try {
+            waitForInvisibleElement("#policy" + policyName + "AppRow" + appName);
+            return true;
+        } catch (TimeoutException e) {
+            return false;
+        }
+    }
+
     public boolean isEmailPresent(String email) {
         if (driver.findElementById("emailExpanded").getAttribute("class").contains("expanded")) {
             driver.findElementById("caretEmail").click();

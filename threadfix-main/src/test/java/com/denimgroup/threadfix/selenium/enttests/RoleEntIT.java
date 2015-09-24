@@ -225,8 +225,7 @@ public class RoleEntIT extends BaseDataTest {
 
 		RolesIndexPage rolesIndexPage = loginPage.defaultLogin()
                 .clickManageRolesLink()
-                .clickDeleteButton(roleName)
-                .clickManageRolesLink();
+                .clickDeleteButton(roleName);
 
         assertTrue("Validation message is not Present.",rolesIndexPage.isValidationPresent());
 		assertFalse("Role was not removed.", rolesIndexPage.isNamePresent(roleName));

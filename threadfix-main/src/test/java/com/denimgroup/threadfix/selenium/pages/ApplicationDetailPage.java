@@ -268,10 +268,11 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage clickDeleteScanButton() {
-        if (!tryClick(By.linkText("Delete Scan"))) {
+        if (!tryClick(By.id("deleteScan0"))) {
             throw new StaleElementReferenceException("Delete button could not be clicked.");
         }
         handleAlert();
+        waitForInvisibleElement("scanDeleting0");
         return new ApplicationDetailPage(driver);
     }
 

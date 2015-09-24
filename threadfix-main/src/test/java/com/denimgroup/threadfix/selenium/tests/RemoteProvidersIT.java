@@ -435,7 +435,7 @@ public class RemoteProvidersIT extends BaseDataTest {
         remoteProvidersIndexPage.sleep(1000);
 
         assertTrue("Incorrect credentials accepted",
-                remoteProvidersIndexPage.getErrorMessage().contains("Failure. Unable to retrieve applications. WhiteHat response status:"));
+                remoteProvidersIndexPage.getErrorMessage().contains("Failure. Message was Unable to retrieve applications. WhiteHat response status:"));
     }
 
     @Test

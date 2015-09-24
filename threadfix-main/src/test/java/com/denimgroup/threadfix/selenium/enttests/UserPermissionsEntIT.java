@@ -486,7 +486,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
 
         dashboardPage.clickConfigTab();
 
-        assertFalse("Manage Users Link is Present", dashboardPage.isElementPresent("manageRolesLink"));
+        assertFalse("Manage Roles Link is Present", dashboardPage.isElementPresent("manageRolesLink"));
     }
 
     @Test
@@ -497,7 +497,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
 
         dashboardPage.clickConfigTab();
 
-        assertFalse("Manage Users Link is Present", dashboardPage.isElementPresent("configureDefaultsLink"));
+        assertFalse("Manage System Settings link is Present", dashboardPage.isElementPresent("configureDefaultsLink"));
     }
 
     @Test

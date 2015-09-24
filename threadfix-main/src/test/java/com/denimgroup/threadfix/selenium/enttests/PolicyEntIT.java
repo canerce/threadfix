@@ -132,7 +132,7 @@ public class PolicyEntIT extends BaseDataTest {
 
         policyPage.removeAppFromPolicy(name, appName);
 
-        assertFalse("Application was not removed.", policyPage.isAppPresent(name, appName));
+        assertTrue("Application was not removed.", policyPage.isAppRemoved(name, appName));
     }
 
     @Test
@@ -653,18 +653,18 @@ public class PolicyEntIT extends BaseDataTest {
                 .addAppToPolicy(policyName, appFail)
                 .addAppToPolicy(policyName, appPass);
 
-        assertFalse("Application should be failing less than filter.", policyPage.isAppPassing(appFail));
-        assertTrue("Application should be passing less than filter.", policyPage.isAppPassing(appPass));
+        assertFalse("Application should be failing more than filter.", policyPage.isAppPassing(appFail));
+        assertTrue("Application should be passing more than filter.", policyPage.isAppPassing(appPass));
 
         policyPage.clickFiltersTab()
                 .selectFilterToEdit(filterName)
-                .clickMoreThan()
+                .clickLessThan()
                 .clickSaveFilterButton()
                 .clickPolicyTab()
                 .expandPolicy(policyName);
 
-        assertTrue("Application should be passing more than filter.", policyPage.isAppPassing(appFail));
-        assertFalse("Application should be failing more than filter.", policyPage.isAppPassing(appPass));
+        assertTrue("Application should be passing less than filter.", policyPage.isAppPassing(appFail));
+        assertFalse("Application should be failing less than filter.", policyPage.isAppPassing(appPass));
     }
 
     @Ignore("Date Range filter doesn't respond to Selenium")

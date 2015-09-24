@@ -61,6 +61,7 @@ public class DefectTrackerIndexPage extends BasePage {
 	}
 
 	public DefectTrackerIndexPage clickAddDefectTrackerButton() {
+        waitForElement(By.cssSelector("#defectTrackerTableBody:not(.ng-hide)"));
 		driver.findElementById("addNewDTButton").click();
 		waitForElement(By.id("submit"), 20);
 		return new DefectTrackerIndexPage(driver);
