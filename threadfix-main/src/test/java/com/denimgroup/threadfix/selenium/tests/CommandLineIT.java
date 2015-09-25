@@ -115,6 +115,8 @@ public class CommandLineIT extends BaseDataTest {
 
     @Test
     public void testSearchTagByName() {
+        checkVersion(22);
+        
         dbUtils.createTag("ExampleTag", "Application");
 
         JSONObject response = cliUtils.searchTagByName("ExampleTag");
@@ -254,6 +256,8 @@ public class CommandLineIT extends BaseDataTest {
 
     @Test
     public void testSearchApplicationByUniqueId() {
+        cliUtils.checkVersion(22);
+
         String teamName = getName();
         String appName = getName();
         String uniqueID = getName();
