@@ -9,8 +9,14 @@ import com.denimgroup.threadfix.selenium.utils.CommandLineUtils;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static com.denimgroup.threadfix.selenium.utils.CommandLineUtils.checkVersion;
 import static org.junit.Assert.assertFalse;
@@ -20,6 +26,7 @@ import static org.junit.Assert.assertTrue;
  * Created by rtimmons on 8/17/2015.
  */
 @Category(CommunityTests.class)
+@RunWith(Parameterized.class)
 public class CommandLineIT extends BaseDataTest {
 
     private static final String API_KEY = System.getProperty("API_KEY");
@@ -27,13 +34,31 @@ public class CommandLineIT extends BaseDataTest {
     private static CommandLineUtils cliUtils = new CommandLineUtils();
     private static DatabaseUtils dbUtils = new DatabaseUtils();
 
-    static {
+    @Before
+    public void setVersion() {
+        cliUtils.cliVersion = versionNumber;
         cliUtils.setApiKey(API_KEY);
         cliUtils.setUrl(CLI_REST_URL);
     }
 
+    @Parameterized.Parameters
+    public static List<String[]> getVersions() {
+        return Arrays.asList(new String[][] {
+            {"21"},
+            {"22"},
+            {"23"}
+        });
+    }
+
+    private String versionNumber;
+
+    public CommandLineIT(String versionNumber) {
+        this.versionNumber = versionNumber;
+    }
+
     @Test
     public void testCreateTeam() {
+        System.out.println("versionNumber is " + versionNumber);
         String teamName = getName();
 
         JSONObject response = cliUtils.createTeam(teamName);
@@ -131,7 +156,7 @@ public class CommandLineIT extends BaseDataTest {
 
     @Test
     public void testCreateTagApplication() {
-        checkVersion(2.3);
+        checkVersion(23);
         String tag = getName();
 
         JSONObject response = cliUtils.createTag(tag);
@@ -145,7 +170,7 @@ public class CommandLineIT extends BaseDataTest {
 
     @Test
     public void testCreateTagComment() {
-        checkVersion(2.3);
+        checkVersion(23);
         String tag = getName();
 
         JSONObject response = cliUtils.createTag(tag, "Comment");
@@ -159,7 +184,7 @@ public class CommandLineIT extends BaseDataTest {
 
     @Test
     public void testCreateTagVulnerability() {
-        checkVersion(2.3);
+        checkVersion(23);
         String tag = getName();
 
         JSONObject response = cliUtils.createTag(tag, "Vulnerability");
@@ -307,7 +332,7 @@ public class CommandLineIT extends BaseDataTest {
 
     @Test
     public void testAddTagToApplication() {
-        checkVersion(2.3);
+        checkVersion(23);
         final String TAG_NAME = getName();
         final String TAG_TYPE = "Application";
         initializeTeamAndAppViaCli();
@@ -328,7 +353,7 @@ public class CommandLineIT extends BaseDataTest {
 
     @Test
     public void testLookupAllTags() throws JSONException{
-        checkVersion(2.3);
+        checkVersion(23);
         String tagName = getName();
         DatabaseUtils.createTag(tagName, "Application");
 
@@ -338,7 +363,7 @@ public class CommandLineIT extends BaseDataTest {
 
     @Test
     public void testSearchTagById() {
-        checkVersion(2.3);
+        checkVersion(23);
         String tagName = getName();
         DatabaseUtils.createTag(tagName, "Application");
         int tagID = DatabaseUtils.getTagId(tagName, true);
@@ -432,7 +457,7 @@ public class CommandLineIT extends BaseDataTest {
 
     @Test
     public void testRemoveTagFromApplication() {
-        checkVersion(2.3);
+        checkVersion(23);
         final String TAG_NAME = getName();
         final String TAG_TYPE = "Application";
         initializeTeamAndAppViaCli();
@@ -455,7 +480,7 @@ public class CommandLineIT extends BaseDataTest {
 
     @Test
     public void testUpdateTag() {
-        checkVersion(2.3);
+        checkVersion(23);
         final String ORIGINAL_TAG_NAME = getName();
         final String CHANGED_TAG_NAME = getName();
         final String TAG_TYPE = "Application";
@@ -472,7 +497,7 @@ public class CommandLineIT extends BaseDataTest {
 
     @Test
     public void testRemoveTag() {
-        checkVersion(2.3);
+        checkVersion(23);
         final String TAG_NAME = getName();
         final String TAG_TYPE = "Application";
 

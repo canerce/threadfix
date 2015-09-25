@@ -23,50 +23,37 @@ import static org.junit.Assert.assertFalse;
 public class CommandLineUtils {
     protected final SanitizedLogger log = new SanitizedLogger(CommandLineUtils.class);
 
-    private static List<String> startArgs = list();
     private static final String DIRECTORY;
     private final String INCREASE_RESULTS_ARG = "numberVulnerabilities=100";
 
-    static double cliVersion = 0;
+    public static String cliVersion;
 
     //===========================================================================================================
     // Startup
     //===========================================================================================================
 
     static {
-        try {
-            String cliVersionProperty = System.getProperty("SPECIFIC_CLI_VERSION").trim();
-            cliVersion = Double.parseDouble(cliVersionProperty);
-            System.out.println("Using CLI jar for ThreadFix " + cliVersion);
-        } catch (NullPointerException ex) {
-            System.out.println("Optional system property SPECIFIC_CLI_VERSION not set.\nContinuing with default CLI jar.");
-        }
-
-        if (cliVersion > 0) {
-            DIRECTORY = System.getProperty("CLI_JAR_DIRECTORY");
-        } else {
-            DIRECTORY = ".." + File.separator + "threadfix-cli" + File.separator + "target";
-        }
+        DIRECTORY = System.getProperty("CLI_JAR_DIRECTORY");
+        System.out.println("Setting directory as: " + DIRECTORY);
     }
 
-    static {
+    public List<String> buildStartArgs(String cliVersion) {
+        List<String> startArgs = list();
         if (System.getProperty("os.name").startsWith("Windows")) {
             startArgs.addAll(list("CMD", "/C"));
         }
         startArgs.addAll(list("java", "-jar"));
-        if (cliVersion != 0) {
-            startArgs.add(cliVersion + ".jar");
-        } else {
-            startArgs.add("threadfix-cli-2.2-SNAPSHOT-jar-with-dependencies.jar");
-        }
+        startArgs.add(cliVersion + ".jar");
+        System.out.println("Built start args with version as: " + cliVersion + ".jar");
+        return startArgs;
     }
 
     // Executes command and returns JSON object
     public JSONObject executeCommand(String workingDirectory, String... args) {
         JSONObject jsonResponse = null;
 
-        List<String> finalArgs = new ArrayList<>();
-        finalArgs.addAll(startArgs);
+        List<String> finalArgs = list();
+        finalArgs.addAll(buildStartArgs(cliVersion));
         Collections.addAll(finalArgs, args);
         ProcessBuilder processBuilder = new ProcessBuilder(finalArgs);
         processBuilder.directory(new File(workingDirectory));
@@ -97,10 +84,9 @@ public class CommandLineUtils {
         return executeCommand(DIRECTORY, args);
     }
 
-    public static void checkVersion(double introductionVersion) {
-        if (cliVersion > 0) {
-            assumeTrue(introductionVersion <= cliVersion);
-        }
+    public static void checkVersion(int introductionVersion) {
+        int currentVersion = Integer.valueOf(cliVersion);
+        assumeTrue(introductionVersion <= currentVersion);
     }
 
     //===========================================================================================================
