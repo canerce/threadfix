@@ -328,7 +328,11 @@ public class TeamIndexPage extends BasePage {
     }
 
     public boolean isAppDisplayed(String teamName, String appName) {
-        return driver.findElementById("applicationLink" + teamName + "-" + appName).isDisplayed();
+        try {
+            return driver.findElementById("applicationLink" + teamName + "-" + appName).isDisplayed();
+        } catch (NoSuchElementException ex) {
+            return false;
+        }
     }
 
     public boolean isTeamPresent(String teamName) {
