@@ -34,17 +34,22 @@ public class CommandLineIT extends BaseDataTest {
     private static CommandLineUtils cliUtils = new CommandLineUtils();
     private static DatabaseUtils dbUtils = new DatabaseUtils();
 
+    static {
+        for (String[] versionArray : getVersions()) {
+            cliUtils.cliVersion = versionArray[0];
+            cliUtils.setApiKey(API_KEY);
+            cliUtils.setUrl(CLI_REST_URL);
+        }
+    }
+
     @Before
     public void setVersion() {
         cliUtils.cliVersion = versionNumber;
-        cliUtils.setApiKey(API_KEY);
-        cliUtils.setUrl(CLI_REST_URL);
     }
 
     @Parameterized.Parameters
     public static List<String[]> getVersions() {
         return Arrays.asList(new String[][] {
-            {"20"},
             {"21"},
             {"22"},
             {"23"}
