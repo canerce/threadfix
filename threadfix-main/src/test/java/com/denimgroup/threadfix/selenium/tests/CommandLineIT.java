@@ -44,6 +44,7 @@ public class CommandLineIT extends BaseDataTest {
     @Parameterized.Parameters
     public static List<String[]> getVersions() {
         return Arrays.asList(new String[][] {
+            {"20"},
             {"21"},
             {"22"},
             {"23"}
