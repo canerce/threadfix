@@ -116,7 +116,7 @@ public class CommandLineIT extends BaseDataTest {
     @Test
     public void testSearchTagByName() {
         checkVersion(22);
-        
+
         dbUtils.createTag("ExampleTag", "Application");
 
         JSONObject response = cliUtils.searchTagByName("ExampleTag");
@@ -319,7 +319,7 @@ public class CommandLineIT extends BaseDataTest {
 
     @Test
     public void testSetParameters() {
-        final String FRAMEWORK_TYPE = "RAILS";
+        final String FRAMEWORK_TYPE = "STRUTS";
         final String REPOSITORY_URL = "https://github.com/denimgroup/threadfix.git";
         initializeTeamAndAppViaCli();
 
