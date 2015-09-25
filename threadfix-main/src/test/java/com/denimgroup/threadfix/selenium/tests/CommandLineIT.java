@@ -36,7 +36,7 @@ public class CommandLineIT extends BaseDataTest {
 
     static {
         for (String[] versionArray : getVersions()) {
-            cliUtils.cliVersion = versionArray[0];
+            CommandLineUtils.cliVersion = versionArray[0];
             cliUtils.setApiKey(API_KEY);
             cliUtils.setUrl(CLI_REST_URL);
         }
@@ -44,7 +44,7 @@ public class CommandLineIT extends BaseDataTest {
 
     @Before
     public void setVersion() {
-        cliUtils.cliVersion = versionNumber;
+        CommandLineUtils.cliVersion = versionNumber;
     }
 
     @Parameterized.Parameters
