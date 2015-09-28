@@ -603,6 +603,7 @@ public class TeamDetailPage extends BasePage {
         int pollCount = 0;
         while (!isVulnerabilityCountCorrect(level, expected) && pollCount <= pollingIntervals) {
             sleep(500);
+            pollCount++;
         }
     }
 
