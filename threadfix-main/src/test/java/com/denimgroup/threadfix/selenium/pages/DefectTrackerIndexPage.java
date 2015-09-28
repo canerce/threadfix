@@ -164,7 +164,7 @@ public class DefectTrackerIndexPage extends BasePage {
     //===========================================================================================================
 
 	public boolean isTextPresentInDefectTrackerTableBody(String newDefectTrackerName) {
-        waitForElement(By.id("addNewDTButton"));
+        waitForElement(By.cssSelector("#defectTrackerTableBody:not(.ng-hide)"));
 		return driver.findElementById("defectTrackerTableBody").getText().contains(newDefectTrackerName);
 	}
 

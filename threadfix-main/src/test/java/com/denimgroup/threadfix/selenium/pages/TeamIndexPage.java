@@ -278,6 +278,8 @@ public class TeamIndexPage extends BasePage {
         WebElement searchField = driver.findElementById("appSelectTypeahead" + teamName);
         searchField.sendKeys(searchTerm);
         searchField.sendKeys(Keys.RETURN);
+        //A necessary sleep as there is no element to wait on
+        sleep(500);
         return new TeamIndexPage(driver);
     }
 

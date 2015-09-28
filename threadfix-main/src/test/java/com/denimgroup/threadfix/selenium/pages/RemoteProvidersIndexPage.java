@@ -93,6 +93,8 @@ public class RemoteProvidersIndexPage extends BasePage {
 
     public TeamDetailPage clickTeamLink(String teamName) {
         driver.findElementByLinkText(teamName).click();
+        //A sleep needed to give the page a chance to load
+        sleep(500);
         return new TeamDetailPage(driver);
     }
 
