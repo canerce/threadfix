@@ -7,8 +7,14 @@ import com.denimgroup.threadfix.selenium.tests.ScanContents;
 import com.denimgroup.threadfix.selenium.utils.CommandLineUtils;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.json.JSONObject;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
@@ -16,16 +22,41 @@ import static org.junit.Assert.assertTrue;
  * Created by rtimmons on 8/20/2015.
  */
 @Category(EnterpriseTests.class)
+@RunWith(Parameterized.class)
 public class CommandLineEntIT extends BaseDataTest {
     private static final String API_KEY = System.getProperty("API_KEY");
     private static final String CLI_REST_URL = System.getProperty("CLI_REST_URL");
     private static CommandLineUtils cliUtils = new CommandLineUtils();
-    private static DatabaseUtils dbUtils = new DatabaseUtils();
 
     static {
-        cliUtils.setApiKey(API_KEY);
-        cliUtils.setUrl(CLI_REST_URL);
+        for (String[] versionArray : getVersions()) {
+            CommandLineUtils.cliVersion = versionArray[0];
+            cliUtils.setApiKey(API_KEY);
+            cliUtils.setUrl(CLI_REST_URL);
+        }
     }
+
+    @Before
+    public void setVersion() {
+        CommandLineUtils.cliVersion = versionNumber;
+    }
+
+    @Parameterized.Parameters
+    public static List<String[]> getVersions() {
+        return Arrays.asList(new String[][]{
+                {"21"},
+                {"22"},
+                {"23"}
+        });
+    }
+
+    private String versionNumber;
+
+    public CommandLineEntIT(String versionNumber) {
+        this.versionNumber = versionNumber;
+    }
+
+
 
     @Test
     public void testQueueScan() {
