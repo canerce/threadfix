@@ -608,8 +608,11 @@ public class TeamDetailPage extends BasePage {
     }
 
     public void waitForResultsToLoad() {
-        while (driver.findElementById("vulnTreeLoadingSpinner").isDisplayed()) {
+        final int pollingIntervals = 15;
+        int pollCount = 0;
+        while (driver.findElementById("vulnTreeLoadingSpinner").isDisplayed() && pollCount <= pollingIntervals) {
             sleep(1000);
+            pollCount++;
         }
     }
 }
