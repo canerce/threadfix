@@ -727,7 +727,7 @@ public abstract class BasePage {
     @SuppressWarnings("unchecked")
     public <T extends BasePage> T clickModalSubmit(Class<T> targetClass) {
         driver.findElementById("submit").click();
-        waitForInvisibleElement("submit");
+        waitForInvisibleElement("myModalLabel");
 
         return (T) this;
     }

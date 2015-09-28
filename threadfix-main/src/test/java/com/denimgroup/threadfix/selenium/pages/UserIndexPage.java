@@ -334,11 +334,13 @@ public class UserIndexPage extends BasePage {
 
     public UserIndexPage clickAddTeamRole() {
         driver.findElementById("addPermissionButton").click();
+        waitForElement(By.id("orgSelect"));
         return new UserIndexPage(driver);
     }
 
     public UserIndexPage clickAddApplicationRole() {
         driver.findElementById("addApplicationRoleButton").click();
+        waitForElement(By.id("orgSelect"));
         return new UserIndexPage(driver);
     }
 
