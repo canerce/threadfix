@@ -608,9 +608,9 @@ public class TeamDetailPage extends BasePage {
     }
 
     public void waitForResultsToLoad() {
-        final int pollingIntervals = 15;
+        final int POLLING_INTERVALS = 15;
         int pollCount = 0;
-        while (driver.findElementById("vulnTreeLoadingSpinner").isDisplayed() && pollCount <= pollingIntervals) {
+        while (driver.findElementById("vulnTreeLoadingSpinner").isDisplayed() && pollCount <= POLLING_INTERVALS) {
             sleep(1000);
             pollCount++;
         }
