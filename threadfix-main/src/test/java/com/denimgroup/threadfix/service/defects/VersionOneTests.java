@@ -27,8 +27,6 @@ import com.denimgroup.threadfix.data.entities.DefectTrackerType;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl;
 import org.junit.Test;
 
-import java.util.List;
-
 import static com.denimgroup.threadfix.service.defects.util.TestConstants.*;
 import static org.junit.Assert.assertTrue;
 
@@ -59,14 +57,6 @@ public class VersionOneTests {
         AbstractDefectTracker tracker = getTracker();
 
         assertTrue("Tracker should have been VersionOne but wasn't.", tracker instanceof VersionOneDefectTracker);
-    }
-
-    @Test
-    public void testResponseWithSpecialCharacters() {
-        AbstractDefectTracker tracker = getTracker();
-        List<String> productNames = tracker.getProductNames();
-
-        System.out.println(productNames);
     }
 
 }
