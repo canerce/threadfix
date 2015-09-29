@@ -114,11 +114,12 @@ public class CommandLineIT extends BaseDataTest {
 
     @Test
     public void testSearchTagByName() {
-        checkVersion(22);
+        checkVersion(23);
+        String tagName = getName();
 
-        dbUtils.createTag("ExampleTag", "Application");
+        dbUtils.createTag(tagName, "Application");
 
-        JSONObject response = cliUtils.searchTagByName("ExampleTag");
+        JSONObject response = cliUtils.searchTagByName(tagName);
         assertTrue("Tag was not found.", cliUtils.isCommandResponseSuccessful(response));
     }
 
@@ -318,7 +319,7 @@ public class CommandLineIT extends BaseDataTest {
 
     @Test
     public void testSetParameters() {
-        final String FRAMEWORK_TYPE = "STRUTS";
+        final String FRAMEWORK_TYPE = "JSP";
         final String REPOSITORY_URL = "https://github.com/denimgroup/threadfix.git";
         initializeTeamAndAppViaCli();
 
