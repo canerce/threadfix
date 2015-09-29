@@ -35,11 +35,10 @@ public class CommandLineIT extends BaseDataTest {
     private static DatabaseUtils dbUtils = new DatabaseUtils();
 
     static {
-        for (String[] versionArray : getVersions()) {
-            CommandLineUtils.cliVersion = versionArray[0];
-            cliUtils.setApiKey(API_KEY);
-            cliUtils.setUrl(CLI_REST_URL);
-        }
+        // Performs API Key and URL Setup
+        CommandLineUtils.cliVersion = getVersions().get(0)[0];
+        cliUtils.configureAPIKey(API_KEY);
+        cliUtils.setUrl(CLI_REST_URL);
     }
 
     @Before

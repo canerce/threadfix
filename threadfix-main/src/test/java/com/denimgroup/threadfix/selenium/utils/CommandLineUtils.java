@@ -34,6 +34,9 @@ public class CommandLineUtils {
 
     static {
         DIRECTORY = System.getProperty("CLI_JAR_DIRECTORY");
+        if (DIRECTORY == null) {
+            throw new IllegalStateException("CLI_JAR_DIRECTORY system property was not set properly.");
+        }
         System.out.println("Setting directory as: " + DIRECTORY);
     }
 
@@ -93,7 +96,7 @@ public class CommandLineUtils {
     // Configuration
     //===========================================================================================================
 
-    public void setApiKey(String apiKey) {
+    public void configureAPIKey(String apiKey) {
         executeJarCommand("-set", "key", apiKey);
     }
 

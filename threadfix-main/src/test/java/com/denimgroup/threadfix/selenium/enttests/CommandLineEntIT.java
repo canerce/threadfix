@@ -5,7 +5,6 @@ import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.tests.BaseDataTest;
 import com.denimgroup.threadfix.selenium.tests.ScanContents;
 import com.denimgroup.threadfix.selenium.utils.CommandLineUtils;
-import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +30,7 @@ public class CommandLineEntIT extends BaseDataTest {
     static {
         for (String[] versionArray : getVersions()) {
             CommandLineUtils.cliVersion = versionArray[0];
-            cliUtils.setApiKey(API_KEY);
+            cliUtils.configureAPIKey(API_KEY);
             cliUtils.setUrl(CLI_REST_URL);
         }
     }
