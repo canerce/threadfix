@@ -47,7 +47,7 @@ public class ApplicationDetailPage extends BasePage {
                 .selectDefectTracker(defectTracker)
                 .setUsername(username)
                 .setPassword(password)
-                .clickTestConnection()
+                .clickGetProductNames()
                 .selectProduct(productName)
                 .clickUpdateApplicationButton()
                 .clickUpdateApplicationButton();
@@ -120,13 +120,6 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage clickAddDefectTrackerButton() {
         driver.findElementById("addDefectTrackerButton").click();
         sleep(1000);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage clickTestConnection() {
-        waitForElement(By.id("getProductNames"));
-        driver.findElementById("getProductNames").click();
-        sleep(5000);
         return new ApplicationDetailPage(driver);
     }
 
@@ -628,7 +621,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage clickGetProductNames() {
         driver.findElementById("getProductNames").click();
-        waitForElement(By.cssSelector("#productNameSelect:not(.ng-hide)"));
+        waitForElement(By.cssSelector("#productNamesSection:not(.ng-hide)"));
         return new ApplicationDetailPage(driver);
     }
 

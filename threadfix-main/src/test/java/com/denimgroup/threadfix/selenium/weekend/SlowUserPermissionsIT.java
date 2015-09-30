@@ -120,7 +120,7 @@ public class SlowUserPermissionsIT extends BaseIT{
                 .selectDefectTracker(defectTrackerName)
                 .setUsername(BUGZILLA_USERNAME)
                 .setPassword(BUGZILLA_PASSWORD)
-                .clickTestConnection()
+                .clickGetProductNames()
                 .selectProduct("QA Testing")
                 .clickUpdateApplicationButton();
 
