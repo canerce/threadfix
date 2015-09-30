@@ -478,19 +478,12 @@ public class UserIndexPage extends BasePage {
     }
 
     public boolean isErrorPresent(String errorMessage) {
-        WebElement element = null;
-        List<WebElement> elementList = driver.findElementsByClassName("errors");
-        for (WebElement e : elementList) {
-            if (e.isDisplayed()) {
-                element = e;
-                break;
-            }
-        }
-        if (element == null) {
+        try {
+            return driver.findElementByCssSelector(".errors:not(.ng-hide)").getText().contains(errorMessage);
+        } catch (NoSuchElementException e) {
             System.out.println("No error message found.");
             return false;
         }
-        return element.getText().contains(errorMessage);
     }
 
     public boolean isDisplayNameMatching(String expectedName) {
