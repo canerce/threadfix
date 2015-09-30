@@ -353,7 +353,7 @@ public class TeamDetailPage extends BasePage {
 
     public TeamDetailPage setChangeSeverity(String severity) {
         hover("changeSeverityButton");
-        driver.findElementById("severity" + severity).click();
+        clickMouseoverElement("severity" + severity);
         return new TeamDetailPage(driver);
     }
 
@@ -559,7 +559,7 @@ public class TeamDetailPage extends BasePage {
     }
 
     public boolean isVulnerabilityCountCorrect(String level, String expected) {
-        return expected.equals(driver.findElementById("totalBadge" + level).getText());
+        return expected.equals(tryGetText(By.id("totalBadge" + level)));
     }
 
     public boolean areAllVulnerabilitiesHidden() {

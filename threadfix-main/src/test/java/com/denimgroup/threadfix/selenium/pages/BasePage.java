@@ -638,6 +638,20 @@ public abstract class BasePage {
     }
 
     @SuppressWarnings("unchecked")
+    public <T extends BasePage> T clickMouseoverElement(String id) {
+        return (T) clickMouseoverElement(id, this.getClass());
+    }
+
+    public <T extends BasePage> T clickMouseoverElement(String ID, Class<T> targetClass) {
+        WebElement element = driver.findElementById(ID);
+        Actions builder = new Actions(driver);
+        builder.clickAndHold(element).build().perform();
+        builder.release(element).build().perform();
+        return (T) this;
+    }
+
+
+    @SuppressWarnings("unchecked")
     public <T extends BasePage> T clickSVGElement(String id) {
         return (T) clickSVGElement(id, this.getClass());
     }
