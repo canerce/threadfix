@@ -148,7 +148,7 @@ public class PolicyPage extends BasePage {
     //===========================================================================================================
 
     public PolicyPage clickPolicyTab() {
-        driver.findElementByLinkText("Policy").click();
+        driver.findElementByCssSelector("#policyTab>a").click();
         //This sleep is necessary; the page elements are all present upon page load but will
         //update shortly afterward, reverting any actions you make
         sleep(500);
@@ -157,7 +157,7 @@ public class PolicyPage extends BasePage {
     }
 
     public PolicyPage clickFiltersTab() {
-        driver.findElementByLinkText("Filters").click();
+        driver.findElementByCssSelector("#filterTab>a").click();
         //This sleep is necessary; the page elements are all present upon page load but will
         //update shortly afterward, reverting any actions you make
         sleep(500);
