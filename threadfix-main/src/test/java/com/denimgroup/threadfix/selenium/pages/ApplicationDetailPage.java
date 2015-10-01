@@ -91,7 +91,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage attachTag(String tagName) {
         driver.findElementById("tagsButton").click();
-        driver.findElementByXPath("//*[@id=\'tagSelect\']//input[contains(@class,'inputFilter')]").sendKeys(tagName);
+        driver.findElementByCssSelector("#tagSelect input.inputFilter").sendKeys(tagName);
         driver.findElementById(tagName).click();
         driver.findElementById("tagsButton").click();
         return this;
@@ -661,6 +661,12 @@ public class ApplicationDetailPage extends BasePage {
         driver.findElementById("gitRadioButton").click();
     }
 
+    public ApplicationDetailPage clickBatchTagging() {
+        driver.findElementById("addBatchTaggingBtn").click();
+        waitForElement(By.id("myModalLabel"));
+        return new ApplicationDetailPage(driver);
+    }
+
     //===========================================================================================================
     // Set Methods
     //===========================================================================================================
@@ -893,6 +899,12 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage setDefectTrackerDefaultPassword(String password) {
         driver.findElementById("defaultPassword").sendKeys(password);
         return this;
+    }
+
+    public ApplicationDetailPage setChangeSeverity(String severity) {
+        hover("changeSeverityButton");
+        clickMouseoverElement("severity" + severity);
+        return new ApplicationDetailPage(driver);
     }
 
     //===========================================================================================================
@@ -1456,6 +1468,10 @@ public class ApplicationDetailPage extends BasePage {
         return isElementPresent("policy" + policyName);
     }
 
+    public boolean isVulnerabilityTagPresent(String severity, String type, String number, String tag) {
+        return isElementPresent(By.id("tag" + severity + type + number + tag));
+    }
+
     //===========================================================================================================
     // Helper Methods
     //===========================================================================================================
@@ -1478,5 +1494,9 @@ public class ApplicationDetailPage extends BasePage {
 
     public void waitForCWEBar(String teamName, String appName, String vulnerability) {
         waitForElement(By.id(teamName + appName + vulnerability + "Bar"));
+    }
+
+    public void waitForVulnerabilityCountUpdate(String severity, String count) {
+        waitForElementTextUpdate(By.id("totalBadge" + severity), count);
     }
 }

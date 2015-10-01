@@ -47,6 +47,14 @@ public class TeamDetailPage extends BasePage {
         return new TeamIndexPage(driver);
     }
 
+    public TeamDetailPage attachTagToVulnerability(String tagName) {
+        driver.findElementById("tagsButton").click();
+        driver.findElementByCssSelector("#tagSelect input.inputFilter").sendKeys(tagName);
+        driver.findElementById(tagName).click();
+        driver.findElementById("tagsButton").click();
+        return this;
+    }
+
     //===========================================================================================================
     // Action Methods
     //===========================================================================================================
@@ -347,6 +355,12 @@ public class TeamDetailPage extends BasePage {
         return new TeamDetailPage(driver);
     }
 
+    public TeamDetailPage clickBatchTagging() {
+        driver.findElementById("addBatchTaggingBtn").click();
+        waitForElement(By.id("myModalLabel"));
+        return new TeamDetailPage(driver);
+    }
+
     //===========================================================================================================
     // Set Methods
     //===========================================================================================================
@@ -595,16 +609,16 @@ public class TeamDetailPage extends BasePage {
         return driver.findElementById("app" + column + "Vulns" + row).getText().trim().equals(expectedNumber);
     }
 
+    public boolean isVulnerabilityTagPresent(String severity, String type, String number, String tag) {
+        return isElementPresent(By.id("tag" + severity + type + number + tag));
+    }
+
     //===========================================================================================================
     // Helper Methods
     //===========================================================================================================
 
-    public void waitForVulnCountUpdate(String level, String expected, int pollingIntervals) {
-        int pollCount = 0;
-        while (!isVulnerabilityCountCorrect(level, expected) && pollCount <= pollingIntervals) {
-            sleep(500);
-            pollCount++;
-        }
+    public void waitForVulnCountUpdate(String level, String expected) {
+        waitForElementTextUpdate(By.id("totalBadge" + level), expected);
     }
 
     public void waitForResultsToLoad() {

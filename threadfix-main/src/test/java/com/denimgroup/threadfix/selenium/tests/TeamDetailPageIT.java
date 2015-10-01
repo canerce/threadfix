@@ -146,7 +146,7 @@ public class TeamDetailPageIT extends BaseIT {
                 .clickVulnerabilitiesActionButton()
                 .setChangeSeverity("Critical");
 
-        teamDetailPage.waitForVulnCountUpdate("High", "4", 10);
+        teamDetailPage.waitForVulnCountUpdate("Critical", "4");
 
         assertTrue("Critical vuln count was not correct after changing severity of 4 vulns.",
                 teamDetailPage.isVulnerabilityCountCorrect("Critical", "4"));
@@ -170,7 +170,7 @@ public class TeamDetailPageIT extends BaseIT {
                 .clickVulnerabilitiesActionButton()
                 .clickCloseVulnerabilities();
 
-        teamDetailPage.waitForVulnCountUpdate("High", "5", 10);
+        teamDetailPage.waitForVulnCountUpdate("High", "5");
 
         assertTrue("High vuln count is incorrect after closing a high vuln.",
                 teamDetailPage.isVulnerabilityCountCorrect("High", "5"));
@@ -192,15 +192,39 @@ public class TeamDetailPageIT extends BaseIT {
                 .clickVulnerabilitiesActionButton()
                 .clickMarkFalseVulnerability();
 
-        teamDetailPage.waitForVulnCountUpdate("High", "5", 10);
+        teamDetailPage.waitForVulnCountUpdate("High", "5");
         assertTrue("High vuln count is incorrect after marking a high vuln as false positive.",
                 teamDetailPage.isVulnerabilityCountCorrect("High", "5"));
 
         teamDetailPage.filterByFalsePositive();
 
-        teamDetailPage.waitForVulnCountUpdate("High", "1", 10);
+        teamDetailPage.waitForVulnCountUpdate("High", "1");
         assertTrue("High vuln count is incorrect after marking a high vuln as false positive.",
                 teamDetailPage.isVulnerabilityCountCorrect("High", "1"));
 
+    }
+
+    @Test
+    public void testBatchTaggingVulnerabilities() {
+        String tagName = getName();
+        DatabaseUtils.createTag(tagName, "Vulnerability");
+
+        TeamDetailPage teamDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .clickViewTeamLink(teamName)
+                .clickVulnerabilitiesTab()
+                .expandVulnerabilityByType("Medium209")
+                .checkVulnerabilitiesByCategory("Medium209")
+                .clickVulnerabilitiesActionButton()
+                .clickBatchTagging()
+                .attachTagToVulnerability(tagName)
+                .clickModalSubmit();
+
+        assertTrue("Tag was not added to first vulnerability.",
+                teamDetailPage.isVulnerabilityTagPresent("Medium", "209", "0", tagName));
+        assertTrue("Tag was not added to second vulnerability.",
+                teamDetailPage.isVulnerabilityTagPresent("Medium", "209", "1", tagName));
+        assertTrue("Tag was not added to third vulnerability.",
+                teamDetailPage.isVulnerabilityTagPresent("Medium", "209", "2", tagName));
     }
 }

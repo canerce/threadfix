@@ -286,6 +286,36 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
     }
 
     @Test
+    public void testChangeSingleVulnerabilitySeverity() {
+        applicationDetailPage.expandVulnerabilityByType("High79")
+                .checkVulnerabilityByType("High790")
+                .clickVulnerabilitiesActionButton()
+                .setChangeSeverity("Critical");
+
+        applicationDetailPage.waitForVulnerabilityCountUpdate("Critical", "1");
+
+        assertTrue("Critical vulnerability count is not 1",
+                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "1"));
+        assertTrue("High vulnerability count is not 9",
+                applicationDetailPage.isVulnerabilityCountCorrect("High", "9"));
+    }
+
+    @Test
+    public void testChangeMultipleVulnerabilitiesSeverity() {
+        applicationDetailPage.expandVulnerabilityByType("High79")
+                .checkVulnerabilitiesByCategory("High79")
+                .clickVulnerabilitiesActionButton()
+                .setChangeSeverity("Critical");
+
+        applicationDetailPage.waitForVulnerabilityCountUpdate("Critical", "5");
+
+        assertTrue("Critical vulnerability count is not 5",
+                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "5"));
+        assertTrue("High vulnerability count is not 5",
+                applicationDetailPage.isVulnerabilityCountCorrect("High", "5"));
+    }
+
+    @Test
     public void testViewMoreLink() {
         applicationDetailPage.expandVulnerabilityByType("High79")
                 .expandCommentSection("High790")
@@ -333,6 +363,27 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
         applicationDetailPage.expandVulnerabilityByType("High79");
 
         assertFalse("Pagination available", applicationDetailPage.isPaginationPresent("High79"));
+    }
 
+    @Test
+    public void testBatchTaggingVulnerabilities() {
+        String tagName = getName();
+        DatabaseUtils.createTag(tagName, "Vulnerability");
+
+        applicationDetailPage.refreshPage();
+
+        applicationDetailPage.expandVulnerabilityByType("Medium74")
+                .checkVulnerabilitiesByCategory("Medium74")
+                .clickVulnerabilitiesActionButton()
+                .clickBatchTagging()
+                .attachTag(tagName)
+                .clickModalSubmit();
+
+        assertTrue("Tag was not added to first vulnerability.",
+                applicationDetailPage.isVulnerabilityTagPresent("Medium", "74", "0", tagName));
+        assertTrue("Tag was not added to second vulnerability.",
+                applicationDetailPage.isVulnerabilityTagPresent("Medium", "74", "1", tagName));
+        assertTrue("Tag was not added to third vulnerability.",
+                applicationDetailPage.isVulnerabilityTagPresent("Medium", "74", "2", tagName));
     }
 }

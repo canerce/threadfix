@@ -603,6 +603,15 @@ public abstract class BasePage {
         }
 	}
 
+    public void waitForElementTextUpdate(By by, String text) {
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, 10);
+            wait.until(ExpectedConditions.textToBePresentInElementLocated(by, text));
+        } catch (TimeoutException t) {
+            throw t;
+        }
+    }
+
     public void waitForElementText(String elementId, int timeInSeconds) {
         int attempts = 0;
         int numPolls = timeInSeconds * 4;
