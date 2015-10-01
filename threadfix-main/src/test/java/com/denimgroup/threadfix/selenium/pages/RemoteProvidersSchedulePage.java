@@ -101,7 +101,8 @@ public class RemoteProvidersSchedulePage extends BasePage{
     }
 
     public boolean isErrorPresent(String errorMessage) {
-        return driver.findElementByClassName("errors").getText().trim().contains(errorMessage);
+        waitForElement(By.cssSelector("#dateError:not(.ng-hide)"));
+        return driver.findElementById("dateError").getText().trim().contains(errorMessage);
     }
 
     public boolean isDeleteButtonPresent(String elementId) {
