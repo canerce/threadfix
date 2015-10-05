@@ -704,6 +704,27 @@ public class UserPermissionsEntIT extends BaseDataTest{
     }
 
     @Test
+    public void testManageScanResultFiltersPermission() {
+        createRestrictedUser("canManageScanResultFilters");
+
+        DashboardPage dashboardPage = loginPage.login(userName, testPassword);
+
+        dashboardPage.clickConfigTab();
+
+        assertFalse("Scanner Severities Link is Present", dashboardPage.isScannerSeveritiesLinkPresent());
+    }
+
+    @Test
+    public void testManageCustomizeCWETextPermission() {
+        createRestrictedUser("canManageCustomCweText");
+
+        CustomizeVulnerabilityTypesPage customizeVulnerabilityTypesPage = loginPage.login(userName, testPassword)
+                .clickCustomizeThreadFixVulnerabilityTypesLink();
+
+        assertFalse("Custom Text link should not be present", customizeVulnerabilityTypesPage.isCustomTextTabPresent());
+    }
+
+    @Test
     public void testModifyVulnerabilitiesPermission() {
         initializeTeamAndAppWithIbmScan();
 
