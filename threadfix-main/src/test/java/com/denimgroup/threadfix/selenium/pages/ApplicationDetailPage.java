@@ -667,6 +667,12 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
+    public TeamDetailPage clickTeamLink() {
+        driver.findElementById("teamLink").click();
+        waitForElement(By.id("applicationsTableBody"));
+        return new TeamDetailPage(driver);
+    }
+
     //===========================================================================================================
     // Set Methods
     //===========================================================================================================
@@ -1278,6 +1284,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public boolean isWafCreationDenied() {
         sleep(2000);
+        handleAlert();
         return driver.findElementById("myModalLabel").getText().equals("Add WAF");
     }
 
@@ -1408,7 +1415,7 @@ public class ApplicationDetailPage extends BasePage {
         return driver.findElementById("linkDT").getText().trim().equals(defectTrackerName);
     }
 
-    public boolean isDetailLinkDisply() { return driver.findElementById("viewApplicationModalButton").isDisplayed();}
+    public boolean isDetailLinkDisplayed() { return driver.findElementById("viewApplicationModalButton").isDisplayed();}
 
     public boolean isOrderOfSelectorCorrect(String firstTeam, String secondTeam) {
         int firstTeamValue;

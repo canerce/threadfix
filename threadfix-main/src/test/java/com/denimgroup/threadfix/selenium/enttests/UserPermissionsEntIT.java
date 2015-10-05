@@ -38,6 +38,10 @@ import static org.junit.Assert.assertTrue;
 @Category(EnterpriseTests.class)
 public class UserPermissionsEntIT extends BaseDataTest{
 
+    //===========================================================================================================
+    // Team and Application Tests
+    //===========================================================================================================
+
     @Test
     public void testBasicNavigation() {
         String userName = createRegularUser();
@@ -274,350 +278,6 @@ public class UserPermissionsEntIT extends BaseDataTest{
         assertTrue("The applications are not sorted", userIndexPage.compareOrderOfSelector(firstTeamName, secondTeamName));
     }
 
-    @Ignore
-    @Test
-    public void testReportPermissions() {
-        initializeTeamAndAppWithIbmScan();
-
-        String userName = getRandomString(8);
-
-        String roleName = getName();
-        String deniedPermission = "canGenerateReports";
-
-        //DatabaseUtils.createRole(roleName);
-
-        RolesIndexPage rolesIndexPage = loginPage.defaultLogin()
-                .clickManageRolesLink()
-                .clickCreateRole()
-                .setRoleName(roleName)
-                .toggleAllPermissions(true)
-                .setPermissionValue(deniedPermission,false)
-                .clickModalSubmit();
-    }
-
-    @Test
-    public void testViewErrorLogPermission() {
-        createRestrictedUser("canViewErrorLogs");
-
-        DashboardPage dashboardPage = loginPage.login(userName, testPassword);
-
-        dashboardPage.clickConfigTab();
-
-       assertFalse("View Error Log wasn't gone", dashboardPage.isElementPresent("viewLogsLink"));
-    }
-
-    @Test
-    public void testUploadScanPermission() {
-        initializeTeamAndApp();
-
-        createRestrictedUser("canUploadScans");
-
-        TeamIndexPage teamIndexPage = loginPage.login(userName, testPassword)
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName);
-
-        assertFalse("Upload Button is Available", teamIndexPage.isUploadButtonPresent(teamName, appName));
-
-        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickApplicationName(teamName, appName)
-                .clickActionButton();
-
-        assertFalse("Upload Link is Available", applicationDetailPage.isElementPresent("uploadScanModalLink"));
-    }
-
-    @Test
-    public void testSubmitDefectsPermission() {
-        initializeTeamAndAppWithIbmScan();
-
-        createRestrictedUser("canSubmitDefects");
-
-        String newDefectTrackerName = getName();
-        String defectTrackerType = "Bugzilla";
-
-        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login(userName, testPassword)
-                .clickDefectTrackersLink()
-                .clickAddDefectTrackerButton()
-                .setName(newDefectTrackerName)
-                .setURL(BUGZILLA_URL)
-                .setType(defectTrackerType)
-                .clickSaveDefectTracker();
-
-        ApplicationDetailPage applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickApplicationName(teamName, appName)
-                .addDefectTracker(newDefectTrackerName, BUGZILLA_USERNAME, BUGZILLA_PASSWORD, BUGZILLA_PROJECTNAME)
-                .clickVulnerabilitiesActionButton();
-
-        assertFalse("Submit Defect is Present", applicationDetailPage.isElementPresent("submitDefectButton"));
-    }
-
-    @Test
-    public void testManageVulnerabilityFilters() {
-        initializeTeamAndAppWithIbmScan();
-
-        createRestrictedUser("canManageVulnFilters");
-
-        CustomizeVulnerabilityTypesPage customizeVulnerabilityTypesPage = loginPage.login(userName, testPassword)
-                .clickCustomizeThreadFixVulnerabilityTypesLink();
-
-        assertTrue("Access Denied Page is not showing", customizeVulnerabilityTypesPage.isAccessDenied());
-
-        customizeVulnerabilityTypesPage.clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickApplicationName(teamName, appName)
-                .clickActionButton();
-
-        assertFalse("Close Vulnerability button is available",
-                customizeVulnerabilityTypesPage.isElementPresent("editVulnerabilityFiltersButton"));
-    }
-
-    @Test
-    public void testModifyVulnerabilitiesPermission() {
-        initializeTeamAndAppWithIbmScan();
-
-        createRestrictedUser("canModifyVulnerabilities");
-
-        ApplicationDetailPage applicationDetailPage = loginPage.login(userName, testPassword)
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickApplicationName(teamName, appName)
-                .clickVulnerabilitiesActionButton();
-
-        assertFalse("Close Vulnerabilities Link is available",
-                applicationDetailPage.isElementPresent("closeVulnsButton"));
-
-        assertFalse("Mark as False Positive Link is available",
-                applicationDetailPage.isElementPresent("markFalsePositivesButton"));
-
-        FindingDetailPage findingDetailPage = applicationDetailPage.clickScansTab()
-                .clickViewScan()
-                .clickViewFinding();
-
-        assertFalse("Merge With Other Findings Button is available",
-                findingDetailPage.isLinkPresent("Merge with Other Findings"));
-
-        findingDetailPage.clickViewVulnerabilityLimitedPermission();
-
-        assertFalse("Close Vulnerability button is available",
-                findingDetailPage.isElementPresent("closeVulnerabilityLink"));
-        assertFalse("Merge With Other Findings Button is available",
-                findingDetailPage.isElementPresent("markFalsePositiveLink"));
-        assertFalse("Add File Button is present",
-                findingDetailPage.isElementPresent("uploadDocVulnModalLink"));
-        assertFalse("Merge With Other Findings Button is available",
-                findingDetailPage.isLinkPresent("Add Comment"));
-    }
-
-    @Ignore
-    @Test
-    public void testManageWAFsPermission() {
-        /* This test is throwing JavaScript errors when
-        attempting to handle JavaScript alert message.
-        Similar error have appeared online.
-         */
-        initializeTeamAndAppWithIbmScan();
-
-        String wafName = getName();
-        DatabaseUtils.createWaf(wafName, "Snort" );
-
-        createRestrictedUser("canManageWafs");
-
-        ApplicationDetailPage applicationDetailPage = loginPage.login(userName, testPassword)
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName)
-                .clickEditDeleteBtn()
-                .clickSetWaf();
-
-        if (applicationDetailPage.isWafPresent()) {
-            applicationDetailPage.clickCreateNewWaf();
-            assertTrue("Creating WAF was still allowed.", applicationDetailPage.isWafCreationDenied());
-        } else {
-            assertTrue("Creating WAF was still allowed.", applicationDetailPage.isWAFAddButtonPresent());
-        }
-
-        WafIndexPage wafIndexPage = applicationDetailPage.clickCloseModalButton()
-                .clickEditDeleteBtn()
-                .clickSetWaf()
-                .selectWaf(wafName)
-                .saveWafAdd()
-                .clickWafNameLink();
-
-        wafIndexPage.clickGenerateWafRulesButton();
-
-        assertTrue("Generating WAf Rules wasn't applied",
-                wafIndexPage.isDownloadWafRulesDisplay());
-
-        wafIndexPage.clickConfigTab();
-
-        assertFalse("Waf Link is Present", applicationDetailPage.isElementPresent("wafsLink"));
-    }
-
-    @Test
-    public void testManageUsersPermission() {
-        createRestrictedUser("canManageUsers");
-
-        DashboardPage dashboardPage = loginPage.login(userName, testPassword);
-
-        dashboardPage.clickConfigTab();
-
-        assertFalse("Manage Users Link is Present", dashboardPage.isElementPresent("manageUsersLink"));
-    }
-
-    @Test
-    public void testManageTeamsPermission() {
-        String teamName = createTeam();
-
-        createRestrictedUser("canManageTeams");
-
-        TeamDetailPage teamDetailPage = loginPage.login(userName, testPassword)
-                .clickOrganizationHeaderLink()
-                .clickViewTeamLink(teamName)
-                .clickActionButtonWithoutEditButton();
-
-        assertFalse("Team Edit/Delete Button is available", teamDetailPage.isElementPresent("teamModalButton"));
-    }
-
-    @Test
-    public void testManageRoles() {
-        createRestrictedUser("canManageRoles");
-
-        DashboardPage dashboardPage = loginPage.login(userName, testPassword);
-
-        dashboardPage.clickConfigTab();
-
-        assertFalse("Manage Roles Link is Present", dashboardPage.isElementPresent("manageRolesLink"));
-    }
-
-    @Test
-    public void testManageSystemSettingsPermission() {
-        createRestrictedUser("canManageSystemSettings");
-
-        DashboardPage dashboardPage = loginPage.login(userName, testPassword);
-
-        dashboardPage.clickConfigTab();
-
-        assertFalse("Manage System Settings link is Present", dashboardPage.isElementPresent("configureDefaultsLink"));
-    }
-
-    @Test
-    public void testManageScanAgentsPermission() {
-        initializeTeamAndApp();
-
-        createRestrictedUser("canManageScanAgents");
-
-        ApplicationDetailPage applicationDetailPage = loginPage.login(userName, testPassword)
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickApplicationName(teamName, appName);
-
-        assertFalse("Scan Agent Tab is Available", applicationDetailPage.isLinkPresent("0 Scan Agent Tasks"));
-        assertFalse("Scheduled Scans Tab Available", applicationDetailPage.isLinkPresent("0 Scheduled Scans"));
-
-        applicationDetailPage.clickConfigTab();
-
-        assertFalse("Scan  Agent Tasks Link is Available", applicationDetailPage.isElementPresent("scanQueueLink"));
-    }
-
-    @Test
-    public void testManageRemoteProvidersPermission() {
-        createRestrictedUser("canManageRemoteProviders");
-
-        DashboardPage dashboardPage = loginPage.login(userName, testPassword);
-
-        dashboardPage.clickConfigTab();
-
-        assertFalse("Manage Remote Providers Link is Present", dashboardPage.isElementPresent("remoteProvidersLink"));
-    }
-
-    @Test
-    public void testManageApplicationsPermission() {
-        initializeTeamAndApp();
-
-        createRestrictedUser("canManageApplications");
-
-        ApplicationDetailPage applicationDetailPage = loginPage.login(userName, testPassword)
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickApplicationName(teamName, appName)
-                .clickActionButton();
-
-        assertFalse("Edit/Delete Button wasn't gone",
-                applicationDetailPage.isElementPresent("editApplicationModalButton"));
-        assertTrue("Detail Link wasn't created", applicationDetailPage.isDetailLinkDisply());
-    }
-
-    @Test
-    public void testManageApiKeysPermission() {
-        createRestrictedUser("canManageApiKeys");
-
-        DashboardPage dashboardPage = loginPage.login(userName, testPassword);
-
-        dashboardPage.clickConfigTab();
-
-        assertFalse("API keys Link is Present", dashboardPage.isApiKeysLinkPresent());
-    }
-
-    @Test
-    public void testGenerateWafRulesPermission() {
-        initializeTeamAndAppWithIbmScan();
-
-        createRestrictedUser("canGenerateWafRules");
-
-        String wafName = getName();
-
-        ApplicationDetailPage applicationDetailPage = loginPage.login(userName, testPassword)
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName)
-                .clickEditDeleteBtn()
-                .clickSetWaf();
-
-        if (applicationDetailPage.isWafPresent()) {
-            applicationDetailPage.clickCreateNewWaf()
-                    .setWafName(wafName)
-                    .clickCreateWafButton();
-        } else {
-            applicationDetailPage.setWafName(wafName)
-                    .clickCreateWafButton();
-        }
-
-        WafIndexPage wafIndexPage = applicationDetailPage.clickWafNameLink();
-
-        assertFalse("The waf was still present after attempted deletion.",
-                wafIndexPage.isGenerateWafRulesButtonPresent());
-    }
-
-    @Test
-    public void testGenerateReportsPermission() {
-        initializeTeamAndAppWithWebInspectScan();
-
-        createRestrictedUser("canGenerateReports");
-
-        DashboardPage dashboardPage = loginPage.login(userName, testPassword);
-
-        assertFalse("Left Report is still Present", dashboardPage.isLeftReportLinkPresent());
-        assertFalse("Right Report is still Present", dashboardPage.isRightReportLinkPresent());
-
-        TeamIndexPage teamIndexPage = dashboardPage.clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName);
-
-        teamIndexPage.waitForPieWedge(teamName, "Critical");
-
-        assertTrue("The Chart is still available", teamIndexPage.isGraphWedgeDisplayed(teamName, "Info") &&
-                teamIndexPage.isGraphWedgeDisplayed(teamName, "Low") &&
-                teamIndexPage.isGraphWedgeDisplayed(teamName, "Medium") &&
-                teamIndexPage.isGraphWedgeDisplayed(teamName, "High") &&
-                teamIndexPage.isGraphWedgeDisplayed(teamName, "Critical"));
-
-        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickViewAppLink(appName, teamName);
-
-        assertFalse("Left Report is still Present", applicationDetailPage.isLeftReportLinkPresent());
-        assertFalse("Right Report is still Present", applicationDetailPage.isRightReportLinkPresent());
-
-        assertFalse("Analytics Tab is still available", applicationDetailPage.isElementPresent("tab-reports"));
-    }
-
     @Test
     public void testPermissionWithNoTeam() {
         DashboardPage dashboardPage = loginPage.defaultLogin();
@@ -633,32 +293,6 @@ public class UserPermissionsEntIT extends BaseDataTest{
 
             assertTrue("Add Permission Button is Clickable", userIndexPage.isAddTeamRoleButtonDisabled());
         }
-    }
-
-    @Test
-    public void testManageApplicationPermissionScanAgent() {
-        initializeTeamAndApp();
-        String scanner = "OWASP Zed Attack Proxy";
-
-        createRestrictedUser("canManageApplications");
-
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName)
-                .clickScanAgentTasksTab(0)
-                .clickAddNewScanTask()
-                .setScanQueueType(scanner)
-                .submitScanQueue();
-
-        LoginPage loginPage = applicationDetailPage.logout();
-
-        ScanAgentTasksPage scanAgentTasksPage = loginPage.login(userName, testPassword)
-                .clickScanAgentTasksLink()
-                .clickDeleteScan(0);
-
-        assertTrue("Scan wasn't deleted", scanAgentTasksPage.successAlert()
-                .contains("One time OWASP Zed Attack Proxy Scan has been deleted from Scan Agent queue"));
     }
 
     @Test
@@ -714,6 +348,150 @@ public class UserPermissionsEntIT extends BaseDataTest{
         assertTrue("Could not edit permissions", userIndexPage.isApplicationRolePresent(teamName, appName, role2));
     }
 
+    //===========================================================================================================
+    // Missing Permission Tests
+    //===========================================================================================================
+
+    @Test
+    public void testGenerateReportsPermission() {
+        initializeTeamAndAppWithWebInspectScan();
+
+        createRestrictedUser("canGenerateReports");
+
+        DashboardPage dashboardPage = loginPage.login(userName, testPassword);
+
+        assertFalse("Left Report is still Present", dashboardPage.isLeftReportLinkPresent());
+        assertFalse("Right Report is still Present", dashboardPage.isRightReportLinkPresent());
+
+        TeamIndexPage teamIndexPage = dashboardPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName);
+
+        teamIndexPage.waitForPieWedge(teamName, "Critical");
+
+        assertTrue("The Chart is still available", teamIndexPage.isGraphWedgeDisplayed(teamName, "Info") &&
+                teamIndexPage.isGraphWedgeDisplayed(teamName, "Low") &&
+                teamIndexPage.isGraphWedgeDisplayed(teamName, "Medium") &&
+                teamIndexPage.isGraphWedgeDisplayed(teamName, "High") &&
+                teamIndexPage.isGraphWedgeDisplayed(teamName, "Critical"));
+
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickViewAppLink(appName, teamName);
+
+        assertFalse("Left Report is still Present", applicationDetailPage.isLeftReportLinkPresent());
+        assertFalse("Right Report is still Present", applicationDetailPage.isRightReportLinkPresent());
+
+        assertFalse("Analytics Tab is still available", applicationDetailPage.isElementPresent("tab-reports"));
+    }
+
+    @Test
+    public void testGenerateWafRulesPermission() {
+        initializeTeamAndAppWithIbmScan();
+
+        createRestrictedUser("canGenerateWafRules");
+
+        String wafName = getName();
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login(userName, testPassword)
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickEditDeleteBtn()
+                .clickSetWaf();
+
+        if (applicationDetailPage.isWafPresent()) {
+            applicationDetailPage.clickCreateNewWaf()
+                    .setWafName(wafName)
+                    .clickCreateWafButton();
+        } else {
+            applicationDetailPage.setWafName(wafName)
+                    .clickCreateWafButton();
+        }
+
+        WafIndexPage wafIndexPage = applicationDetailPage.clickWafNameLink();
+
+        assertFalse("The user can still generate WAF rules without permission.",
+                wafIndexPage.isGenerateWafRulesButtonPresent());
+    }
+
+    @Test
+    public void testManageApiKeysPermission() {
+        createRestrictedUser("canManageApiKeys");
+
+        DashboardPage dashboardPage = loginPage.login(userName, testPassword);
+
+        dashboardPage.clickConfigTab();
+
+        assertFalse("API keys Link is Present", dashboardPage.isApiKeysLinkPresent());
+    }
+
+    @Test
+    public void testManageApplicationsPermission() {
+        initializeTeamAndApp();
+
+        createRestrictedUser("canManageApplications");
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login(userName, testPassword)
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(teamName, appName)
+                .clickActionButton();
+
+        assertFalse("Edit/Delete Button wasn't gone",
+                applicationDetailPage.isElementPresent("editApplicationModalButton"));
+        assertTrue("Detail Link wasn't created", applicationDetailPage.isDetailLinkDisplayed());
+    }
+
+    @Test
+    public void testManageRemoteProvidersPermission() {
+        createRestrictedUser("canManageRemoteProviders");
+
+        DashboardPage dashboardPage = loginPage.login(userName, testPassword);
+
+        dashboardPage.clickConfigTab();
+
+        assertFalse("Manage Remote Providers Link is Present", dashboardPage.isElementPresent("remoteProvidersLink"));
+    }
+
+    @Test
+    public void testManageScanAgentsPermission() {
+        initializeTeamAndApp();
+
+        createRestrictedUser("canManageScanAgents");
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login(userName, testPassword)
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(teamName, appName);
+
+        assertFalse("Scan Agent Tab is Available", applicationDetailPage.isLinkPresent("0 Scan Agent Tasks"));
+        assertFalse("Scheduled Scans Tab Available", applicationDetailPage.isLinkPresent("0 Scheduled Scans"));
+
+        applicationDetailPage.clickConfigTab();
+
+        assertFalse("Scan  Agent Tasks Link is Available", applicationDetailPage.isElementPresent("scanQueueLink"));
+    }
+
+    @Test
+    public void testManageSystemSettingsPermission() {
+        createRestrictedUser("canManageSystemSettings");
+
+        DashboardPage dashboardPage = loginPage.login(userName, testPassword);
+
+        dashboardPage.clickConfigTab();
+
+        assertFalse("Manage System Settings link is Present", dashboardPage.isElementPresent("configureDefaultsLink"));
+    }
+
+    @Test
+    public void testManageRoles() {
+        createRestrictedUser("canManageRoles");
+
+        DashboardPage dashboardPage = loginPage.login(userName, testPassword);
+
+        dashboardPage.clickConfigTab();
+
+        assertFalse("Manage Roles Link is Present", dashboardPage.isElementPresent("manageRolesLink"));
+    }
+
     @Test
     public void testManageTagsPermission() {
         createRestrictedUser("canManageTags");
@@ -723,5 +501,213 @@ public class UserPermissionsEntIT extends BaseDataTest{
         dashboardPage.clickConfigTab();
 
         assertTrue("Manage tags permission not added", driver.findElements(By.id("tagsLink")).isEmpty());
+    }
+
+    @Test
+    public void testManageTeamsPermission() {
+        String teamName = createTeam();
+
+        createRestrictedUser("canManageTeams");
+
+        TeamDetailPage teamDetailPage = loginPage.login(userName, testPassword)
+                .clickOrganizationHeaderLink()
+                .clickViewTeamLink(teamName)
+                .clickActionButtonWithoutEditButton();
+
+        assertFalse("Team Edit/Delete Button is available", teamDetailPage.isElementPresent("teamModalButton"));
+    }
+
+    @Test
+    public void testManageUsersPermission() {
+        createRestrictedUser("canManageUsers");
+
+        DashboardPage dashboardPage = loginPage.login(userName, testPassword);
+
+        dashboardPage.clickConfigTab();
+
+        assertFalse("Manage Users Link is Present", dashboardPage.isElementPresent("manageUsersLink"));
+    }
+
+    @Test
+    public void testManageWAFsPermission() {
+        initializeTeamAndAppWithIbmScan();
+
+        String wafName = getName();
+        DatabaseUtils.createWaf(wafName, "Snort" );
+
+        createRestrictedUser("canManageWafs");
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login(userName, testPassword)
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickEditDeleteBtn()
+                .clickSetWaf();
+
+        if (applicationDetailPage.isWafPresent()) {
+            applicationDetailPage.clickCreateNewWaf();
+            assertTrue("Creating WAF was still allowed.", applicationDetailPage.isWafCreationDenied());
+        } else {
+            assertTrue("Creating WAF was still allowed.", applicationDetailPage.isWAFAddButtonPresent());
+        }
+
+        //TODO: Expand test coverage when it is decided what should happen with GenerateWAFRules permission but no ManageWAFs permission
+
+        WafIndexPage wafIndexPage = applicationDetailPage.clickCloseModalButton()
+                .clickEditDeleteBtn()
+                .clickSetWaf()
+                .selectWaf(wafName)
+                .saveWafAdd()
+                .clickWafNameLink();
+
+        wafIndexPage.clickConfigTab();
+
+        assertFalse("Waf Link is Present", applicationDetailPage.isElementPresent("wafsLink"));
+    }
+
+    @Test
+    public void testModifyVulnerabilitiesPermission() {
+        initializeTeamAndAppWithIbmScan();
+
+        createRestrictedUser("canModifyVulnerabilities");
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login(userName, testPassword)
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(teamName, appName)
+                .clickVulnerabilitiesActionButton();
+
+        assertFalse("Close Vulnerabilities Link is available",
+                applicationDetailPage.isElementPresent("closeVulnsButton"));
+        assertFalse("Mark as False Positive Link is available",
+                applicationDetailPage.isElementPresent("markFalsePositivesButton"));
+        assertFalse("Change severity link is available",
+                applicationDetailPage.isElementPresent("changeSeverityButton"));
+        assertFalse("Batch Tagging link is available",
+                applicationDetailPage.isElementPresent("addBatchTaggingBtn"));
+        assertFalse("Batch Comment link is available",
+                applicationDetailPage.isElementPresent("addBatchCommentBtn"));
+
+        FindingDetailPage findingDetailPage = applicationDetailPage.clickScansTab()
+                .clickViewScan()
+                .clickViewFinding();
+
+        assertFalse("Merge With Other Findings Button is available",
+                findingDetailPage.isLinkPresent("Merge with Other Findings"));
+
+        VulnerabilityDetailPage vulnerabilityDetailPage = findingDetailPage.clickViewVulnerabilityLimitedPermission();
+
+        assertFalse("Action menu is present", vulnerabilityDetailPage.isActionMenuPresent());
+        assertFalse("Add File Button is present", vulnerabilityDetailPage.isUploadFileButtonPresent());
+        assertFalse("Add Comment Button is present", vulnerabilityDetailPage.isAddCommentButtonPresent());
+    }
+
+    @Test
+    public void testManageVulnerabilityFilters() {
+        initializeTeamAndAppWithIbmScan();
+
+        createRestrictedUser("canManageVulnFilters");
+
+        CustomizeVulnerabilityTypesPage customizeVulnerabilityTypesPage = loginPage.login(userName, testPassword)
+                .clickCustomizeThreadFixVulnerabilityTypesLink();
+
+        assertTrue("Access Denied Page is not showing", customizeVulnerabilityTypesPage.isAccessDenied());
+
+        ApplicationDetailPage applicationDetailPage = customizeVulnerabilityTypesPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(teamName, appName)
+                .clickActionButton();
+
+        assertFalse("Customize ThreadFix Vulnerability Types and Severities link is present",
+                applicationDetailPage.isElementPresent("editVulnerabilityFiltersButton"));
+
+        TeamDetailPage teamDetailPage = applicationDetailPage.clickTeamLink()
+                .clickActionButton();
+
+        assertFalse("Customize ThreadFix Vulnerability Types and Severities link is present",
+                teamDetailPage.isElementPresent("editfiltersButton1"));
+    }
+
+    @Test
+    public void testSubmitDefectsPermission() {
+        initializeTeamAndAppWithIbmScan();
+
+        createRestrictedUser("canSubmitDefects");
+
+        String newDefectTrackerName = getName();
+        String defectTrackerType = "Bugzilla";
+
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login(userName, testPassword)
+                .clickDefectTrackersLink()
+                .clickAddDefectTrackerButton()
+                .setName(newDefectTrackerName)
+                .setURL(BUGZILLA_URL)
+                .setType(defectTrackerType)
+                .clickSaveDefectTracker();
+
+        ApplicationDetailPage applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(teamName, appName)
+                .addDefectTracker(newDefectTrackerName, BUGZILLA_USERNAME, BUGZILLA_PASSWORD, BUGZILLA_PROJECTNAME)
+                .clickVulnerabilitiesActionButton();
+
+        assertFalse("Submit Defect is Present", applicationDetailPage.isElementPresent("submitDefectButton"));
+    }
+
+    @Test
+    public void testUploadScanPermission() {
+        initializeTeamAndApp();
+
+        createRestrictedUser("canUploadScans");
+
+        TeamIndexPage teamIndexPage = loginPage.login(userName, testPassword)
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName);
+
+        assertFalse("Upload Button is Available", teamIndexPage.isUploadButtonPresent(teamName, appName));
+
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickApplicationName(teamName, appName)
+                .clickActionButton();
+
+        assertFalse("Upload Link is Available", applicationDetailPage.isElementPresent("uploadScanModalLink"));
+        assertFalse("Add Manual Finding link is available", applicationDetailPage.isElementPresent("addManualFindingModalLink"));
+    }
+
+    @Test
+    public void testViewErrorLogPermission() {
+        createRestrictedUser("canViewErrorLogs");
+
+        DashboardPage dashboardPage = loginPage.login(userName, testPassword);
+
+        dashboardPage.clickConfigTab();
+
+       assertFalse("View Error Log wasn't gone", dashboardPage.isElementPresent("viewLogsLink"));
+    }
+
+    @Test
+    public void testManageApplicationPermissionScanAgent() {
+        initializeTeamAndApp();
+        String scanner = "OWASP Zed Attack Proxy";
+
+        createRestrictedUser("canManageApplications");
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickScanAgentTasksTab(0)
+                .clickAddNewScanTask()
+                .setScanQueueType(scanner)
+                .submitScanQueue();
+
+        LoginPage loginPage = applicationDetailPage.logout();
+
+        ScanAgentTasksPage scanAgentTasksPage = loginPage.login(userName, testPassword)
+                .clickScanAgentTasksLink()
+                .clickDeleteScan(0);
+
+        assertTrue("Scan wasn't deleted", scanAgentTasksPage.successAlert()
+                .contains("One time OWASP Zed Attack Proxy Scan has been deleted from Scan Agent queue"));
     }
 }

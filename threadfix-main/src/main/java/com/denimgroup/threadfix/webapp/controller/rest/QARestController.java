@@ -198,23 +198,28 @@ public class QARestController extends TFRestController {
         role.setDisplayName(roleName);
 
         if (allPermissions) {
+            role.setCanSubmitComments(allPermissions);
             role.setCanGenerateReports(allPermissions);
             role.setCanGenerateWafRules(allPermissions);
             role.setCanManageApiKeys(allPermissions);
             role.setCanManageApplications(allPermissions);
-            role.setCanManageGrcTools(allPermissions);
             role.setCanManageDefectTrackers(allPermissions);
+            role.setCanManageEmailReports(allPermissions);
+            role.setCanManageGrcTools(allPermissions);
             role.setCanManageRemoteProviders(allPermissions);
             role.setCanManageScanAgents(allPermissions);
             role.setCanManageSystemSettings(allPermissions);
             role.setCanManageRoles(allPermissions);
             role.setCanManageTags(allPermissions);
+            role.setCanManageGroups(allPermissions);
             role.setCanManageTeams(allPermissions);
-            role.setCanManageUsers(allPermissions);
+            role.setCanManagePolicies(allPermissions);
             role.setCanManageUsers(allPermissions);
             role.setCanManageWafs(allPermissions);
-            role.setCanManageVulnFilters(allPermissions);
+            role.setCanManageScanResultFilters(allPermissions);
+            role.setCanManageCustomCweText(allPermissions);
             role.setCanModifyVulnerabilities(allPermissions);
+            role.setCanManageVulnFilters(allPermissions);
             role.setCanSubmitDefects(allPermissions);
             role.setCanUploadScans(allPermissions);
             role.setCanViewErrorLogs(allPermissions);
