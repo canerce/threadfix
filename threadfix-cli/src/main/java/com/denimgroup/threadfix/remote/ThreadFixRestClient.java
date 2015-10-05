@@ -116,6 +116,9 @@ public interface ThreadFixRestClient {
     //QA only
     public RestResponse<Group> createGroup(String groupName);
 
+    //QA only
+    public RestResponse<String> deletePolicies();
+
     public RestResponse<Finding> addDynamicFinding(String applicationId, String vulnType, String severity,
                                     String nativeId, String parameter, String longDescription,
                                     String fullUrl, String path);

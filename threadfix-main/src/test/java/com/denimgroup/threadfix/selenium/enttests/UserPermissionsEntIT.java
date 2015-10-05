@@ -353,6 +353,52 @@ public class UserPermissionsEntIT extends BaseDataTest{
     //===========================================================================================================
 
     @Test
+    public void testCommentOnVulnerabilitiesPermission() {
+        initializeTeamAndAppWithWebInspectScan();
+
+        createRestrictedUser("canSubmitComments");
+
+        TeamDetailPage teamDetailPage = loginPage.login(userName, testPassword)
+                .clickOrganizationHeaderLink()
+                .clickViewTeamLink(teamName)
+                .clickVulnerabilitiesTab()
+                .expandVulnerabilityByType("Critical79")
+                .expandCommentSection("Critical790");
+
+        //TODO: Change assert statement when DGTF-2143 is resolved
+        assertTrue("Add Comment button is not present on Team page", teamDetailPage.isAddCommentButtonPresent("Critical790"));
+
+        teamDetailPage.checkVulnerabilitiesByCategory("Critical79")
+                .clickVulnerabilitiesActionButton();
+
+        assertFalse("Batch Tagging button is still present on Team page", teamDetailPage.isBatchCommentButtonPresent());
+
+        ApplicationDetailPage applicationDetailPage = teamDetailPage.clickVulnerabilitiesActionButton()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(teamName, appName)
+                .expandVulnerabilityByType("Critical79")
+                .expandCommentSection("Critical790");
+
+        //TODO: Change assert statement when DGTF-2143 is resolved
+        assertTrue("Add Comment button is not present on App page", applicationDetailPage.isAddCommentButtonPresent("Critical790"));
+
+        applicationDetailPage.checkVulnerabilitiesByCategory("Critical79")
+                .clickVulnerabilitiesActionButton();
+
+        assertFalse("Batch Tagging button is still present on App page", applicationDetailPage.isBatchCommentButtonPresent());
+
+        VulnerabilityDetailPage vulnerabilityDetailPage = applicationDetailPage.clickVulnerabilitiesActionButton()
+                .clickScansHeaderLink()
+                .clickViewScanLink()
+                .clickViewFinding()
+                .clickViewVulnerability();
+
+        //TODO: Change assert statement when DGTF-2143 is resolved
+        assertTrue("Add comment button is not present on Vulnerability page", vulnerabilityDetailPage.isAddCommentButtonPresent());
+    }
+
+    @Test
     public void testGenerateReportsPermission() {
         initializeTeamAndAppWithWebInspectScan();
 
@@ -441,6 +487,64 @@ public class UserPermissionsEntIT extends BaseDataTest{
     }
 
     @Test
+    public void testManageDefectTrackersPermission() {
+        if (JIRA_URL == null){
+            throw new RuntimeException("Please set JIRA_URL property.");
+        }
+
+        initializeTeamAndApp();
+        String defectName = getName();
+        createRestrictedUser("canManageDefectTrackers");
+
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.defaultLogin()
+                .clickDefectTrackersLink()
+                .clickAddDefectTrackerButton()
+                .setName(defectName)
+                .setType("JIRA")
+                .setURL(JIRA_URL)
+                .clickSaveDefectTracker();
+
+        ApplicationDetailPage applicationDetailPage = defectTrackerIndexPage.logout()
+                .login(userName, testPassword)
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(teamName, appName)
+                .clickEditDeleteBtn()
+                .clickAddDefectTrackerButton()
+                .clickCreateNewDefectTrackerExpectingError();
+
+        assertTrue("User was allowed to create a defect tracker", applicationDetailPage.isCreateDefectTrackerPresent());
+
+        applicationDetailPage.clickCloseModalButton()
+                .clickConfigTab();
+
+        assertFalse("Defect Trackers link is present", applicationDetailPage.isDefectTrackerLinkPresent());
+    }
+
+    @Test
+    public void testManageEmailReportsPermission() {
+        createRestrictedUser("canManageEmailReports");
+
+        DashboardPage dashboardPage = loginPage.login(userName, testPassword);
+
+        dashboardPage.clickConfigTab();
+
+        assertFalse("Manage Email Reports link is present", dashboardPage.isEmailReportsLinkPresent());
+        assertFalse("Manage Email Lists link is present", dashboardPage.isEmailListsLinkPresent());
+    }
+
+    @Test
+    public void testManageGRCToolsPermssion() {
+        createRestrictedUser("canManageGrcTools");
+
+        DashboardPage dashboardPage = loginPage.login(userName, testPassword);
+
+        dashboardPage.clickConfigTab();
+
+        assertFalse("GRC Tools link is present", dashboardPage.isGRCToolsLinkPresent());
+    }
+
+    @Test
     public void testManageRemoteProvidersPermission() {
         createRestrictedUser("canManageRemoteProviders");
 
@@ -504,6 +608,20 @@ public class UserPermissionsEntIT extends BaseDataTest{
     }
 
     @Test
+    public void testManageGroupsPermission() {
+        createRestrictedUser("canManageGroups");
+
+        UserIndexPage userIndexPage = loginPage.login(userName, testPassword)
+                .clickManageUsersLink();
+
+        assertFalse("Manage Groups tab is not present", userIndexPage.isGroupsTabPresent());
+
+        userIndexPage.clickConfigTab();
+
+        assertFalse("Manage Groups link is not present", userIndexPage.isManageGroupsLinkPresent());
+    }
+
+    @Test
     public void testManageTeamsPermission() {
         String teamName = createTeam();
 
@@ -515,6 +633,26 @@ public class UserPermissionsEntIT extends BaseDataTest{
                 .clickActionButtonWithoutEditButton();
 
         assertFalse("Team Edit/Delete Button is available", teamDetailPage.isElementPresent("teamModalButton"));
+    }
+
+    @Test
+    public void testManagePoliciesPermission() {
+        initializeTeamAndApp();
+        DatabaseUtils.deleteAllPolicies();
+        createRestrictedUser("canManagePolicies");
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login(userName, testPassword)
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(teamName, appName)
+                .clickEditDeleteBtn();
+
+        assertFalse("Create Policy button should not be present", applicationDetailPage.isCreatePolicyButtonPresent());
+
+        applicationDetailPage.clickCloseModalButton()
+                .clickConfigTab();
+
+        assertFalse("Policies link should not be present", applicationDetailPage.isPoliciesLinkPresent());
     }
 
     @Test

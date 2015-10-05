@@ -361,6 +361,12 @@ public class TeamDetailPage extends BasePage {
         return new TeamDetailPage(driver);
     }
 
+    public TeamDetailPage expandCommentSection(String level) {
+        sleep(5000);
+        driver.findElementById("commentsButton" + level).click();
+        return new TeamDetailPage(driver);
+    }
+
     //===========================================================================================================
     // Set Methods
     //===========================================================================================================
@@ -611,6 +617,14 @@ public class TeamDetailPage extends BasePage {
 
     public boolean isVulnerabilityTagPresent(String severity, String type, String number, String tag) {
         return isElementPresent(By.id("tag" + severity + type + number + tag));
+    }
+
+    public boolean isAddCommentButtonPresent(String level) {
+        return isElementPresent("addCommentButton" + level);
+    }
+
+    public boolean isBatchCommentButtonPresent() {
+        return isElementPresent("addBatchCommentBtn");
     }
 
     //===========================================================================================================

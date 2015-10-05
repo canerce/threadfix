@@ -607,6 +607,12 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
+    public ApplicationDetailPage clickCreateNewDefectTrackerExpectingError() {
+        driver.findElementById("createDefectTrackerButton").click();
+        handleAlert();
+        return new ApplicationDetailPage(driver);
+    }
+
     public ApplicationDetailPage clickCreateDefectTracker() {
         driver.findElementById("submit").click();
         waitForElement(By.id("username"), 20);
@@ -1477,6 +1483,18 @@ public class ApplicationDetailPage extends BasePage {
 
     public boolean isVulnerabilityTagPresent(String severity, String type, String number, String tag) {
         return isElementPresent(By.id("tag" + severity + type + number + tag));
+    }
+
+    public boolean isAddCommentButtonPresent(String level) {
+        return isElementPresent("addCommentButton" + level);
+    }
+
+    public boolean isBatchCommentButtonPresent() {
+        return isElementPresent("addBatchCommentBtn");
+    }
+
+    public boolean isCreatePolicyButtonPresent() {
+        return isElementPresent("goToPolicyButton");
     }
 
     //===========================================================================================================

@@ -55,6 +55,8 @@ public class QARestController extends TFRestController {
     private AccessControlMapService accessControlMapService;
     @Autowired(required=false)
     private GroupService groupService;
+    @Autowired(required=false)
+    private PolicyService policyService;
 
     private static final String TEAM_DELETION_FAILED = "Team deletion failed.";
     private static final String TEAM_DELETION_SUCCESS= "Team deleted successfully";
@@ -165,7 +167,7 @@ public class QARestController extends TFRestController {
             return RestResponse.failure(USER_DELETION_FAILED);
 
         } else if(!userService.canDelete(user)) {
-            log.warn("Cannot delete this User without removing access to critical funtions.");
+            log.warn("Cannot delete this User without removing access to critical functions.");
             return RestResponse.failure(USER_DELETION_FAILED);
         } else {
             String userName = user.getName();
@@ -238,65 +240,87 @@ public class QARestController extends TFRestController {
         Role role = new Role();
         role.setDisplayName(roleName);
 
-        if (permission.equals("canManageUsers")) {
-            role.setCanManageUsers(true);
-
-        } else if (permission.equals("canManageRoles")) {
-            role.setCanManageRoles(true);
-
-        } else if (permission.equals("canManageTeams")) {
-            role.setCanManageTeams(true);
-
-        } else if (permission.equals("canManageGRCTools")) {
-            role.setCanManageGrcTools(true);
-
-        } else if (permission.equals("canManageDefectTrackers")) {
-            role.setCanManageDefectTrackers(true);
-
-        } else if (permission.equals("canManageVulnFilters")) {
-            role.setCanManageVulnFilters(true);
-
-        } else if (permission.equals("canModifyVulnerabilities")) {
-            role.setCanModifyVulnerabilities(true);
-
-        } else if (permission.equals("canUploadScans")) {
-            role.setCanUploadScans(true);
-
-        } else if (permission.equals("canViewErrorLogs")) {
-            role.setCanViewErrorLogs(true);
-
-        } else if (permission.equals("canSubmitDefects")) {
-            role.setCanSubmitDefects(true);
-
-        } else if (permission.equals("canManageWafs")) {
-            role.setCanManageWafs(true);
-
-        } else if (permission.equals("canGenerateWafRules")) {
-            role.setCanGenerateWafRules(true);
-
-        } else if (permission.equals("canManageApiKeys")) {
-            role.setCanManageApiKeys(true);
-
-        } else if (permission.equals("canManageRemoteProviders")) {
-            role.setCanManageRemoteProviders(true);
-
-        } else if (permission.equals("canGenerateReports")) {
-            role.setCanGenerateReports(true);
-
-        } else if (permission.equals("canManageApplications")) {
-            role.setCanManageApplications(true);
-
-        } else if (permission.equals("canManageScanAgents")) {
-            role.setCanManageScanAgents(true);
-
-        } else if (permission.equals("canManageSystemSettings")) {
-            role.setCanManageSystemSettings(true);
-
-        } else if (permission.equals("canManageTags")) {
-            role.setCanManageTags(true);
-
-        } else {
-            throw new RuntimeException(permission + " is not a valid permission");
+        switch (permission) {
+            case "canManageUsers":
+                role.setCanManageUsers(true);
+                break;
+            case "canManageRoles":
+                role.setCanManageRoles(true);
+                break;
+            case "canManageTeams":
+                role.setCanManageTeams(true);
+                break;
+            case "canManageGRCTools":
+                role.setCanManageGrcTools(true);
+                break;
+            case "canManageDefectTrackers":
+                role.setCanManageDefectTrackers(true);
+                break;
+            case "canManageVulnFilters":
+                role.setCanManageVulnFilters(true);
+                break;
+            case "canModifyVulnerabilities":
+                role.setCanModifyVulnerabilities(true);
+                break;
+            case "canUploadScans":
+                role.setCanUploadScans(true);
+                break;
+            case "canViewErrorLogs":
+                role.setCanViewErrorLogs(true);
+                break;
+            case "canSubmitDefects":
+                role.setCanSubmitDefects(true);
+                break;
+            case "canManageWafs":
+                role.setCanManageWafs(true);
+                break;
+            case "canGenerateWafRules":
+                role.setCanGenerateWafRules(true);
+                break;
+            case "canManageApiKeys":
+                role.setCanManageApiKeys(true);
+                break;
+            case "canManageRemoteProviders":
+                role.setCanManageRemoteProviders(true);
+                break;
+            case "canGenerateReports":
+                role.setCanGenerateReports(true);
+                break;
+            case "canManageApplications":
+                role.setCanManageApplications(true);
+                break;
+            case "canManageScanAgents":
+                role.setCanManageScanAgents(true);
+                break;
+            case "canManageSystemSettings":
+                role.setCanManageSystemSettings(true);
+                break;
+            case "canManageTags":
+                role.setCanManageTags(true);
+                break;
+            case "canSubmitComments":
+                role.setCanSubmitComments(true);
+                break;
+            case "canManageEmailReports":
+                role.setCanManageEmailReports(true);
+                break;
+            case "canManageGrcTools":
+                role.setCanManageGrcTools(true);
+                break;
+            case "canManageGroups":
+                role.setCanManageGroups(true);
+                break;
+            case "canManagePolicies":
+                role.setCanManagePolicies(true);
+                break;
+            case "canManageScanResultFilters":
+                role.setCanManageScanResultFilters(true);
+                break;
+            case "canManageCustomCweText":
+                role.setCanManageCustomCweText(true);
+                break;
+            default:
+                throw new RuntimeException(permission + " is not a valid permission");
         }
 
         roleService.storeRole(role);
@@ -311,62 +335,84 @@ public class QARestController extends TFRestController {
 
         Role role = roleService.loadRole(roleName);
 
-        if (permission.equals("canManageUsers")) {
-            role.setCanManageUsers(false);
-
-        } else if (permission.equals("canManageRoles")) {
-            role.setCanManageRoles(false);
-
-        } else if (permission.equals("canManageTeams")) {
-            role.setCanManageTeams(false);
-
-        } else if (permission.equals("canManageDefectTrackers")) {
-            role.setCanManageDefectTrackers(false);
-
-        } else if (permission.equals("canManageVulnFilters")) {
-            role.setCanManageVulnFilters(false);
-
-        } else if (permission.equals("canModifyVulnerabilities")) {
-            role.setCanModifyVulnerabilities(false);
-
-        } else if (permission.equals("canUploadScans")) {
-            role.setCanUploadScans(false);
-
-        } else if (permission.equals("canViewErrorLogs")) {
-            role.setCanViewErrorLogs(false);
-
-        } else if (permission.equals("canSubmitDefects")) {
-            role.setCanSubmitDefects(false);
-
-        } else if (permission.equals("canManageWafs")) {
-            role.setCanManageWafs(false);
-
-        } else if (permission.equals("canGenerateWafRules")) {
-            role.setCanGenerateWafRules(false);
-
-        } else if (permission.equals("canManageApiKeys")) {
-            role.setCanManageApiKeys(false);
-
-        } else if (permission.equals("canManageRemoteProviders")) {
-            role.setCanManageRemoteProviders(false);
-
-        } else if (permission.equals("canGenerateReports")) {
-            role.setCanGenerateReports(false);
-
-        } else if (permission.equals("canManageApplications")) {
-            role.setCanManageApplications(false);
-
-        } else if (permission.equals("canManageScanAgents")) {
-            role.setCanManageScanAgents(false);
-
-        } else if (permission.equals("canManageSystemSettings")) {
-            role.setCanManageSystemSettings(false);
-
-        } else if (permission.equals("canManageTags")) {
-            role.setCanManageTags(false);
-
-        } else {
-            throw new RuntimeException(permission + " is not a valid permission");
+        switch (permission) {
+            case "canManageUsers":
+                role.setCanManageUsers(false);
+                break;
+            case "canManageRoles":
+                role.setCanManageRoles(false);
+                break;
+            case "canManageTeams":
+                role.setCanManageTeams(false);
+                break;
+            case "canManageDefectTrackers":
+                role.setCanManageDefectTrackers(false);
+                break;
+            case "canManageVulnFilters":
+                role.setCanManageVulnFilters(false);
+                break;
+            case "canModifyVulnerabilities":
+                role.setCanModifyVulnerabilities(false);
+                break;
+            case "canUploadScans":
+                role.setCanUploadScans(false);
+                break;
+            case "canViewErrorLogs":
+                role.setCanViewErrorLogs(false);
+                break;
+            case "canSubmitDefects":
+                role.setCanSubmitDefects(false);
+                break;
+            case "canManageWafs":
+                role.setCanManageWafs(false);
+                break;
+            case "canGenerateWafRules":
+                role.setCanGenerateWafRules(false);
+                break;
+            case "canManageApiKeys":
+                role.setCanManageApiKeys(false);
+                break;
+            case "canManageRemoteProviders":
+                role.setCanManageRemoteProviders(false);
+                break;
+            case "canGenerateReports":
+                role.setCanGenerateReports(false);
+                break;
+            case "canManageApplications":
+                role.setCanManageApplications(false);
+                break;
+            case "canManageScanAgents":
+                role.setCanManageScanAgents(false);
+                break;
+            case "canManageSystemSettings":
+                role.setCanManageSystemSettings(false);
+                break;
+            case "canManageTags":
+                role.setCanManageTags(false);
+                break;
+            case "canSubmitComments":
+                role.setCanSubmitComments(false);
+                break;
+            case "canManageEmailReports":
+                role.setCanManageEmailReports(false);
+                break;
+            case "canManageGrcTools":
+                role.setCanManageGrcTools(false);
+                break;
+            case "canManageGroups":
+                role.setCanManageGroups(false);
+                break;
+            case "canManagePolicies":
+                role.setCanManagePolicies(false);
+                break;
+            case "canManageScanResultFilters":
+                role.setCanManageScanResultFilters(false);
+                break;
+            case "canManageCustomCweText":
+                role.setCanManageCustomCweText(false);
+                break;
+            default:
+                throw new RuntimeException(permission + " is not a valid permission");
         }
 
         roleService.storeRole(role);
@@ -388,5 +434,29 @@ public class QARestController extends TFRestController {
 
         return success(group);
     }
+
+    /********************************
+     * POLICY METHODS
+     ********************************/
+
+    @JsonView(AllViews.TableRow.class)
+    @RequestMapping(headers = "Accept=application/json", value = "/policy/deleteAll", method = RequestMethod.POST)
+    public Object deletePolicies(HttpServletRequest request) {
+        log.info("Received REST request to delete all policies.");
+
+        List<Policy> policies = policyService.loadAll();
+
+        for(Policy policy: policies) {
+
+            if (policy != null && policy.isActive()) {
+                String policyName = policy.getName();
+                policyService.delete(policy);
+                log.info("REST Request to delete Policy " + policyName + " is completed successfully");
+            }
+        }
+
+        return RestResponse.success("Request to delete all policies successful.");
+    }
+
 
 }

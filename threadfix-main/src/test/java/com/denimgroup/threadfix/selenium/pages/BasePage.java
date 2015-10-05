@@ -397,8 +397,12 @@ public abstract class BasePage {
 	}
 
 	public boolean isDefectTrackerLinkPresent() {
-        hover("manageIntegrations");
-		return driver.findElementById("defectTrackersLink").isDisplayed();
+        try {
+            hover("manageIntegrations");
+            return driver.findElementById("defectTrackersLink").isDisplayed();
+        } catch (NoSuchElementException e) {
+            return false;
+        }
 	}
 
 	public boolean isDefectTrackerMenuLinkClickable() {
@@ -491,6 +495,51 @@ public abstract class BasePage {
 	public boolean isUserDropDownPresent(){
         return driver.findElementById("userConfigurationHeader").isDisplayed();
 	}
+
+    public boolean isEmailReportsLinkPresent() {
+        try {
+            hover("adminLink");
+            return driver.findElementById("emailReportConfiguration").isDisplayed();
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
+
+    public boolean isEmailListsLinkPresent() {
+        try {
+            hover("adminLink");
+            return driver.findElementById("emailListsLink").isDisplayed();
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
+
+    public boolean isGRCToolsLinkPresent() {
+        try {
+            hover("manageIntegrations");
+            return driver.findElementById("grcToolsLink").isDisplayed();
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
+
+    public boolean isManageGroupsLinkPresent() {
+        try {
+            hover("adminLink");
+            return driver.findElementById("manageGroupsLink").isDisplayed();
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
+
+    public boolean isPoliciesLinkPresent() {
+        try {
+            hover("manageCustomLink");
+            return driver.findElementById("policiesLink").isDisplayed();
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
 
     // wrapper method for testing expected condition
     public boolean isClickable(String elementID) {

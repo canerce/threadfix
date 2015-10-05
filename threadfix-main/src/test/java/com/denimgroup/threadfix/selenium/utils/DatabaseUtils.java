@@ -223,4 +223,11 @@ public class DatabaseUtils {
                 "3", "qa", "parameter", "description", "", "path");
         assertTrue("Request for Finding was unsuccessful. Message:" + secondResponse.message, secondResponse.success);
     }
+
+    public static void deleteAllPolicies() {
+
+        RestResponse<String> response = CLIENT.deletePolicies();
+        assertTrue("Request to delete all policies was unsuccessful. Message: " + response.message, response.success);
+
+    }
 }

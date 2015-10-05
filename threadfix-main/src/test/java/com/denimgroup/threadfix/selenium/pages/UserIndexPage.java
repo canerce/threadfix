@@ -499,6 +499,10 @@ public class UserIndexPage extends BasePage {
         return driver.findElementById("addPermissionButton").getAttribute("ng-disabled") != null;
     }
 
+    public boolean isGroupsTabPresent() {
+        return isElementPresent(By.linkText("Manage Groups"));
+    }
+
     //===========================================================================================================
     // Helper Methods
     //===========================================================================================================
