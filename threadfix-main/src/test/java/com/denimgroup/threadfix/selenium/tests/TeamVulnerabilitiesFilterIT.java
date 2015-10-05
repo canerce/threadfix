@@ -221,22 +221,22 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         assertTrue("Only 16 high vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("High", "16"));
         assertTrue("Only 13 medium vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Medium", "13"));
+                teamDetailPage.isVulnerabilityCountCorrect("Medium", "14"));
         assertTrue("Only 25 low vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Low", "25"));
         assertTrue("Only 15 info vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Info", "15"));
+                teamDetailPage.isVulnerabilityCountCorrect("Info", "14"));
 
         teamDetailPage.addApplicationFilter(appName2);
 
         assertTrue("Only 6 high vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("High", "6"));
         assertTrue("Only 6 medium vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Medium", "5"));
+                teamDetailPage.isVulnerabilityCountCorrect("Medium", "6"));
         assertTrue("Only 4 low vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Low", "4"));
         assertTrue("Only 9 info vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Info", "10"));
+                teamDetailPage.isVulnerabilityCountCorrect("Info", "9"));
     }
 
     //===========================================================================================================
@@ -430,11 +430,11 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         assertTrue("6 high vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("High", "6"));
         assertTrue("5 medium vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Medium", "5"));
+                teamDetailPage.isVulnerabilityCountCorrect("Medium", "6"));
         assertTrue("4 low vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Low", "4"));
         assertTrue("10 info vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Info", "10"));
+                teamDetailPage.isVulnerabilityCountCorrect("Info", "9"));
 
         teamDetailPage.toggle90Days();
 
