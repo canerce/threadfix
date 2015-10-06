@@ -441,11 +441,11 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         assertTrue("6 high vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("High", "6"));
         assertTrue("5 medium vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Medium", "5"));
+                teamDetailPage.isVulnerabilityCountCorrect("Medium", "6"));
         assertTrue("4 low vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Low", "4"));
         assertTrue("10 info vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Info", "10"));
+                teamDetailPage.isVulnerabilityCountCorrect("Info", "9"));
     }
 
     //===========================================================================================================

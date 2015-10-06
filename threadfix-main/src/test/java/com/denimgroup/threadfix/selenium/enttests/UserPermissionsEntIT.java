@@ -758,7 +758,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
 
         assertFalse("Action menu is present", vulnerabilityDetailPage.isActionMenuPresent());
         assertFalse("Add File Button is present", vulnerabilityDetailPage.isUploadFileButtonPresent());
-        assertFalse("Add Comment Button is present", vulnerabilityDetailPage.isAddCommentButtonPresent());
+        assertTrue("Add Comment Button is not present", vulnerabilityDetailPage.isAddCommentButtonPresent());
     }
 
     @Test
@@ -770,7 +770,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
         CustomizeVulnerabilityTypesPage customizeVulnerabilityTypesPage = loginPage.login(userName, testPassword)
                 .clickCustomizeThreadFixVulnerabilityTypesLink();
 
-        assertTrue("Access Denied Page is not showing", customizeVulnerabilityTypesPage.isAccessDenied());
+        assertFalse("Severity Mappings tab should not be present", customizeVulnerabilityTypesPage.isSeverityMappingsTabPresent());
 
         ApplicationDetailPage applicationDetailPage = customizeVulnerabilityTypesPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
