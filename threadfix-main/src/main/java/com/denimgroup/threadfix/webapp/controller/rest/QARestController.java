@@ -74,18 +74,18 @@ public class QARestController extends TFRestController {
     @RequestMapping(headers = "Accept=application/json", value = "/teams/delete/{teamId}", method = RequestMethod.POST)
     @JsonView(AllViews.RestViewTeam2_1.class)
     public Object deleteTeam(HttpServletRequest request, @PathVariable("teamId") int teamId) {
-        log.info("Received REST request to delete Team with id " + teamId + ".");
+        LOG.info("Received REST request to delete Team with id " + teamId + ".");
 
         Organization organization = organizationService.loadById(teamId);
 
         if (organization == null || !organization.isActive()) {
-            log.warn("Invalid Team ID.");
+            LOG.warn("Invalid Team ID.");
             return RestResponse.failure(TEAM_DELETION_FAILED);
 
         } else {
             String teamName = organization.getName();
             organizationService.markInactive(organization);
-            log.info("REST Request to delete Team " + teamName + " is completed successfully");
+            LOG.info("REST Request to delete Team " + teamName + " is completed successfully");
             return RestResponse.success(TEAM_DELETION_SUCCESS);
         }
     }
@@ -158,21 +158,21 @@ public class QARestController extends TFRestController {
     @JsonView(AllViews.TableRow.class)
     @RequestMapping(headers = "Accept=application/json", value = "/user/delete/{userId}", method = RequestMethod.POST)
     public Object deleteUser(HttpServletRequest request, @PathVariable("userId") int userId) {
-        log.info("Received REST request to delete User with id " + userId + ".");
+        LOG.info("Received REST request to delete User with id " + userId + ".");
 
         User user = userService.loadUser(userId);
 
         if (user == null || !user.isActive()) {
-            log.warn("Invalid User ID.");
+            LOG.warn("Invalid User ID.");
             return RestResponse.failure(USER_DELETION_FAILED);
 
         } else if(!userService.canDelete(user)) {
-            log.warn("Cannot delete this User without removing access to critical functions.");
+            LOG.warn("Cannot delete this User without removing access to critical functions.");
             return RestResponse.failure(USER_DELETION_FAILED);
         } else {
             String userName = user.getName();
             userService.delete(user);
-            log.info("REST Request to delete User " + userName + " is completed successfully");
+            LOG.info("REST Request to delete User " + userName + " is completed successfully");
             return RestResponse.success(USER_DELETION_SUCCESS);
         }
     }
@@ -180,7 +180,7 @@ public class QARestController extends TFRestController {
     @JsonView(AllViews.TableRow.class)
     @RequestMapping(headers = "Accept=application/json", value = "/user/list", method = RequestMethod.POST)
     public Object listUsers(HttpServletRequest request) {
-        log.info("Recieved REST request to list Users");
+        LOG.info("Recieved REST request to list Users");
 
         List<User> users = userService.loadAllUsers();
 
@@ -442,7 +442,7 @@ public class QARestController extends TFRestController {
     @JsonView(AllViews.TableRow.class)
     @RequestMapping(headers = "Accept=application/json", value = "/policy/deleteAll", method = RequestMethod.POST)
     public Object deletePolicies(HttpServletRequest request) {
-        log.info("Received REST request to delete all policies.");
+        LOG.info("Received REST request to delete all policies.");
 
         List<Policy> policies = policyService.loadAll();
 
@@ -451,7 +451,7 @@ public class QARestController extends TFRestController {
             if (policy != null && policy.isActive()) {
                 String policyName = policy.getName();
                 policyService.delete(policy);
-                log.info("REST Request to delete Policy " + policyName + " is completed successfully");
+                LOG.info("REST Request to delete Policy " + policyName + " is completed successfully");
             }
         }
 
