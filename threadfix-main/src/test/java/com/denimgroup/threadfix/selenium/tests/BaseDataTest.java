@@ -92,6 +92,15 @@ public abstract class BaseDataTest extends BaseIT{
         }
     }
 
+    protected void createLimitedUser(String permission) {
+        if (permission != null) {
+            roleName = createSpecificPermissionRole(permission);
+            userName = createSpecificRoleUser(roleName);
+        } else {
+            throw new RuntimeException("Permission required to create a limited user.");
+        }
+    }
+
     public void initializeTeamAndAppViaCli() {
         CommandLineUtils cliUtils = new CommandLineUtils();
         teamName = getName();

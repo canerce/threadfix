@@ -234,4 +234,14 @@ public class DatabaseUtils {
         assertTrue("Request to delete all policies was unsuccessful. Message: " + response.message, response.success);
 
     }
+
+    public static void attachWAFToApp(String wafName, String teamName, String appName) {
+        String wafID = getWafID(wafName);
+
+        RestResponse<Application> response = CLIENT.searchForApplicationByName(appName, teamName);
+        assertTrue("Request for Application was unsuccessful. Message:" + response.message, response.success);
+
+        RestResponse<Application> secondResponse = CLIENT.addWaf(String.valueOf(response.object.getId()), wafID);
+        assertTrue("Request to attach WAF was unsuccessful. Message:" + secondResponse.message, secondResponse.success);
+    }
 }

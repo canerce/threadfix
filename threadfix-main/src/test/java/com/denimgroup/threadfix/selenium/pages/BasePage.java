@@ -141,6 +141,11 @@ public abstract class BasePage {
         waitForElement(By.id("configurationHeader"));
     }
 
+    public void closeConfigTab() {
+        driver.findElementById("tabConfigAnchor").click();
+        waitForInvisibleElement("configurationHeader");
+    }
+
     public void clickUserTab(){
         driver.findElementById("tabUserAnchor").click();
         sleep(3000);
@@ -575,6 +580,10 @@ public abstract class BasePage {
 
     public boolean isElementActive(WebElement element){
         return element.getAttribute("class").contains("active");
+    }
+
+    public boolean isAccessDenied() {
+        return driver.findElementById("main-content").getText().contains("Access Denied");
     }
 
     //===========================================================================================================
