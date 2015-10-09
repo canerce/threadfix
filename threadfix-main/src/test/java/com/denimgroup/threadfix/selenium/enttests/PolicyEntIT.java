@@ -522,8 +522,7 @@ public class PolicyEntIT extends BaseDataTest {
                 .clickFieldControl("Critical")
                 .clickFieldControl("High")
                 .clickSaveFilterButton()
-                .clickPolicyTab()
-                .expandPolicy(policyName);
+                .clickPolicyTab();
 
         assertTrue("Application should be passing high filter.", policyPage.isAppPassing(appFail));
         assertFalse("Application should be failing high filter.", policyPage.isAppPassing(appPass));
@@ -564,8 +563,7 @@ public class PolicyEntIT extends BaseDataTest {
                 .clickFieldControl("Open")
                 .clickFieldControl("Closed")
                 .clickSaveFilterButton()
-                .clickPolicyTab()
-                .expandPolicy(policyName);
+                .clickPolicyTab();
 
         assertTrue("Application should be passing closed filter.", policyPage.isAppPassing(appFail));
         assertFalse("Application should be failing closed filter.", policyPage.isAppPassing(appPass));
@@ -660,8 +658,7 @@ public class PolicyEntIT extends BaseDataTest {
                 .selectFilterToEdit(filterName)
                 .clickLessThan()
                 .clickSaveFilterButton()
-                .clickPolicyTab()
-                .expandPolicy(policyName);
+                .clickPolicyTab();
 
         assertTrue("Application should be passing less than filter.", policyPage.isAppPassing(appFail));
         assertFalse("Application should be failing less than filter.", policyPage.isAppPassing(appPass));
