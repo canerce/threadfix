@@ -5,6 +5,8 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.ScanQueueTask;
 import com.denimgroup.threadfix.data.entities.Task;
+import com.denimgroup.threadfix.remote.QARestClient;
+import com.denimgroup.threadfix.remote.QARestClientImpl;
 import com.denimgroup.threadfix.remote.ThreadFixRestClient;
 import com.denimgroup.threadfix.remote.ThreadFixRestClientImpl;
 import com.denimgroup.threadfix.remote.response.RestResponse;
@@ -19,12 +21,27 @@ import static org.junit.Assert.assertTrue;
 public class ThreadFixRestClientEntIT {
     String dummyUrl = "http://test.com";
 
-    private ThreadFixRestClient getClient() {
-        return new ThreadFixRestClientImpl(new TestUtils());
+    public static final String API_KEY, REST_URL;
+    public static final ThreadFixRestClient CLIENT;
+    public static final QARestClient QA_CLIENT;
+
+    static {
+        API_KEY = System.getProperty("API_KEY");
+        REST_URL = System.getProperty("REST_URL");
+
+        CLIENT = new ThreadFixRestClientImpl(REST_URL, API_KEY);
+        QA_CLIENT = new QARestClientImpl(REST_URL, API_KEY);
+
+        if (API_KEY == null) {
+            throw new IllegalStateException("API_KEY system variable was null.");
+        }
+        if (REST_URL == null) {
+            throw new IllegalStateException("REST_URL system variable was null.");
+        }
     }
 
     private RestResponse<Organization> createTeam(String name) {
-        return getClient().createTeam(name);
+        return CLIENT.createTeam(name);
     }
 
     private Integer getTeamId(String name) {
@@ -38,7 +55,7 @@ public class ThreadFixRestClientEntIT {
     }
 
     private RestResponse<Application> createApplication(String teamId, String name, String url) {
-        return getClient().createApplication(teamId, name, url);
+        return CLIENT.createApplication(teamId, name, url);
     }
 
     private Integer getApplicationId(String teamName, String name, String url) {
@@ -58,7 +75,7 @@ public class ThreadFixRestClientEntIT {
 
         String appId = getApplicationId(teamName, appName, dummyUrl).toString();
 
-        RestResponse<ScanQueueTask> queueResponse = getClient().queueScan(appId, "Acunetix WVS");
+        RestResponse<ScanQueueTask> queueResponse = CLIENT.queueScan(appId, "Acunetix WVS");
 
         assertTrue("Future scan should have been queued.", queueResponse.success);
     }
@@ -70,9 +87,9 @@ public class ThreadFixRestClientEntIT {
 
         String appId = getApplicationId(teamName, appName, dummyUrl).toString();
 
-        RestResponse<ScanQueueTask> queueResponse = getClient().queueScan(appId, "Acunetix WVS");
+        RestResponse<ScanQueueTask> queueResponse = CLIENT.queueScan(appId, "Acunetix WVS");
 
-        RestResponse<Task> response = getClient().requestTask(scannerList, "");
+        RestResponse<Task> response = QA_CLIENT.requestTask(scannerList, "");
 
         assertTrue(response != null && response.object != null);
     }
@@ -83,11 +100,11 @@ public class ThreadFixRestClientEntIT {
 
         String appId = getApplicationId(teamName, appName, dummyUrl).toString();
 
-        RestResponse<ScanQueueTask> queueResponse = getClient().queueScan(appId, "Acunetix WVS");
+        RestResponse<ScanQueueTask> queueResponse = CLIENT.queueScan(appId, "Acunetix WVS");
 
         String taskId = queueResponse.object.getId().toString();
 
-        RestResponse<String> statusResponse = getClient().taskStatusUpdate(taskId, "This is a test.");
+        RestResponse<String> statusResponse = QA_CLIENT.taskStatusUpdate(taskId, "This is a test.");
 
         assertTrue("Status should have been changed.", statusResponse.success);
     }
@@ -98,11 +115,11 @@ public class ThreadFixRestClientEntIT {
 
         String appId = getApplicationId(teamName, appName, dummyUrl).toString();
 
-        RestResponse<ScanQueueTask> queueResponse = getClient().queueScan(appId, "Acunetix WVS");
+        RestResponse<ScanQueueTask> queueResponse = CLIENT.queueScan(appId, "Acunetix WVS");
 
         String taskId = queueResponse.object.getId().toString();
 
-        RestResponse<String> setResponse = getClient().setTaskConfig(taskId, "Acunetix WVS", ScanContents.getScanFilePath());
+        RestResponse<String> setResponse = CLIENT.setTaskConfig(taskId, "Acunetix WVS", ScanContents.getScanFilePath());
 
         assertTrue("Configuration for the task should have been set.", setResponse.success);
     }
@@ -113,13 +130,13 @@ public class ThreadFixRestClientEntIT {
 
         String appId = getApplicationId(teamName, appName, dummyUrl).toString();
 
-        getClient().queueScan(appId, "Acunetix WVS");
+        CLIENT.queueScan(appId, "Acunetix WVS");
 
-        RestResponse<Task> requestTask = getClient().requestTask("Acunetix WVS", "Test");
+        RestResponse<Task> requestTask = QA_CLIENT.requestTask("Acunetix WVS", "Test");
         String taskId = Integer.toString(requestTask.object.getTaskId());
         String taskKey = requestTask.object.getSecureTaskKey();
 
-        RestResponse<ScanQueueTask> completionResponse = getClient().completeTask(taskId, ScanContents.getScanFilePath(), taskKey);
+        RestResponse<ScanQueueTask> completionResponse = QA_CLIENT.completeTask(taskId, ScanContents.getScanFilePath(), taskKey);
 
         assertTrue("Task should be completed.", completionResponse.success);
 
@@ -131,13 +148,13 @@ public class ThreadFixRestClientEntIT {
 
         String appId = getApplicationId(teamName, appName, dummyUrl).toString();
 
-        getClient().queueScan(appId, "Acunetix WVS");
+        CLIENT.queueScan(appId, "Acunetix WVS");
 
-        RestResponse<Task> requestTask = getClient().requestTask("Acunetix WVS", "Test");
+        RestResponse<Task> requestTask = QA_CLIENT.requestTask("Acunetix WVS", "Test");
         String taskId = Integer.toString(requestTask.object.getTaskId());
         String taskKey = requestTask.object.getSecureTaskKey();
 
-        RestResponse<String> failureResponse = getClient().failTask(taskId, "Task Failed.", taskKey);
+        RestResponse<String> failureResponse = QA_CLIENT.failTask(taskId, "Task Failed.", taskKey);
 
         assertTrue("Task should have failed.", failureResponse.success);
     }

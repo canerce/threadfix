@@ -242,24 +242,6 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 				new String[] { url },
                 Application.class);
 	}
-
-    public RestResponse<Task> requestTask(String scanners, String agentConfig) {
-        return httpRestUtils.httpPost("/tasks/requestTask",
-                new String[] {"scanners", "agentConfig" },
-                new String[] { scanners, agentConfig }, Task.class);
-    }
-
-    /**
-     * Determine if we want to pass the taskId as a parameter or if we want to REST it up
-     * @param scanQueueTaskId
-     * @param message
-     * @return
-     */
-    public RestResponse<String> taskStatusUpdate(String scanQueueTaskId, String message) {
-        return httpRestUtils.httpPost("/tasks/taskStatusUpdate",
-                new String[]{"scanQueueTaskId", "message"},
-                new String[]{ scanQueueTaskId, message}, String.class);
-    }
 	
 	public RestResponse<String> setTaskConfig(String appId, String scannerType, String filePath) {
 		String url = "/tasks/setTaskConfig";
@@ -267,110 +249,6 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 		String[] paramValues 	= { appId, scannerType };
 		return httpRestUtils.httpPostFile(url, new File(filePath), paramNames, paramValues, String.class);
 	}
-
-	public RestResponse<ScanQueueTask> completeTask(String scanQueueTaskId, String filePath, String secureTaskKey) {
-		String url = "/tasks/completeTask";
-		String[] paramNames 	= {	"scanQueueTaskId", "secureTaskKey" };
-		String[] paramValues 	= {  scanQueueTaskId,   secureTaskKey };
-	    return httpRestUtils.httpPostFile(url, new File(filePath), paramNames, paramValues, ScanQueueTask.class);
-	}
-	
-	public RestResponse<String> failTask(String scanQueueTaskId, String message, String secureTaskKey) {
-		return httpRestUtils.httpPost("/tasks/failTask",
-				new String[] {"scanQueueTaskId", "message", "secureTaskKey" },
-				new String[] { scanQueueTaskId,	  message,   secureTaskKey }, String.class);
-	}
-
-    // QA only
-    @Override
-    public RestResponse<User> trap() {
-        return httpRestUtils.httpPost("user/trap",
-                new String[] {},
-                new String[] {}, User.class);
-    }
-
-    // QA only
-    @Override
-    public RestResponse<User> createUser(String username, String globalRoleName) {
-        return httpRestUtils.httpPost("/user/create",
-                new String[] {"username", "globalRoleName" },
-                new String[] { username, globalRoleName }, User.class);
-    }
-
-    // QA only
-    @Override
-    public RestResponse<User> createUser(String username) {
-        return httpRestUtils.httpPost("/user/create",
-                new String[] {"username"},
-                new String[] { username}, User.class);
-    }
-
-    //QA only
-    public RestResponse<User> deleteUser(String userId) {
-        return httpRestUtils.httpPost("/user/delete/"+userId,
-                new String[] {},
-                new String[] {}, User.class);
-    }
-
-    //QA only
-    public RestResponse<User[]> listUsers() {
-        return httpRestUtils.httpPost("/user/list",
-                new String[] {},
-                new String[] {}, User[].class);
-    }
-
-    // QA only
-    @Override
-    public RestResponse<User> addUserTeamAppPermission(String userName, String roleName, String teamName, String appName) {
-        return httpRestUtils.httpPost("/user/permission",
-                new String[] {"username", "rolename", "teamname", "appname"},
-                new String[] {userName, roleName, teamName, appName}, User.class);
-    }
-
-    // QA only
-    @Override
-    public RestResponse<Role> createRole(String roleName, Boolean allPermissions) {
-        return httpRestUtils.httpPost("/role/create",
-                new String[] {"roleName", "allPermissions"},
-                new String[] {roleName, allPermissions.toString()}, Role.class);
-    }
-
-    // QA only
-    @Override
-    public RestResponse<Role> createSpecificPermissionRole(String roleName, String permission) {
-        return httpRestUtils.httpPost("/role/create/specific",
-                new String[] {"roleName", "permission"},
-                new String[] {roleName, permission}, Role.class);
-    }
-
-    //QA only
-    @Override
-    public RestResponse<Role> removePermission(String roleName, String permission) {
-        return httpRestUtils.httpPost("/role/edit",
-                new String[] {"roleName", "permission"},
-                new String[] {roleName, permission}, Role.class);
-    }
-
-    //QA only
-    public RestResponse<Organization> deleteTeam(String teamId) {
-        return httpRestUtils.httpPost("/teams/delete/"+teamId,
-                new String[] {},
-                new String[] {}, Organization.class);
-    }
-
-    //QA only
-    public RestResponse<Group> createGroup(String groupName) {
-        return httpRestUtils.httpPost("/groups/create",
-                new String[] {"groupName"},
-                new String[] {groupName}, Group.class);
-    }
-
-    //QA only
-    public RestResponse<String> deletePolicies() {
-        return httpRestUtils.httpPost("/policy/deleteAll",
-                new String[] {},
-                new String[] {}, String.class);
-    }
 
 	public RestResponse<Finding> addDynamicFinding(String applicationId, String vulnType, String severity,
 		String nativeId, String parameter, String longDescription,
