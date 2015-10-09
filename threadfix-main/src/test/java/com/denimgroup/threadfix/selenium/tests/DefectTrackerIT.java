@@ -28,6 +28,8 @@ import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.DefectTrackerIndexPage;
 import com.denimgroup.threadfix.selenium.pages.DefectTrackerSchedulePage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import com.denimgroup.threadfix.selenium.utils.DefectTrackerUtils;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -742,5 +744,11 @@ public class DefectTrackerIT extends BaseDataTest {
 
         assertFalse("The Schedule wasn't Deleted",
                 defectTrackerSchedulePage.isDeleteButtonPresent("Sunday_11_30_AM"));
+    }
+
+    @Ignore
+    @Test
+    public void testDefectSubmission() {
+        System.out.println(DefectTrackerUtils.getLatestJiraDefect().toString());
     }
 }
