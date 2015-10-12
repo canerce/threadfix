@@ -366,6 +366,10 @@ public class TeamIndexPage extends BasePage {
         }
     }
 
+    public boolean isAddApplicationButtonForTeamPresent(String teamName) {
+        return isElementPresent(By.id("addApplicationModalButton" + teamName));
+    }
+
     public String getUrlRepositoryError() {
         return driver.findElementById("sourceUrlValidError").getText().trim();
     }

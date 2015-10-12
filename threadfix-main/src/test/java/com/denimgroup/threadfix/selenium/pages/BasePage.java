@@ -270,6 +270,13 @@ public abstract class BasePage {
         return new PolicyPage(driver);
     }
 
+    public ScheduledEmailReportPage clickEmailReportsLink() {
+        clickConfigTab();
+        hover("adminLink");
+        driver.findElementById("emailReportConfiguration").click();
+        return new ScheduledEmailReportPage(driver);
+    }
+
     //===========================================================================================================
     // Get Methods
     //===========================================================================================================
@@ -300,6 +307,14 @@ public abstract class BasePage {
     public boolean isElementPresent(By by) {
         try {
             return driver.findElement(by) != null;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
+
+    public boolean isElementDisplayed(By by) {
+        try {
+            return driver.findElement(by).isDisplayed();
         } catch (NoSuchElementException e) {
             return false;
         }
