@@ -23,10 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 
@@ -525,7 +522,11 @@ public class TeamDetailPage extends BasePage {
     }
 
     public boolean is6MonthChartPresnt(){
-        return driver.findElementById("leftTileReport").isDisplayed();
+        try {
+            return driver.findElementById("leftTileReport").isDisplayed();
+        } catch (NoSuchElementException e) {
+            return false;
+        }
     }
 
     public boolean isrightViewMoreLinkClickable(){
@@ -533,7 +534,11 @@ public class TeamDetailPage extends BasePage {
     }
 
     public boolean isTop10ChartPresent(){
-        return driver.findElementById("rightTileReport").isDisplayed();
+        try {
+            return driver.findElementById("rightTileReport").isDisplayed();
+        } catch (NoSuchElementException e) {
+            return false;
+        }
     }
 
     public boolean isAddAppBtnPresent() {

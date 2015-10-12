@@ -365,8 +365,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
                 .expandVulnerabilityByType("Critical79")
                 .expandCommentSection("Critical790");
 
-        //TODO: Change assert statement when DGTF-2143 is resolved
-        assertTrue("Add Comment button is not present on Team page", teamDetailPage.isAddCommentButtonPresent("Critical790"));
+        assertFalse("Add Comment button is still present on Team page", teamDetailPage.isAddCommentButtonPresent("Critical790"));
 
         teamDetailPage.checkVulnerabilitiesByCategory("Critical79")
                 .clickVulnerabilitiesActionButton();
@@ -380,8 +379,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
                 .expandVulnerabilityByType("Critical79")
                 .expandCommentSection("Critical790");
 
-        //TODO: Change assert statement when DGTF-2143 is resolved
-        assertTrue("Add Comment button is not present on App page", applicationDetailPage.isAddCommentButtonPresent("Critical790"));
+        assertFalse("Add Comment button is still present on App page", applicationDetailPage.isAddCommentButtonPresent("Critical790"));
 
         applicationDetailPage.checkVulnerabilitiesByCategory("Critical79")
                 .clickVulnerabilitiesActionButton();
@@ -394,8 +392,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
                 .clickViewFinding()
                 .clickViewVulnerability();
 
-        //TODO: Change assert statement when DGTF-2143 is resolved
-        assertTrue("Add comment button is not present on Vulnerability page", vulnerabilityDetailPage.isAddCommentButtonPresent());
+        assertFalse("Add comment button is still present on Vulnerability page", vulnerabilityDetailPage.isAddCommentButtonPresent());
     }
 
     @Test
@@ -420,7 +417,12 @@ public class UserPermissionsEntIT extends BaseDataTest{
                 teamIndexPage.isGraphWedgeDisplayed(teamName, "High") &&
                 teamIndexPage.isGraphWedgeDisplayed(teamName, "Critical"));
 
-        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickViewAppLink(appName, teamName);
+        TeamDetailPage teamDetailPage = teamIndexPage.clickViewTeamLink(teamName);
+
+        assertFalse("Left Report is still Present", teamDetailPage.is6MonthChartPresnt());
+        assertFalse("Right Report is still Present", teamDetailPage.isTop10ChartPresent());
+
+        ApplicationDetailPage applicationDetailPage = teamDetailPage.clickAppLink("0");
 
         assertFalse("Left Report is still Present", applicationDetailPage.isLeftReportLinkPresent());
         assertFalse("Right Report is still Present", applicationDetailPage.isRightReportLinkPresent());
@@ -467,6 +469,13 @@ public class UserPermissionsEntIT extends BaseDataTest{
         dashboardPage.clickConfigTab();
 
         assertFalse("API keys Link is Present", dashboardPage.isApiKeysLinkPresent());
+
+        dashboardPage.closeConfigTab();
+
+        UserIndexPage userIndexPage = dashboardPage.clickManageUsersLink()
+                .clickUserLink("user");
+
+        assertFalse("API keys section is present on User page", userIndexPage.isAPIKeysSectionPresent());
     }
 
     @Test
@@ -868,5 +877,115 @@ public class UserPermissionsEntIT extends BaseDataTest{
 
         assertTrue("Scan wasn't deleted", scanAgentTasksPage.successAlert()
                 .contains("One time OWASP Zed Attack Proxy Scan has been deleted from Scan Agent queue"));
+    }
+
+    //===========================================================================================================
+    // Single Permission Tests
+    //===========================================================================================================
+
+    @Test
+    public void testCommentOnVulnerabilitiesOnlyPermission() {
+        initializeTeamAndAppWithWebInspectScan();
+
+        createLimitedUser("canSubmitComments");
+
+        TeamDetailPage teamDetailPage = loginPage.login(userName, testPassword)
+                .clickOrganizationHeaderLink()
+                .clickViewTeamLink(teamName)
+                .clickVulnerabilitiesTab()
+                .expandVulnerabilityByType("Critical79")
+                .expandCommentSection("Critical790");
+
+        assertTrue("Add Comment button is not present on Team page", teamDetailPage.isAddCommentButtonPresent("Critical790"));
+
+        teamDetailPage.checkVulnerabilitiesByCategory("Critical79")
+                .clickVulnerabilitiesActionButton();
+
+        assertTrue("Batch Tagging button is not present on Team page", teamDetailPage.isBatchCommentButtonPresent());
+
+        ApplicationDetailPage applicationDetailPage = teamDetailPage.clickVulnerabilitiesActionButton()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(teamName, appName)
+                .expandVulnerabilityByType("Critical79")
+                .expandCommentSection("Critical790");
+
+        assertTrue("Add Comment button is not present on App page", applicationDetailPage.isAddCommentButtonPresent("Critical790"));
+
+        applicationDetailPage.checkVulnerabilitiesByCategory("Critical79")
+                .clickVulnerabilitiesActionButton();
+
+        assertTrue("Batch Tagging button is not present on App page", applicationDetailPage.isBatchCommentButtonPresent());
+
+        VulnerabilityDetailPage vulnerabilityDetailPage = applicationDetailPage.clickVulnerabilitiesActionButton()
+                .clickScansHeaderLink()
+                .clickViewScanLink()
+                .clickViewFinding()
+                .clickViewVulnerability();
+
+        assertTrue("Add comment button is not present on Vulnerability page", vulnerabilityDetailPage.isAddCommentButtonPresent());
+    }
+
+    @Test
+    public void testGenerateReportsOnlyPermission() {
+        initializeTeamAndAppWithWebInspectScan();
+
+        createLimitedUser("canGenerateReports");
+
+        DashboardPage dashboardPage = loginPage.login(userName, testPassword);
+
+        assertTrue("Left Report is not Present", dashboardPage.isLeftReportLinkPresent());
+        assertTrue("Right Report is not Present", dashboardPage.isRightReportLinkPresent());
+
+        TeamIndexPage teamIndexPage = dashboardPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName);
+
+        teamIndexPage.waitForPieWedge(teamName, "Critical");
+
+        assertTrue("The Chart is not available", teamIndexPage.isGraphWedgeDisplayed(teamName, "Info") &&
+                teamIndexPage.isGraphWedgeDisplayed(teamName, "Low") &&
+                teamIndexPage.isGraphWedgeDisplayed(teamName, "Medium") &&
+                teamIndexPage.isGraphWedgeDisplayed(teamName, "High") &&
+                teamIndexPage.isGraphWedgeDisplayed(teamName, "Critical"));
+
+        TeamDetailPage teamDetailPage = teamIndexPage.clickViewTeamLink(teamName);
+
+        assertTrue("Left Report is not Present", teamDetailPage.is6MonthChartPresnt());
+        assertTrue("Right Report is not Present", teamDetailPage.isTop10ChartPresent());
+
+        ApplicationDetailPage applicationDetailPage = teamDetailPage.clickAppLink("0");
+
+        assertTrue("Left Report is not Present", applicationDetailPage.isLeftReportLinkPresent());
+        assertTrue("Right Report is not Present", applicationDetailPage.isRightReportLinkPresent());
+
+        assertTrue("Analytics Tab is not available", applicationDetailPage.isElementPresent("tab-reports"));
+    }
+
+    @Ignore("Correct behavior needs to be determined")
+    @Test
+    public void testGenerateWafRulesOnlyPermission() {
+        initializeTeamAndAppWithIbmScan();
+
+        createLimitedUser("canGenerateWafRules");
+
+        String wafName = getName();
+        DatabaseUtils.createWaf(wafName, "Snort");
+        DatabaseUtils.attachWAFToApp(wafName, teamName, appName);
+
+        WafIndexPage wafIndexPage = loginPage.login(userName, testPassword)
+                .clickWafsHeaderLink();
+
+        assertTrue("The Rules button is not present.",
+                wafIndexPage.isGenerateWafRulesButtonPresent());
+    }
+
+    @Test
+    public void testManageApiKeysOnlyPermission() {
+        createLimitedUser("canManageApiKeys");
+
+        ApiKeysIndexPage apiKeysIndexPage = loginPage.login(userName, testPassword)
+                .clickApiKeysLink();
+
+        assertFalse("Access is denied", apiKeysIndexPage.isAccessDenied());
     }
 }

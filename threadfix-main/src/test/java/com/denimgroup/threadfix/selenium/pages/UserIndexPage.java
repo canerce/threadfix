@@ -503,6 +503,10 @@ public class UserIndexPage extends BasePage {
         return isElementPresent(By.linkText("Manage Groups"));
     }
 
+    public boolean isAPIKeysSectionPresent() {
+        return isElementPresent(By.id("apiKeys"));
+    }
+
     //===========================================================================================================
     // Helper Methods
     //===========================================================================================================

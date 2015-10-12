@@ -82,42 +82,7 @@ public interface ThreadFixRestClient {
 
     public RestResponse<ScanQueueTask> queueScan(String applicationId, String scannerType);
     public RestResponse<ScanQueueTask> queueScan(String applicationId, String scannerType, String scanConfigId);
-    public RestResponse<Task> requestTask(String scanners, String agentConfig);
-    public RestResponse<String> taskStatusUpdate(String scanQueueTaskId, String message);
     public RestResponse<String> setTaskConfig(String appId, String scannerType, String filePath);
-    public RestResponse<ScanQueueTask> completeTask(String scanQueueTaskId, String filePath, String secureTaskKey);
-    public RestResponse<String> failTask(String scanQueueTaskId, String message, String secureTaskKey);
-
-    // QA only
-    public RestResponse<User> trap();
-
-    // QA only
-    public RestResponse<User> createUser(String username, String globalRoleName);
-    // QA only
-    public RestResponse<User> createUser(String username);
-    // QA only
-    public RestResponse<User> deleteUser(String userId);
-    // QA only
-    public RestResponse<User[]> listUsers();
-    // QA only
-    public RestResponse<User> addUserTeamAppPermission(String userName, String roleName, String teamName, String appName);
-
-
-    // QA only
-    public RestResponse<Role> createRole(String roleName, Boolean allPermissions);
-    // QA only
-    public RestResponse<Role> createSpecificPermissionRole(String roleName, String permission);
-    // QA only
-    public RestResponse<Role> removePermission(String roleName, String permission);
-
-    //QA only
-    public RestResponse<Organization> deleteTeam(String teamId);
-
-    //QA only
-    public RestResponse<Group> createGroup(String groupName);
-
-    //QA only
-    public RestResponse<String> deletePolicies();
 
     public RestResponse<Finding> addDynamicFinding(String applicationId, String vulnType, String severity,
                                     String nativeId, String parameter, String longDescription,
