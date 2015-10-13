@@ -11,7 +11,6 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.json.JSONObject;
 import sun.plugin.dom.exception.InvalidStateException;
-
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,10 +33,10 @@ public class DefectTrackerUtils {
             throw new InvalidStateException("Please set JIRA_USERNAME property.");
         }
         if (JIRA_PASSWORD.length() <= 0) {
-            throw new InvalidStateException("Please set JIRA_USERNAME property.");
+            throw new InvalidStateException("Please set JIRA_PASSWORD property.");
         }
         if (JIRA_URL.length() <= 0) {
-            throw new InvalidStateException("Please set JIRA_USERNAME property.");
+            throw new InvalidStateException("Please set JIRA_URL property.");
         }
         // Ensure url has trailing slash
         if (!JIRA_URL.substring(JIRA_URL.length()-1).equals("/")) {
