@@ -37,6 +37,10 @@ myAppModule.controller('UserAuditPageController', function ($scope, $modal, $htt
         reloadList();
     });
 
+    $scope.$on('updateAuditRoles', function() {
+        reloadList();
+    });
+
     $scope.$on('reloadRoles', function() {
         reloadList();
     });
@@ -122,7 +126,8 @@ myAppModule.controller('UserAuditPageController', function ($scope, $modal, $htt
                         heading: 'User Roles',
                         teamMaps: teamMaps,
                         appMaps: appMaps,
-                        userGlobalRole: user.globalRole != null ? user.globalRole.displayName : '--'
+                        userGlobalRole: user.globalRole != null ?
+                            user.globalRole.displayName : user.hasGlobalGroupAccess ? 'Read Access' : "--"
                     }
                 }
             }

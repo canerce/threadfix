@@ -359,8 +359,12 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 						vulnerabilityStatusService.openVulnerability(vuln, scan, null, map.getVulnerability().getOpenTime(), true, false);
 					}
 					vulnerabilityService.storeVulnerability(vuln);
+					scanDao.deleteMap(map);
+					map.setVulnerability(null);
+					map.setScan(null);
 				}
 			}
+			scan.getScanCloseVulnerabilityMaps().clear();
 		}
 		
 		if (scan != null && scan.getScanReopenVulnerabilityMaps() != null) {
@@ -372,8 +376,12 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 					}
 					map.getVulnerability().getScanReopenVulnerabilityMaps().remove(map);
 					vulnerabilityService.storeVulnerability(map.getVulnerability());
+					scanDao.deleteMap(map);
+					map.setVulnerability(null);
+					map.setScan(null);
 				}
 			}
+			scan.getScanReopenVulnerabilityMaps().clear();
 		}
 	}
 	
@@ -719,14 +727,15 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 			if (vuln.getScanCloseVulnerabilityMaps() != null) {
 				List<ScanCloseVulnerabilityMap> vulnMapCopy = new ArrayList<>(vuln.getScanCloseVulnerabilityMaps());
 				for (ScanCloseVulnerabilityMap map : vulnMapCopy) {
-					map.getScan().getScanCloseVulnerabilityMaps().remove(map);
-					map.getScan().setNumberClosedVulnerabilities(
-							map.getScan().getNumberClosedVulnerabilities() - 1);
+					scan.getScanCloseVulnerabilityMaps().remove(map);
+					scan.setNumberClosedVulnerabilities(
+							scan.getNumberClosedVulnerabilities() - 1);
 
 					vuln.getScanCloseVulnerabilityMaps().remove(map);
 
 					scanDao.deleteMap(map);
-					scanDao.saveOrUpdate(map.getScan());
+					map.setVulnerability(null);
+					map.setScan(null);
 
 				}
 			}
@@ -842,13 +851,22 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 		if (newCloseTime != null && newOpenTime != null) {
 			if (vuln.isFoundByScanner()) {
 				vuln.setCloseTime(newCloseTime);
-				
+
+				// Calculate all the close maps from other channels other than the channel of scan to delete
+				List<ScanCloseVulnerabilityMap> scanCloseVulnerabilityMaps = listFrom(vuln.getScanCloseVulnerabilityMaps());
+				for (int i = 0; i < vuln.getScanCloseVulnerabilityMaps().size(); i++) {
+					ScanCloseVulnerabilityMap map = vuln.getScanCloseVulnerabilityMaps().get(i);
+					if (scanToDelete.getApplicationChannel().getId() == map.getScan().getApplicationChannel().getId()) {
+						scanCloseVulnerabilityMaps.remove(i);
+					}
+				}
+
 				if (!vuln.isActive() && newCloseTime.before(newOpenTime)
-						|| (!vuln.isActive() && !(vuln.getScanCloseVulnerabilityMaps().size() > 0 && closeVulnWhenNoScannersReport))) {
+						|| (!vuln.isActive() && !(scanCloseVulnerabilityMaps.size() > 0 && closeVulnWhenNoScannersReport))) {
 					vulnerabilityStatusService.openVulnerability(vuln, scanToDelete, null, newOpenTime, true, false);
 				}
 
-				boolean toClose = vuln.getScanCloseVulnerabilityMaps().size() == 0 || (vuln.getScanCloseVulnerabilityMaps().size() > 0 && closeVulnWhenNoScannersReport);
+				boolean toClose = scanCloseVulnerabilityMaps.size() == 0 || (scanCloseVulnerabilityMaps.size() > 0 && closeVulnWhenNoScannersReport);
 
 				if (vuln.isActive() && newCloseTime.after(newOpenTime) && toClose) {
 					vulnerabilityStatusService.closeVulnerability(vuln, scanToDelete, newCloseTime, true, false);
