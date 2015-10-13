@@ -10,8 +10,6 @@ import com.sun.jna.platform.dnd.GhostedDragImage;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.json.JSONObject;
-import sun.plugin.dom.exception.InvalidStateException;
-import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -67,7 +65,7 @@ public class DefectTrackerUtils {
             }
             return JsonUtils.getJSONObject(stringBuilder.toString());
         } catch (IOException ioEx) {
-            throw new InvalidStateException("IO Exception");
+            throw new RuntimeException("IO Exception");
         }
     }
 }
