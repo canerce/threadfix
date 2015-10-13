@@ -132,6 +132,10 @@ public class EmailListPage extends BasePage {
         return true;
     }
 
+    public boolean isCreateEmailListButtonPresent() {
+        return isElementPresent("createEmailListModalButton");
+    }
+
     //===========================================================================================================
     // Get Methods
     //===========================================================================================================

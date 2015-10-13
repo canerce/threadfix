@@ -219,9 +219,12 @@ public class UserServiceImpl implements UserService {
 
 		if (user != null && user.getGroups() != null && user.getGroups().size() != 0) {
 			for (Group group : user.getGroups()) {
-				if (group.isActive() && group.getHasGlobalAccess() && group.getGlobalRole() != null) {
-					returnList.addAll(group.getGlobalRole().getPermissions());
+				if (group.isActive() && group.getHasGlobalAccess()) {
 					returnList.add(Permission.READ_ACCESS);
+				}
+
+				if (group.isActive() && group.getGlobalRole() != null) {
+					returnList.addAll(group.getGlobalRole().getPermissions());
 				}
 			}
 		}
@@ -557,7 +560,7 @@ public class UserServiceImpl implements UserService {
 			if (!currentNotificationEventActions.contains(eventAction)) {
 				UserEventNotificationMap userEventNotificationMap = new UserEventNotificationMap();
 				userEventNotificationMap.setUser(user);
-				userEventNotificationMap.setEventAction(eventAction.toString());
+				userEventNotificationMap.setEventAction(eventAction.name());
 				userEventNotificationMap.setActive(true);
 				userEventNotificationMapDao.saveOrUpdate(userEventNotificationMap);
 			}
@@ -574,9 +577,9 @@ public class UserServiceImpl implements UserService {
 			Set<EventAction> notificationEventActions = getNotificationEventActions(user);
 			for (EventAction eventNotificationType : EventAction.values()) {
 				if (notificationEventActions.contains(eventNotificationType)) {
-					eventNotificationSettings.put(eventNotificationType.toString(), true);
+					eventNotificationSettings.put(eventNotificationType.name(), true);
 				} else {
-					eventNotificationSettings.put(eventNotificationType.toString(), false);
+					eventNotificationSettings.put(eventNotificationType.name(), false);
 				}
 			}
 		}

@@ -484,10 +484,17 @@ public class UserPermissionsEntIT extends BaseDataTest{
 
         createRestrictedUser("canManageApplications");
 
-        ApplicationDetailPage applicationDetailPage = loginPage.login(userName, testPassword)
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickApplicationName(teamName, appName)
+        TeamIndexPage teamIndexPage = loginPage.login(userName, testPassword)
+                .clickOrganizationHeaderLink();
+
+        assertFalse("Add Application button was present on Team Index page",
+                teamIndexPage.isAddApplicationButtonForTeamPresent(teamName));
+
+        TeamDetailPage teamDetailPage = teamIndexPage.clickViewTeamLink(teamName);
+
+        assertFalse("Add Application button was present on Team Detail page", teamDetailPage.isAddAppBtnPresent());
+
+        ApplicationDetailPage applicationDetailPage = teamDetailPage.clickAppLink("0")
                 .clickActionButton();
 
         assertFalse("Edit/Delete Button wasn't gone",
@@ -987,5 +994,54 @@ public class UserPermissionsEntIT extends BaseDataTest{
                 .clickApiKeysLink();
 
         assertFalse("Access is denied", apiKeysIndexPage.isAccessDenied());
+    }
+
+    @Test
+    public void testManageApplicationsOnlyPermission() {
+        initializeTeamAndApp();
+
+        createLimitedUser("canManageApplications");
+
+        TeamIndexPage teamIndexPage = loginPage.login(userName, testPassword)
+                .clickOrganizationHeaderLink();
+
+        assertTrue("Add Application button was not present on Team Index page",
+                teamIndexPage.isAddApplicationButtonForTeamPresent(teamName));
+
+        TeamDetailPage teamDetailPage = teamIndexPage.clickViewTeamLink(teamName);
+
+        assertTrue("Add Application button was not present on Team Detail page", teamDetailPage.isAddAppBtnPresent());
+
+        ApplicationDetailPage applicationDetailPage = teamDetailPage.clickAppLink("0")
+                .clickActionButton();
+
+        assertTrue("Edit/Delete Button was not present",
+                applicationDetailPage.isElementPresent("editApplicationModalButton"));
+        assertFalse("Detail Link is present", applicationDetailPage.isDetailLinkDisplayed());
+    }
+
+    @Test
+    public void testManageDefectTrackersOnlyPermission() {
+        createLimitedUser("canManageDefectTrackers");
+
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login(userName, testPassword)
+                .clickDefectTrackersLink();
+
+        assertTrue("Create New Tracker button was not present", defectTrackerIndexPage.isCreateNewTrackerButtonPresent());
+    }
+
+    @Test
+    public void testManageEmailReportsOnlyPermission() {
+        createLimitedUser("canManageEmailReports");
+
+        ScheduledEmailReportPage scheduledEmailReportPage = loginPage.login(userName, testPassword)
+                .clickEmailReportsLink();
+
+        assertTrue("New Schedule Email Report button is not present",
+                scheduledEmailReportPage.isScheduleEmailReportButtonPresent());
+
+        EmailListPage emailListPage = scheduledEmailReportPage.clickManageEmailListsLink();
+
+        assertTrue("Create Email List button is not present", emailListPage.isCreateEmailListButtonPresent());
     }
 }
