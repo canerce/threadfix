@@ -617,11 +617,11 @@ public class RemoteProvidersIT extends BaseDataTest {
         remoteProvidersIndexPage.clickConfigure(WHITEHAT)
                 .setWhiteHatAPI(SENTINEL_API_KEY)
                 .saveConfiguration(WHITEHAT)
-                .mapProviderToTeamAndApp(WHITEHAT, 1, teamName, appName);
+                .mapProviderToTeamAndApp(WHITEHAT, 2, teamName, appName);
 
         assertTrue("Success message was " + remoteProvidersIndexPage.getSuccessAlert(), remoteProvidersIndexPage.getSuccessAlert().contains("WhiteHat Sentinel"));
 
-        remoteProvidersIndexPage.clickImportScan(WHITEHAT, 1)
+        remoteProvidersIndexPage.clickImportScan(WHITEHAT, 2)
                 .checkForAlert();
 
         assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
@@ -629,11 +629,11 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         TeamDetailPage teamDetailPage = remoteProvidersIndexPage.clickTeamLink(teamName);
 
-        assertTrue("Number of Open vulnerabilities is not correct", teamDetailPage.isNumberOfVulnerabilitiesCorrect("Total", "77", 0));
-        assertTrue("Number of Critical vulnerabilities is not correct", teamDetailPage.isNumberOfVulnerabilitiesCorrect("Critical", "10", 0));
-        assertTrue("Number of High vulnerabilities is not correct", teamDetailPage.isNumberOfVulnerabilitiesCorrect("High", "11", 0));
-        assertTrue("Number of Medium vulnerabilities is not correct", teamDetailPage.isNumberOfVulnerabilitiesCorrect("Medium", "47", 0));
-        assertTrue("Number of Low vulnerabilities is not correct", teamDetailPage.isNumberOfVulnerabilitiesCorrect("Low", "1", 0));
+        assertTrue("Number of Open vulnerabilities is not correct", teamDetailPage.isNumberOfVulnerabilitiesCorrect("Total", "86", 0));
+        assertTrue("Number of Critical vulnerabilities is not correct", teamDetailPage.isNumberOfVulnerabilitiesCorrect("Critical", "12", 0));
+        assertTrue("Number of High vulnerabilities is not correct", teamDetailPage.isNumberOfVulnerabilitiesCorrect("High", "15", 0));
+        assertTrue("Number of Medium vulnerabilities is not correct", teamDetailPage.isNumberOfVulnerabilitiesCorrect("Medium", "48", 0));
+        assertTrue("Number of Low vulnerabilities is not correct", teamDetailPage.isNumberOfVulnerabilitiesCorrect("Low", "3", 0));
         assertTrue("Number of Info vulnerabilities is not correct", teamDetailPage.isNumberOfVulnerabilitiesCorrect("Info", "8", 0));
 
         remoteProvidersIndexPage = teamDetailPage.clickRemoteProvidersLink()
