@@ -100,7 +100,6 @@ public class PolicyPage extends BasePage {
     public PolicyPage createOpenFilter(String name) {
         clickFiltersTab()
                 .expandFilters()
-                .clickFieldControl("Open")
                 .setFilterName(name)
                 .clickPolicyTab();
         return new PolicyPage(driver);
