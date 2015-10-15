@@ -26,4 +26,11 @@ for url in "${blacklist[@]}"
 do
 	difflist=$(echo "$difflist" | grep -v $url)
 done
+
+# Formatting
+printf "\n============================================================"
+printf "\n  Differing Files"
+printf "\n============================================================\n"
+
+# Echo Final List
 echo "$difflist"
