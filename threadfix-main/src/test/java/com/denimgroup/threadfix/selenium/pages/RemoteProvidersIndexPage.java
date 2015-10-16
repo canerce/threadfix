@@ -234,6 +234,11 @@ public class RemoteProvidersIndexPage extends BasePage {
         return driver.findElementById("errorSpan").getText();
     }
 
+    public String getImportErrorMessage(String provider) {
+        waitForElement(By.cssSelector("#errorMessage" + provider + ":not(.ng-hide)"));
+        return driver.findElementByCssSelector("#errorMessage" + provider + ":not(.ng-hide)").getText();
+    }
+
     public String getAppName(String provider, String appNum) {
         return driver.findElementById("provider" + provider + "appid" + appNum).getText();
     }
@@ -274,6 +279,10 @@ public class RemoteProvidersIndexPage extends BasePage {
     public boolean isSuccessMessagePresent(String expectedMessage) {
         return driver.findElementByClassName("alert-success").getText()
                 .contains(expectedMessage);
+    }
+
+    public boolean isImportAllScansButtonPresent(String provider) {
+        return isElementPresent("importAll" + provider);
     }
 
     //===========================================================================================================

@@ -165,4 +165,8 @@ public class WafIndexPage extends BasePage {
     public boolean isGenerateWafRulesButtonPresent() {
         return driver.findElementsById("generateWafRulesButton").size() !=0;
     }
+
+    public boolean isCreateWAFButtonPresent() {
+        return isElementPresent("createWafModalButton");
+    }
 }

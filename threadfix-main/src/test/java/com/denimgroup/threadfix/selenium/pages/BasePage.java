@@ -277,6 +277,27 @@ public abstract class BasePage {
         return new ScheduledEmailReportPage(driver);
     }
 
+    public GRCToolsPage clickGRCToolsLink() {
+        clickConfigTab();
+        hover("manageIntegrations");
+        driver.findElementById("grcToolsLink").click();
+        return new GRCToolsPage(driver);
+    }
+
+    public ScannerSeveritiesPage clickScannerSeveritiesLink() {
+        clickConfigTab();
+        hover("manageCustomLink");
+        driver.findElementById("customizeScannerSeveritiesLink").click();
+        return new ScannerSeveritiesPage(driver);
+    }
+
+    public ScannerVulnerabilityTypesPage clickScannerVulnerabilityTypesLink() {
+        clickConfigTab();
+        hover("manageCustomLink");
+        driver.findElementById("customizeScannerVulnerabilityTypesLink").click();
+        return new ScannerVulnerabilityTypesPage(driver);
+    }
+
     //===========================================================================================================
     // Get Methods
     //===========================================================================================================
@@ -462,7 +483,7 @@ public abstract class BasePage {
 
     public boolean isCustomizeThreadFixVulnerabilityTypesLinkPresent(){
         hover("manageCustomLink");
-        return driver.findElementById("customizeThreadFixVulnerabilityTypesLink").isDisplayed();
+        return isElementDisplayed(By.id("customizeThreadFixVulnerabilityTypesLink"));
     }
 
     public boolean isCustomizeThreadFixVulnerabilityTypesLinkClickable(){

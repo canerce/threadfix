@@ -68,7 +68,7 @@ public class CommandLineEntIT extends BaseDataTest {
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickApplicationName(teamName, appName)
-                .clickScanAgentTasksTab(1);
+                .clickScanAgentTasksTab();
         assertTrue("Scheduled scan isn't present.",
                 ("OWASP Zed Attack Proxy").equals(applicationDetailPage.getScanAgentTaskScannerType(0)));
     }

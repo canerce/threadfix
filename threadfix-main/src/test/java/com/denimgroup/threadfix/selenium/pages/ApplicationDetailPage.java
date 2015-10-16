@@ -193,14 +193,9 @@ public class ApplicationDetailPage extends BasePage {
         return new FindingDetailPage(driver);
     }
 
-    public ApplicationDetailPage clickScheduleScanTab(int scheduledScans) {
-        sleep(1000);
-        if (scheduledScans == 1) {
-            driver.findElementByLinkText(scheduledScans + " Scheduled Scan").click();
-        } else {
-            driver.findElementByLinkText(scheduledScans + " Scheduled Scans").click();
-        }
-        waitForElement(By.linkText("Schedule New Scan"));
+    public ApplicationDetailPage clickScheduleScanTab() {
+        driver.findElementByCssSelector("#scheduledScanTab>a").click();
+        waitForElement(By.id("scheduledScanTable"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -312,13 +307,8 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public ApplicationDetailPage clickScanAgentTasksTab(int count) {
-        if (count == 1) {
-            driver.findElementByLinkText(count + " Scan Agent Task").click();
-        } else {
-            driver.findElementByLinkText(count + " Scan Agent Tasks").click();
-        }
-        sleep(1000);
+    public ApplicationDetailPage clickScanAgentTasksTab() {
+        driver.findElementByCssSelector("#scanAgentTasksTab>a").click();
         waitForElement(By.id("scanQueueTable"));
         return new ApplicationDetailPage(driver);
     }
@@ -1495,6 +1485,26 @@ public class ApplicationDetailPage extends BasePage {
 
     public boolean isCreatePolicyButtonPresent() {
         return isElementPresent("goToPolicyButton");
+    }
+
+    public boolean isScanAgentTasksTabPresent() {
+        return isElementPresent("scanAgentTasksTab");
+    }
+
+    public boolean isScheduledScanTabPresent() {
+        return isElementPresent("scheduledScanTab");
+    }
+
+    public boolean isDeleteScanAgentTaskButtonPresent() {
+        return isElementPresent("deleteButton0");
+    }
+
+    public boolean isDeleteScheduledScanButtonPresent() {
+        return isElementPresent("scheduledScanDeleteButton0");
+    }
+
+    public boolean isTagLabelPresent() {
+        return isElementPresent("appLabelTag0");
     }
 
     //===========================================================================================================

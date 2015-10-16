@@ -58,14 +58,6 @@ public class UserIndexPage extends BasePage {
         return new UserIndexPage(driver);
     }
 
-    //TODO: Delete this method after updating user tests.
-	public UserPermissionsPage clickEditPermissions(String name){
-		driver.findElementById("editPermissions" + name).click();
-		//waitForElement(By.id("addPermissionButton"));
-        sleep(1000);
-        return new UserPermissionsPage(driver);
-	}
-
 	public UserIndexPage clickCreateUserButton() {
         refreshPage();
 		driver.findElementById("newUserModalLink").click();
@@ -505,6 +497,16 @@ public class UserIndexPage extends BasePage {
 
     public boolean isAPIKeysSectionPresent() {
         return isElementPresent(By.id("apiKeys"));
+    }
+
+    public boolean isCreateUserButtonPresent() {
+        return isElementPresent("newUserModalLink");
+    }
+
+    public boolean isUserAuditTabPresent() {
+        //TODO: Replace with commented code when ID is added
+        return isElementPresent(By.linkText("User Audit"));
+        //return isElementPresent("userAuditTab");
     }
 
     //===========================================================================================================
