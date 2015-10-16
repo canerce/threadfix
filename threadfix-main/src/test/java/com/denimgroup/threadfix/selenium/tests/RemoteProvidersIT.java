@@ -463,11 +463,11 @@ public class RemoteProvidersIT extends BaseDataTest {
         remoteProvidersIndexPage.clickConfigure(WHITEHAT)
                 .setWhiteHatAPI(SENTINEL_API_KEY)
                 .saveConfiguration(WHITEHAT)
-                .mapProviderToTeamAndApp(WHITEHAT, 1, teamName, appName);
+                .mapProviderToTeamAndApp(WHITEHAT, 2, teamName, appName);
 
         assertTrue("Success message was " + remoteProvidersIndexPage.getSuccessAlert(), remoteProvidersIndexPage.getSuccessAlert().contains("WhiteHat Sentinel"));
 
-        remoteProvidersIndexPage.clickImportScan(WHITEHAT, 1)
+        remoteProvidersIndexPage.clickImportScan(WHITEHAT, 2)
                 .checkForAlert();
 
         assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
@@ -519,9 +519,9 @@ public class RemoteProvidersIT extends BaseDataTest {
                 .saveConfiguration(WHITEHAT);
 
         assertTrue("Success message was " + remoteProvidersIndexPage.getSuccessAlert(), remoteProvidersIndexPage.getSuccessAlert().contains("WhiteHat Sentinel"));
-        remoteProvidersIndexPage.mapProviderToTeamAndApp(WHITEHAT, 1, teamName, appName);
+        remoteProvidersIndexPage.mapProviderToTeamAndApp(WHITEHAT, 2, teamName, appName);
 
-        ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickImportScan(WHITEHAT, 1);
+        ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickImportScan(WHITEHAT, 2);
         applicationDetailPage.checkForAlert();
 
         assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
@@ -650,7 +650,7 @@ public class RemoteProvidersIT extends BaseDataTest {
         remoteProvidersIndexPage.clickConfigure(WHITEHAT)
                 .setWhiteHatAPI(SENTINEL_API_KEY)
                 .saveConfiguration(WHITEHAT)
-                .mapProviderToTeamAndApp(WHITEHAT, 1, teamName, appName);
+                .mapProviderToTeamAndApp(WHITEHAT, 2, teamName, appName);
 
         assertTrue("Success message was " + remoteProvidersIndexPage.getSuccessAlert(), remoteProvidersIndexPage.getSuccessAlert().contains("WhiteHat Sentinel"));
 
@@ -676,7 +676,7 @@ public class RemoteProvidersIT extends BaseDataTest {
         remoteProvidersIndexPage.clickConfigure(WHITEHAT)
                 .setWhiteHatAPI(SENTINEL_API_KEY)
                 .saveConfiguration(WHITEHAT)
-                .mapProviderToTeamAndApp(WHITEHAT, 1, teamName, appName);
+                .mapProviderToTeamAndApp(WHITEHAT, 2, teamName, appName);
 
         assertTrue("Success message was " + remoteProvidersIndexPage.getSuccessAlert(), remoteProvidersIndexPage.getSuccessAlert().contains("WhiteHat Sentinel"));
 
