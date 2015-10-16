@@ -65,6 +65,17 @@ public class ScanDetailPage extends BasePage {
         return new FindingDetailPage(driver);
     }
 
+    public ScanDetailPage clickCreateMapping(){
+        driver.findElementById("createMapping").click();
+        sleep(3000);
+        return new ScanDetailPage(driver);
+    }
+
+    public ScanDetailPage clickCreateMappingButton(){
+        driver.findElementById("submit").click();
+        return new ScanDetailPage(driver);
+    }
+
     public ScanDetailPage toggleStatistics() {
         driver.findElementById("statisticButton").click();
         sleep(500);
@@ -81,9 +92,25 @@ public class ScanDetailPage extends BasePage {
         return new TeamDetailPage(driver);
     }
 
+    public ScanDetailPage clickDeleteScan(){
+        driver.findElementByPartialLinkText("Delete").click();
+        handleAlert();
+        return new ScanDetailPage(driver);
+    }
+
+    public ScanDetailPage setCWEValue(String cwe){
+        driver.findElementById("sourceGenericVulnerability.name").clear();
+        driver.findElementById("sourceGenericVulnerability.name").sendKeys(cwe);
+        return this;
+    }
+
     public boolean isViewFindingPresent() {
         return driver.findElementById("mappedVulnType").isDisplayed();
     }
+
+    public boolean isCreateMappingPresent() { return driver.findElementById("createMapping").isDisplayed(); }
+
+    public boolean isCreatMappingButtonEnabled() { return driver.findElementById("submit").isEnabled(); }
 
     public boolean isImportedResultsCorrect(String expectedCount) {
         return driver.findElementById("importedResults").getText().trim().equals(expectedCount);
@@ -139,6 +166,10 @@ public class ScanDetailPage extends BasePage {
 
     public boolean isClosedVulnerabilitiesCorrect(String expectedCount) {
         return driver.findElementById("closedVulnerabilities").getText().trim().equals(expectedCount);
+    }
+
+    public boolean isScansEmpty(){
+        return driver.findElementById("scanTab").getAttribute("heading").equals("0 Scans");
     }
 }
 

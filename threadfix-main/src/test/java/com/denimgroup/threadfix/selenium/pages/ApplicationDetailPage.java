@@ -435,6 +435,12 @@ public class ApplicationDetailPage extends BasePage {
         return new ScanDetailPage(driver);
     }
 
+    public ScanDetailPage clickViewScan(String scanNum){
+        clickScansHeaderLink();
+        driver.findElementById("importTime"+scanNum).click();
+        return new ScanDetailPage(driver);
+    }
+
     public ApplicationDetailPage clickSourceInfo(){
         waitForElement(By.linkText("Source Code Information"));
         driver.findElementByLinkText("Source Code Information").click();
