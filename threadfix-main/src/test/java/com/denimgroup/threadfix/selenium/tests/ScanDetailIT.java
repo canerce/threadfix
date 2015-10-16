@@ -57,6 +57,24 @@ public class ScanDetailIT extends BaseDataTest {
     }
 
     @Test
+    public void testDeleteScan(){
+        ScanDetailPage scanDetailPage = applicationDetailPage.clickViewScan();
+        scanDetailPage.clickDeleteScan();
+        assertTrue("Scan was not deleted", scanDetailPage.isScansEmpty());
+    }
+
+    @Test
+    public void testCreateMapping(){
+        String team = teamName;
+        String app = appName;
+        uploadScanToApp(team, app, "Nessus");
+        ScanDetailPage scanDetailPage = applicationDetailPage.clickViewScan("1");
+        scanDetailPage.clickCreateMapping()
+                .setCWEValue("1")
+                .clickCreateMappingButton();
+    }
+
+    @Test
     public void testShowHideStatisticsDetail() {
         ScanDetailPage scanDetailPage = applicationDetailPage.clickViewScan()
                 .toggleStatistics();
