@@ -15,75 +15,76 @@ public class ScheduledEmailReportPage extends BasePage {
     //===========================================================================================================
     // Action Methods
     //===========================================================================================================
-    public ScheduledEmailReportPage clickScheduleNewReport(){
+
+    public ScheduledEmailReportPage clickScheduleNewReport() {
         driver.findElementById("scheduleNewReportButton").click();
         return new ScheduledEmailReportPage(driver);
     }
 
-    public ScheduledEmailReportPage clickTeamsConcernedDropDownButton(){
+    public ScheduledEmailReportPage clickTeamsConcernedDropDownButton() {
         driver.findElementById("tagsButton").click();
         return new ScheduledEmailReportPage(driver);
     }
 
-    public ScheduledEmailReportPage clickCreateScheduledReport(){
+    public ScheduledEmailReportPage clickCreateScheduledReport() {
         driver.findElementById("submit").click();
         return new ScheduledEmailReportPage(driver);
     }
 
-    public ScheduledEmailReportPage clickCloseButton(){
+    public ScheduledEmailReportPage clickCloseButton() {
         driver.findElementById("closeModalButton").click();
         return new ScheduledEmailReportPage(driver);
     }
 
-    public ScheduledEmailReportPage clickShowHideEmailAddressButton(String bttnNum){
+    public ScheduledEmailReportPage clickShowHideEmailAddressButton(String bttnNum) {
         driver.findElementById("showHideEmails"+bttnNum).click();
         return new ScheduledEmailReportPage(driver);
     }
 
-    public ScheduledEmailReportPage clickAddEmailButton(){
+    public ScheduledEmailReportPage clickAddEmailButton() {
         driver.findElementById("addEmailButton").click();
         return new ScheduledEmailReportPage(driver);
     }
 
-    public ScheduledEmailReportPage clickDeleteEmailButton(String email){
+    public ScheduledEmailReportPage clickDeleteEmailButton(String email) {
         driver.findElementById("deleteButton"+email).click();
         handleAlert();
         return new ScheduledEmailReportPage(driver);
     }
 
-    public ScheduledEmailReportPage clickAddListButton(){
+    public ScheduledEmailReportPage clickAddListButton() {
         driver.findElementById("addListButton").click();
         return new ScheduledEmailReportPage(driver);
     }
 
-    public ScheduledEmailReportPage clickDeleteListButton(String listName){
+    public ScheduledEmailReportPage clickDeleteListButton(String listName) {
         driver.findElementById("deleteEmailList" + listName).click();
         handleAlert();
         return new ScheduledEmailReportPage(driver);
     }
 
-    public ScheduledEmailReportPage clickEditDeleteButton(String bttnNum){
+    public ScheduledEmailReportPage clickEditDeleteButton(String bttnNum) {
         driver.findElementById("editDelete"+bttnNum).click();
         return new ScheduledEmailReportPage(driver);
     }
 
-    public ScheduledEmailReportPage clickDeleteButton(){
+    public ScheduledEmailReportPage clickDeleteButton() {
         driver.findElementById("deleteButton").click();
         handleAlert();
         return new ScheduledEmailReportPage(driver);
     }
 
-    public ScheduledEmailReportPage clickSelectAllButton(){
+    public ScheduledEmailReportPage clickSelectAllButton() {
         driver.findElementById("tagsAllButton").click();
         return new ScheduledEmailReportPage(driver);
     }
 
-    public ScheduledEmailReportPage clickResetButton(){
+    public ScheduledEmailReportPage clickResetButton() {
         driver.findElementById("tagsResetButton").click();
         return new ScheduledEmailReportPage(driver);
     }
 
-    public ScheduledEmailReportPage clickSelectNoneButton(){
+    public ScheduledEmailReportPage clickSelectNoneButton() {
         driver.findElementById("tagsNoneButton").click();
         return new ScheduledEmailReportPage(driver);
     }
@@ -91,13 +92,14 @@ public class ScheduledEmailReportPage extends BasePage {
     //===========================================================================================================
     // Boolean Methods
     //===========================================================================================================
+
     public boolean isScheduleEmailReportButtonPresent() { return isElementPresent("scheduleNewReportButton"); }
 
     public boolean isTeamsConcernedButtonPresent() { return isElementPresent("tagsButton"); }
 
     public boolean isTeamNamePresent(String teamName) {return isElementVisible(teamName); }
 
-    public boolean isSeverityThresholdButtonPresent(){ return isElementPresent("severityThresholdSelect"); }
+    public boolean isSeverityThresholdButtonPresent() { return isElementPresent("severityThresholdSelect"); }
 
     public boolean isFrequencyButtonPresent() { return isElementPresent("frequency"); }
 
@@ -140,53 +142,54 @@ public class ScheduledEmailReportPage extends BasePage {
     //===========================================================================================================
     // Set Methods
     //===========================================================================================================
-    public ScheduledEmailReportPage setTeamsConcerned(String teamName){
+
+    public ScheduledEmailReportPage setTeamsConcerned(String teamName) {
         driver.findElementById(teamName).click();
         return new ScheduledEmailReportPage(driver);
     }
 
-    public ScheduledEmailReportPage setSeverityThreshold(String severity){
+    public ScheduledEmailReportPage setSeverityThreshold(String severity) {
         driver.findElementById("severityThresholdSelect").click();
         driver.findElementById("severityThresholdSelect").sendKeys(severity);
         return this;
     }
 
-    public ScheduledEmailReportPage setFrequency(String freq){
+    public ScheduledEmailReportPage setFrequency(String freq) {
         driver.findElementById("frequency").click();
         driver.findElementById("frequency").sendKeys(freq);;
         return this;
     }
 
-    public ScheduledEmailReportPage setHour(String hour){
+    public ScheduledEmailReportPage setHour(String hour) {
         driver.findElementById("hour").click();
         driver.findElementById("hour").sendKeys(hour);
         return this;
     }
 
-    public ScheduledEmailReportPage setMinutes(String minutes){
+    public ScheduledEmailReportPage setMinutes(String minutes) {
         driver.findElementById("minute").click();
         driver.findElementById("minute").sendKeys(minutes);
         return this;
     }
 
-    public ScheduledEmailReportPage setPeriod(String period){
+    public ScheduledEmailReportPage setPeriod(String period) {
         driver.findElementById("selectedPeriod").click();
         driver.findElementById("selectedPeriod").sendKeys(period);
         return this;
     }
 
-    public ScheduledEmailReportPage setDay(String day){
+    public ScheduledEmailReportPage setDay(String day) {
         driver.findElementById("selectedDay").click();
         driver.findElementById("selectedDay").sendKeys(day);
         return this;
     }
 
-    public ScheduledEmailReportPage setEmailList(String listName){
+    public ScheduledEmailReportPage setEmailList(String listName) {
         driver.findElementById("emailListSelect").sendKeys(listName);
         return this;
     }
 
-    public ScheduledEmailReportPage setEmailAddress(String email){
+    public ScheduledEmailReportPage setEmailAddress(String email) {
         driver.findElementById("emailField").sendKeys(email);
         return this;
     }
