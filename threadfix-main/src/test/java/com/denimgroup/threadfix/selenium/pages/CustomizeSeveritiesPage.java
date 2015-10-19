@@ -136,5 +136,13 @@ public class CustomizeSeveritiesPage extends BasePage {
         driver.findElementById("showInfo2").click();
         return new CustomizeSeveritiesPage(driver);
     }
+
+    public boolean isCustomNamesTabPresent() {
+        return isElementPresent(By.linkText("Custom Names"));
+    }
+
+    public boolean isShowAndHideTabPresent() {
+        return isElementPresent(By.linkText("Show and Hide"));
+    }
     
 }

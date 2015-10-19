@@ -361,7 +361,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
         TeamDetailPage teamDetailPage = loginPage.login(userName, testPassword)
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab()
+                .clickVulnerabilitiesTab("29")
                 .expandVulnerabilityByType("Critical79")
                 .expandCommentSection("Critical790");
 
@@ -582,8 +582,8 @@ public class UserPermissionsEntIT extends BaseDataTest{
                 .expandTeamRowByName(teamName)
                 .clickApplicationName(teamName, appName);
 
-        assertFalse("Scan Agent Tab is Available", applicationDetailPage.isLinkPresent("0 Scan Agent Tasks"));
-        assertFalse("Scheduled Scans Tab Available", applicationDetailPage.isLinkPresent("0 Scheduled Scans"));
+        assertFalse("Scan Agent Tab is Available", applicationDetailPage.isScanAgentTasksTabPresent());
+        assertFalse("Scheduled Scans Tab Available", applicationDetailPage.isScheduledScanTabPresent());
 
         applicationDetailPage.clickConfigTab();
 
@@ -615,10 +615,18 @@ public class UserPermissionsEntIT extends BaseDataTest{
     @Test
     public void testManageTagsPermission() {
         createRestrictedUser("canManageTags");
+        initializeTeamAndApp();
+        DatabaseUtils.attachAppToTag("1", appName, teamName);
 
-        DashboardPage dashboardPage = loginPage.login(userName, testPassword);
+        ApplicationDetailPage applicationDetailPage = loginPage.login(userName, testPassword)
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(teamName, appName);
 
-        dashboardPage.clickConfigTab();
+        assertFalse("Tag should not be a link", applicationDetailPage.isTagLinkPresent());
+        assertTrue("Tag should still be visible", applicationDetailPage.isTagLabelPresent());
+
+        applicationDetailPage.clickConfigTab();
 
         assertTrue("Manage tags permission not added", driver.findElements(By.id("tagsLink")).isEmpty());
     }
@@ -675,11 +683,16 @@ public class UserPermissionsEntIT extends BaseDataTest{
     public void testManageUsersPermission() {
         createRestrictedUser("canManageUsers");
 
-        DashboardPage dashboardPage = loginPage.login(userName, testPassword);
+        RolesIndexPage rolesIndexPage = loginPage.login(userName, testPassword)
+                .clickManageRolesLink();
 
-        dashboardPage.clickConfigTab();
+        assertFalse("Manage Users tab is present", rolesIndexPage.isManageUserTabPresent());
+        assertFalse("User Audit tab is present", rolesIndexPage.isUserAuditTabPresent());
 
-        assertFalse("Manage Users Link is Present", dashboardPage.isElementPresent("manageUsersLink"));
+        rolesIndexPage.clickConfigTab();
+
+        assertFalse("Manage Users Link is Present", rolesIndexPage.isElementPresent("manageUsersLink"));
+
     }
 
     @Test
@@ -746,14 +759,38 @@ public class UserPermissionsEntIT extends BaseDataTest{
 
         createRestrictedUser("canModifyVulnerabilities");
 
-        ApplicationDetailPage applicationDetailPage = loginPage.login(userName, testPassword)
+        TeamDetailPage teamDetailPage = loginPage.login(userName, testPassword)
                 .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickApplicationName(teamName, appName)
+                .clickViewTeamLink(teamName)
+                .clickVulnerabilitiesTab("44")
+                .expandFieldControls()
+                .toggleStatusFilter("Closed")
+                .clickVulnerabilitiesActionButton();
+
+        assertFalse("Close Vulnerabilities Link is available",
+                teamDetailPage.isElementPresent("closeVulnsButton"));
+        assertFalse("Open Vulnerabilities Link is available",
+                teamDetailPage.isElementPresent("openVulnsButton"));
+        assertFalse("Mark as False Positive Link is available",
+                teamDetailPage.isElementPresent("markFalsePositivesButton"));
+        assertFalse("Change severity link is available",
+                teamDetailPage.isElementPresent("changeSeverityButton"));
+        assertFalse("Batch Tagging link is available",
+                teamDetailPage.isElementPresent("addBatchTaggingBtn"));
+        assertFalse("Batch Comment link is available",
+                teamDetailPage.isElementPresent("addBatchCommentBtn"));
+
+        ApplicationDetailPage applicationDetailPage = teamDetailPage.clickVulnerabilitiesActionButton()
+                .clickApplicationsTab()
+                .clickAppLink("0")
+                .expandFieldControls()
+                .toggleStatusFilter("Closed")
                 .clickVulnerabilitiesActionButton();
 
         assertFalse("Close Vulnerabilities Link is available",
                 applicationDetailPage.isElementPresent("closeVulnsButton"));
+        assertFalse("Open Vulnerabilities Link is available",
+                applicationDetailPage.isElementPresent("openVulnsButton"));
         assertFalse("Mark as False Positive Link is available",
                 applicationDetailPage.isElementPresent("markFalsePositivesButton"));
         assertFalse("Change severity link is available",
@@ -775,6 +812,11 @@ public class UserPermissionsEntIT extends BaseDataTest{
         assertFalse("Action menu is present", vulnerabilityDetailPage.isActionMenuPresent());
         assertFalse("Add File Button is present", vulnerabilityDetailPage.isUploadFileButtonPresent());
         assertTrue("Add Comment Button is not present", vulnerabilityDetailPage.isAddCommentButtonPresent());
+
+        vulnerabilityDetailPage.clickConfigTab();
+
+        assertFalse("Customize ThreadFix Severities link should not be present",
+                vulnerabilityDetailPage.isCustomizeThreadFixVulnerabilityTypesLinkPresent());
     }
 
     @Test
@@ -786,7 +828,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
         CustomizeVulnerabilityTypesPage customizeVulnerabilityTypesPage = loginPage.login(userName, testPassword)
                 .clickCustomizeThreadFixVulnerabilityTypesLink();
 
-        assertFalse("Severity Mappings tab should not be present", customizeVulnerabilityTypesPage.isSeverityMappingsTabPresent());
+        assertFalse("User should not be able to create mappings", customizeVulnerabilityTypesPage.isCreateNewMappingButtonPresent());
 
         ApplicationDetailPage applicationDetailPage = customizeVulnerabilityTypesPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
@@ -805,6 +847,19 @@ public class UserPermissionsEntIT extends BaseDataTest{
 
     @Test
     public void testSubmitDefectsPermission() {
+        if (BUGZILLA_URL == null){
+            throw new RuntimeException("Please set BUGZILLA_URL property.");
+        }
+        if (BUGZILLA_USERNAME == null){
+            throw new RuntimeException("Please set BUGZILLA_USERNAME property.");
+        }
+        if (BUGZILLA_PASSWORD == null){
+            throw new RuntimeException("Please set BUGZILLA_PASSWORD property.");
+        }
+        if (BUGZILLA_PROJECTNAME == null){
+            throw new RuntimeException("Please set BUGZILLA_PROJECTNAME property.");
+        }
+
         initializeTeamAndAppWithIbmScan();
 
         createRestrictedUser("canSubmitDefects");
@@ -828,6 +883,15 @@ public class UserPermissionsEntIT extends BaseDataTest{
                 .clickVulnerabilitiesActionButton();
 
         assertFalse("Submit Defect is Present", applicationDetailPage.isElementPresent("submitDefectButton"));
+        assertFalse("Add to Existing Defect is present", applicationDetailPage.isElementPresent("mergeDefectButton"));
+
+        VulnerabilityDetailPage vulnerabilityDetailPage = applicationDetailPage.clickVulnerabilitiesActionButton()
+                .expandVulnerabilityByType("High79")
+                .clickViewMoreVulnerabilityLink("High790")
+                .clickActionMenu();
+
+        assertFalse("Create Defect is present", vulnerabilityDetailPage.isCreateDefectPresent());
+        assertFalse("Add to Existing Defect is present", vulnerabilityDetailPage.isAddToExistingDefectPresent());
     }
 
     @Test
@@ -871,7 +935,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
-                .clickScanAgentTasksTab(0)
+                .clickScanAgentTasksTab()
                 .clickAddNewScanTask()
                 .setScanQueueType(scanner)
                 .submitScanQueue();
@@ -899,7 +963,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
         TeamDetailPage teamDetailPage = loginPage.login(userName, testPassword)
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab()
+                .clickVulnerabilitiesTab("29")
                 .expandVulnerabilityByType("Critical79")
                 .expandCommentSection("Critical790");
 
@@ -1043,5 +1107,373 @@ public class UserPermissionsEntIT extends BaseDataTest{
         EmailListPage emailListPage = scheduledEmailReportPage.clickManageEmailListsLink();
 
         assertTrue("Create Email List button is not present", emailListPage.isCreateEmailListButtonPresent());
+    }
+
+    @Test
+    public void testManageGRCToolsOnlyPermssion() {
+        createLimitedUser("canManageGrcTools");
+
+        GRCToolsPage grcToolsPage = loginPage.login(userName, testPassword)
+                .clickGRCToolsLink();
+
+        assertTrue("Create GRC Tool button is not present", grcToolsPage.isCreateGRCToolButtonPresent());
+    }
+
+    @Test
+    public void testManageRemoteProvidersOnlyPermission() {
+        if (SENTINEL_API_KEY == null){
+            throw new RuntimeException("Please set WHITEHAT_KEY property.");
+        }
+        final String WHITEHAT = "WhiteHatSentinel";
+
+        initializeTeamAndApp();
+        createLimitedUser("canManageRemoteProviders");
+
+        RemoteProvidersIndexPage remoteProvidersPage = loginPage.login(userName, testPassword)
+                .clickRemoteProvidersLink();
+
+        assertFalse("User should have access to Remote Provider page", remoteProvidersPage.isAccessDenied());
+
+        remoteProvidersPage.ensureRemoteProviderConfigurationIsCleared(WHITEHAT)
+                .clickConfigure(WHITEHAT)
+                .setWhiteHatAPI(SENTINEL_API_KEY)
+                .saveConfiguration(WHITEHAT)
+                .mapProviderToTeamAndApp(WHITEHAT, 2, teamName, appName)
+                .clickImportScan(WHITEHAT, 2);
+
+        assertTrue("Error message did not display correctly",
+                remoteProvidersPage.getImportErrorMessage(WHITEHAT).contains("Error encountered: You don't have permission to do that."));
+        assertFalse("Import All Scans button is present", remoteProvidersPage.isImportAllScansButtonPresent(WHITEHAT));
+    }
+
+    @Test
+    public void testManageScanAgentsOnlyPermission() {
+        initializeTeamAndApp();
+        createLimitedUser("canManageScanAgents");
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(teamName, appName)
+                .clickScanAgentTasksTab()
+                .clickAddNewScanTask()
+                .submitScanQueue()
+                .clickScheduleScanTab()
+                .clickScheduleNewScanButton()
+                .setScheduledScanFrequency("Daily")
+                .setScheduledScanTime("8", "15", "PM")
+                .clickModalSubmit();
+
+        applicationDetailPage.logout()
+                .login(userName, testPassword)
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(teamName, appName);
+
+        assertTrue("Scan Agent Tab is not Available", applicationDetailPage.isScanAgentTasksTabPresent());
+        assertTrue("Scheduled Scans Tab is not Available", applicationDetailPage.isScheduledScanTabPresent());
+
+        applicationDetailPage.clickScanAgentTasksTab();
+
+        assertFalse("Delete button is present", applicationDetailPage.isDeleteScanAgentTaskButtonPresent());
+
+        applicationDetailPage.clickScheduleScanTab();
+
+        assertFalse("Delete button is present", applicationDetailPage.isDeleteScheduledScanButtonPresent());
+
+        ScanAgentTasksPage scanAgentTasksPage = applicationDetailPage.clickScanAgentTasksLink();
+
+        assertTrue("Delete button is present", scanAgentTasksPage.isDeleteButtonPresent());
+    }
+
+    @Test
+    public void testManageSystemSettingsOnlyPermission() {
+        createLimitedUser("canManageSystemSettings");
+
+        SystemSettingsPage systemSettingsPage = loginPage.login(userName, testPassword)
+                .clickSystemSettingsLink()
+                .expandDefaultLDAPRole();
+
+        assertFalse("Default LDAP Role should not be configurable", systemSettingsPage.isDefaultLDAPRoleContentPresent());
+    }
+
+    @Test
+    public void testManageRolesOnlyPermission() {
+        createLimitedUser("canManageRoles");
+
+        RolesIndexPage rolesIndexPage = loginPage.login(userName, testPassword)
+                .clickManageRolesLink();
+
+        assertTrue("Create Role button was not present", rolesIndexPage.isCreateRoleButtonPresent());
+    }
+
+    @Test
+    public void testManageTagsOnlyPermission() {
+        createLimitedUser("canManageTags");
+        initializeTeamAndApp();
+        DatabaseUtils.attachAppToTag("1", appName, teamName);
+
+        TagIndexPage tagIndexPage = loginPage.login(userName, testPassword)
+                .clickTagsLink();
+
+        assertTrue("User cannot create tags", tagIndexPage.isCreateTagButtonPresent());
+
+        ApplicationDetailPage applicationDetailPage = tagIndexPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(teamName, appName);
+
+        assertTrue("Tag does not act as link", applicationDetailPage.isTagLinkPresent());
+    }
+
+    @Test
+    public void testManageGroupsOnlyPermission() {
+        createLimitedUser("canManageGroups");
+
+        GroupIndexPage groupIndexPage = loginPage.login(userName, testPassword)
+                .clickManageGroupsLink();
+
+        assertTrue("User cannot create Groups", groupIndexPage.isCreateGroupButtonPresent());
+    }
+
+    @Test
+    public void testManageTeamsOnlyPermission() {
+        String teamName = createTeam();
+
+        createLimitedUser("canManageTeams");
+
+        TeamDetailPage teamDetailPage = loginPage.login(userName, testPassword)
+                .clickOrganizationHeaderLink()
+                .clickViewTeamLink(teamName)
+                .clickActionButton();
+
+        assertTrue("Team Edit/Delete Button is not available", teamDetailPage.isEditDeleteLinkPresent());
+    }
+
+    @Test
+    public void testManagePoliciesOnlyPermission() {
+        createLimitedUser("canManagePolicies");
+
+        PolicyPage policyPage = loginPage.login(userName, testPassword)
+                .clickPoliciesLink();
+
+        assertTrue("User cannot create policies", policyPage.isCreatePolicyButtonPresent());
+    }
+
+    @Test
+    public void testManageUsersOnlyPermission() {
+        createLimitedUser("canManageUsers");
+
+        UserIndexPage userIndexPage = loginPage.login(userName, testPassword)
+                .clickManageUsersLink();
+
+        assertTrue("User cannot create users", userIndexPage.isCreateUserButtonPresent());
+        assertTrue("User Audit tab is not present", userIndexPage.isUserAuditTabPresent());
+    }
+
+    @Test
+    public void testManageWAFsOnlyPermission() {
+        createLimitedUser("canManageWafs");
+
+        WafIndexPage wafIndexPage = loginPage.login(userName, testPassword)
+                .clickWafsHeaderLink();
+
+        assertTrue("User cannot create WAFs", wafIndexPage.isCreateWAFButtonPresent());
+    }
+
+    @Test
+    public void testManageScanResultFiltersOnlyPermission() {
+        createLimitedUser("canManageScanResultFilters");
+
+        ScannerSeveritiesPage scannerSeveritiesPage = loginPage.login(userName, testPassword)
+                .clickScannerSeveritiesLink();
+
+        assertTrue("User cannot update severity mappings", scannerSeveritiesPage.isUpdateButtonPresent());
+    }
+
+    @Test
+    public void testManageCustomizeCWETextOnlyPermission() {
+        createLimitedUser("canManageCustomCweText");
+
+        CustomizeVulnerabilityTypesPage customizeVulnerabilityTypesPage = loginPage.login(userName, testPassword)
+                .clickCustomizeThreadFixVulnerabilityTypesLink();
+
+        assertTrue("User cannot set custom text", customizeVulnerabilityTypesPage.isSetCustomTextButtonPresent());
+    }
+
+    @Test
+    public void testModifyVulnerabilitiesOnlyPermission() {
+        initializeTeamAndAppWithIbmScan();
+
+        createLimitedUser("canModifyVulnerabilities");
+
+        TeamDetailPage teamDetailPage = loginPage.login(userName, testPassword)
+                .clickOrganizationHeaderLink()
+                .clickViewTeamLink(teamName)
+                .clickVulnerabilitiesTab("44")
+                .expandFieldControls()
+                .toggleStatusFilter("Closed")
+                .clickVulnerabilitiesActionButton();
+
+        assertTrue("Close Vulnerabilities Link is not available",
+                teamDetailPage.isElementPresent("closeVulnsButton"));
+        assertTrue("Open Vulnerabilities Link is not available",
+                teamDetailPage.isElementPresent("openVulnsButton"));
+        assertTrue("Mark as False Positive Link is not available",
+                teamDetailPage.isElementPresent("markFalsePositivesButton"));
+        assertTrue("Change severity link is not available",
+                teamDetailPage.isElementPresent("changeSeverityButton"));
+        assertTrue("Batch Tagging link is not available",
+                teamDetailPage.isElementPresent("addBatchTaggingBtn"));
+
+        ApplicationDetailPage applicationDetailPage = teamDetailPage.clickVulnerabilitiesActionButton()
+                .clickApplicationsTab()
+                .clickAppLink("0")
+                .expandFieldControls()
+                .toggleStatusFilter("Closed")
+                .clickVulnerabilitiesActionButton();
+
+        assertTrue("Close Vulnerabilities Link is not available",
+                applicationDetailPage.isElementPresent("closeVulnsButton"));
+        assertTrue("Open Vulnerabilities Link is not available",
+                applicationDetailPage.isElementPresent("openVulnsButton"));
+        assertTrue("Mark as False Positive Link is not available",
+                applicationDetailPage.isElementPresent("markFalsePositivesButton"));
+        assertTrue("Change severity link is not available",
+                applicationDetailPage.isElementPresent("changeSeverityButton"));
+        assertTrue("Batch Tagging link is not available",
+                applicationDetailPage.isElementPresent("addBatchTaggingBtn"));
+
+        FindingDetailPage findingDetailPage = applicationDetailPage.clickScansTab()
+                .clickViewScan()
+                .clickViewFinding();
+
+        assertTrue("Merge With Other Findings Button is not available",
+                findingDetailPage.isLinkPresent("Merge with Other Findings"));
+
+        VulnerabilityDetailPage vulnerabilityDetailPage = findingDetailPage.clickViewVulnerability();
+
+        assertTrue("Action menu is not present", vulnerabilityDetailPage.isActionMenuPresent());
+        assertTrue("Add File Button is not present", vulnerabilityDetailPage.isUploadFileButtonPresent());
+        assertFalse("Add Comment Button is present", vulnerabilityDetailPage.isAddCommentButtonPresent());
+
+        CustomizeSeveritiesPage customizeSeveritiesPage = vulnerabilityDetailPage.clickCustomizeThreadFixSeveritiesLink();
+
+        assertTrue("Custom Names tab should be present", customizeSeveritiesPage.isCustomNamesTabPresent());
+        assertTrue("Show and Hide tab should be present", customizeSeveritiesPage.isShowAndHideTabPresent());
+    }
+
+    @Test
+    public void testManageVulnerabilityFiltersOnlyPermission() {
+        initializeTeamAndAppWithIbmScan();
+
+        createLimitedUser("canManageVulnFilters");
+
+        CustomizeVulnerabilityTypesPage customizeVulnerabilityTypesPage = loginPage.login(userName, testPassword)
+                .clickCustomizeThreadFixVulnerabilityTypesLink();
+
+        assertTrue("Create New ThreadFix Mapping button should be present", customizeVulnerabilityTypesPage.isCreateNewMappingButtonPresent());
+
+        ScannerVulnerabilityTypesPage scannerVulnerabilityTypesPage = customizeVulnerabilityTypesPage.clickScannerVulnerabilityTypesLink();
+
+        assertTrue("Create New Scanner Mapping button should be present", scannerVulnerabilityTypesPage.isCreateNewMappingButtonPresent());
+
+        ApplicationDetailPage applicationDetailPage = scannerVulnerabilityTypesPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(teamName, appName)
+                .clickActionButton();
+
+        assertTrue("Customize ThreadFix Vulnerability Types and Severities link is not present",
+                applicationDetailPage.isElementPresent("editVulnerabilityFiltersButton"));
+
+        TeamDetailPage teamDetailPage = applicationDetailPage.clickTeamLink()
+                .clickActionButton();
+
+        assertTrue("Customize ThreadFix Vulnerability Types and Severities link is not present",
+                teamDetailPage.isElementPresent("editfiltersButton1"));
+    }
+
+    @Test
+    public void testSubmitDefectsOnlyPermission() {
+        if (BUGZILLA_URL == null){
+            throw new RuntimeException("Please set BUGZILLA_URL property.");
+        }
+        if (BUGZILLA_USERNAME == null){
+            throw new RuntimeException("Please set BUGZILLA_USERNAME property.");
+        }
+        if (BUGZILLA_PASSWORD == null){
+            throw new RuntimeException("Please set BUGZILLA_PASSWORD property.");
+        }
+        if (BUGZILLA_PROJECTNAME == null){
+            throw new RuntimeException("Please set BUGZILLA_PROJECTNAME property.");
+        }
+
+        initializeTeamAndAppWithIbmScan();
+
+        createLimitedUser("canSubmitDefects");
+
+        String newDefectTrackerName = getName();
+        String defectTrackerType = "Bugzilla";
+
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.defaultLogin()
+                .clickDefectTrackersLink()
+                .clickAddDefectTrackerButton()
+                .setName(newDefectTrackerName)
+                .setURL(BUGZILLA_URL)
+                .setType(defectTrackerType)
+                .clickSaveDefectTracker();
+
+        ApplicationDetailPage applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(teamName, appName)
+                .addDefectTracker(newDefectTrackerName, BUGZILLA_USERNAME, BUGZILLA_PASSWORD, BUGZILLA_PROJECTNAME);
+
+        applicationDetailPage.logout()
+                .login(userName, testPassword)
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(teamName, appName)
+                .clickVulnerabilitiesActionButton();
+
+        assertTrue("Submit Defect is not present", applicationDetailPage.isElementPresent("submitDefectButton"));
+        assertTrue("Add to Existing Defect is not present", applicationDetailPage.isElementPresent("mergeDefectButton"));
+
+        //TODO: Uncomment if DGTF-2216 is completed
+//        VulnerabilityDetailPage vulnerabilityDetailPage = applicationDetailPage.clickVulnerabilitiesActionButton()
+//                .expandVulnerabilityByType("High79")
+//                .clickViewMoreVulnerabilityLink("High790")
+//                .clickActionMenu();
+//
+//        assertTrue("Create Defect is not present", vulnerabilityDetailPage.isCreateDefectPresent());
+//        assertTrue("Add to Existing Defect is not present", vulnerabilityDetailPage.isAddToExistingDefectPresent());
+    }
+
+    @Test
+    public void testUploadScanOnlyPermission() {
+        initializeTeamAndApp();
+
+        createLimitedUser("canUploadScans");
+
+        TeamIndexPage teamIndexPage = loginPage.login(userName, testPassword)
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName);
+
+        assertTrue("Upload Button is not available", teamIndexPage.isUploadButtonPresent(teamName, appName));
+
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickApplicationName(teamName, appName)
+                .clickActionButton();
+
+        assertTrue("Upload Link is not available", applicationDetailPage.isElementPresent("uploadScanModalLink"));
+        assertTrue("Add Manual Finding link is not available", applicationDetailPage.isElementPresent("addManualFindingModalLink"));
+    }
+
+    @Test
+    public void testViewErrorLogOnlyPermission() {
+        createLimitedUser("canViewErrorLogs");
+
+        ErrorLogPage errorLogPage = loginPage.login(userName, testPassword)
+                .clickViewLogsLink();
+
+        assertTrue("User cannot view Error Logs", errorLogPage.isErrorLogTablePresent());
     }
 }

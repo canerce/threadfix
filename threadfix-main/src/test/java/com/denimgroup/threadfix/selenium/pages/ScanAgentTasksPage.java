@@ -79,4 +79,8 @@ public class ScanAgentTasksPage extends BasePage{
         }
         return false;
     }
+
+    public boolean isDeleteButtonPresent() {
+        return isElementPresent("deleteButton0");
+    }
 }

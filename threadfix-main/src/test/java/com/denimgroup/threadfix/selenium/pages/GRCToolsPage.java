@@ -26,12 +26,12 @@ package com.denimgroup.threadfix.selenium.pages;
 
 import org.openqa.selenium.WebDriver;
 
-public class ErrorLogPage extends BasePage {
+/**
+ * Created by dharrison on 10/15/2015.
+ */
+public class GRCToolsPage extends BasePage {
 
-	public ErrorLogPage(WebDriver webdriver) {
-		super(webdriver);
-		// TODO Auto-generated constructor stub
-	}
+    public GRCToolsPage(WebDriver webDriver) { super(webDriver); }
 
     //===========================================================================================================
     // Procedure Methods
@@ -47,8 +47,8 @@ public class ErrorLogPage extends BasePage {
     // Boolean Methods
     //===========================================================================================================
 
-    public boolean isErrorLogTablePresent() {
-        return isElementPresent("logListTable");
+    public boolean isCreateGRCToolButtonPresent() {
+        return isElementPresent("addNewGRCToolButton");
     }
 
     //===========================================================================================================

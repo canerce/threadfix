@@ -171,4 +171,16 @@ public class RolesIndexPage extends BasePage {
         }
         return true;
 	}
+
+    public boolean isCreateRoleButtonPresent() {
+        return isElementPresent("newRoleModalLink");
+    }
+
+    public boolean isManageUserTabPresent() {
+        return isElementPresent("manageUserTab");
+    }
+
+    public boolean isUserAuditTabPresent() {
+        return isElementPresent("userAuditTab");
+    }
 }

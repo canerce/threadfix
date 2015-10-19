@@ -106,12 +106,19 @@ public class TeamDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
+    public TeamDetailPage clickApplicationsTab() {
+        driver.findElementById("applicationsTab").click();
+        waitForElement(By.id("applicationsTableBody"));
+        return new TeamDetailPage(driver);
+    }
+
     public TeamDetailPage clickVulnerabilitiesTab() {
-        driver.findElementByPartialLinkText("Vulnerabilities").click();
+        driver.findElementById("vulnerabilitiesTab").click();
         waitForElement(By.className("filter-controls"));
         return new TeamDetailPage(driver);
     }
 
+    //TODO: Eliminate method when new ID is added to tab
     public TeamDetailPage clickVulnerabilitiesTab(String number) {
         driver.findElementByLinkText(number + " Vulnerabilities").click();
         waitForResultsToLoad();
@@ -469,7 +476,7 @@ public class TeamDetailPage extends BasePage {
 
     public boolean isActionBtnClickable() { return isClickable("actionButton"); }
 
-    public boolean isEditDeleteLinkPresent() { return driver.findElementById("teamModalButton").isDisplayed(); }
+    public boolean isEditDeleteLinkPresent() { return isElementDisplayed(By.id("teamModalButton")); }
 
     public boolean isEditDeleteLinkClickable(){
         return isClickable("teamModalButton");

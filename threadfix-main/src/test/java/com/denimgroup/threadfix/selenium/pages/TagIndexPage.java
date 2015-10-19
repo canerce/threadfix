@@ -131,4 +131,8 @@ public class TagIndexPage extends BasePage{
         }
         return true;
     }
+
+    public boolean isCreateTagButtonPresent() {
+        return isElementPresent("createTagModalButton");
+    }
 }

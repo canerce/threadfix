@@ -134,4 +134,8 @@ public class SystemSettingsPage extends BasePage {
         waitForElement(By.cssSelector(".alert-success:not(.ng-hide"));
         return driver.findElementByClassName("alert-success").getText().trim().contains("Configuration was saved successfully.");
     }
+
+    public boolean isDefaultLDAPRoleContentPresent() {
+        return isElementPresent("roleSelect");
+    }
 }

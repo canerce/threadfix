@@ -46,7 +46,7 @@ public class ScheduledScanEntIT extends BaseDataTest {
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
-                .clickScheduleScanTab(0);
+                .clickScheduleScanTab();
     }
 
     @Test

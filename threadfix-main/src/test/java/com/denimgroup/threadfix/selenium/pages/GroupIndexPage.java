@@ -211,6 +211,10 @@ public class GroupIndexPage extends BasePage {
         return true;
     }
 
+    public boolean isCreateGroupButtonPresent() {
+        return isElementPresent("newGroupModalLink");
+    }
+
     //===========================================================================================================
     // Get Methods
     //===========================================================================================================

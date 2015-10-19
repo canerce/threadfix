@@ -24,14 +24,15 @@
 
 package com.denimgroup.threadfix.selenium.pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-public class ErrorLogPage extends BasePage {
+/**
+ * Created by dharrison on 10/16/2015.
+ */
+public class ScannerSeveritiesPage extends BasePage {
 
-	public ErrorLogPage(WebDriver webdriver) {
-		super(webdriver);
-		// TODO Auto-generated constructor stub
-	}
+    public ScannerSeveritiesPage(WebDriver webDriver) { super(webDriver); }
 
     //===========================================================================================================
     // Procedure Methods
@@ -47,8 +48,12 @@ public class ErrorLogPage extends BasePage {
     // Boolean Methods
     //===========================================================================================================
 
-    public boolean isErrorLogTablePresent() {
-        return isElementPresent("logListTable");
+    public boolean isUpdateButtonPresent() {
+        return isElementPresent("updateButton1");
+    }
+
+    public boolean isSeverityMappingsTabPresent() {
+        return isElementPresent(By.linkText("Severity Mappings"));
     }
 
     //===========================================================================================================

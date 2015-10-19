@@ -65,7 +65,7 @@ public class ScanAgentTaskEntIT extends BaseDataTest {
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
-                .clickScanAgentTasksTab(0)
+                .clickScanAgentTasksTab()
                 .clickAddNewScanTask()
                 .setScanQueueType(scanner)
                 .submitScanQueue();
@@ -91,7 +91,7 @@ public class ScanAgentTaskEntIT extends BaseDataTest {
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
-                .clickScanAgentTasksTab(0)
+                .clickScanAgentTasksTab()
                 .clickAddNewScanTask()
                 .setScanQueueType(scanner)
                 .submitScanQueue();
@@ -116,7 +116,7 @@ public class ScanAgentTaskEntIT extends BaseDataTest {
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
-                .clickScanAgentTasksTab(0)
+                .clickScanAgentTasksTab()
                 .clickAddNewScanTask()
                 .setScanQueueType(scanner)
                 .submitScanQueue();
@@ -134,7 +134,7 @@ public class ScanAgentTaskEntIT extends BaseDataTest {
         applicationDetailPage = scanAgentTasksPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
-                .clickScanAgentTasksTab(0);
+                .clickScanAgentTasksTab();
 
         assertFalse("Scan was not removed from the application detail page.", applicationDetailPage.isScanAgentTaskPresent(scanTaskId));
     }
@@ -152,7 +152,7 @@ public class ScanAgentTaskEntIT extends BaseDataTest {
 		for (Entry<String, String> mapEntry : scanAgentMap.entrySet()) {
             String tempName = mapEntry.getValue();
 
-			applicationDetailPage = applicationDetailPage.clickScanAgentTasksTab(scanQueueCount)
+			applicationDetailPage = applicationDetailPage.clickScanAgentTasksTab()
                     .clickAddNewScanTask()
                     .setScanQueueType(tempName)
                     .submitScanQueue();

@@ -423,6 +423,10 @@ public class PolicyPage extends BasePage {
         return tryGetText(By.cssSelector("#policyStatus" + appName + ":not(.ng-hide)")).contains("PASS");
     }
 
+    public boolean isCreatePolicyButtonPresent() {
+        return isElementPresent("createNewModalButton");
+    }
+
     //===========================================================================================================
     // Helper Methods
     //===========================================================================================================
