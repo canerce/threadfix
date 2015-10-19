@@ -50,6 +50,9 @@ public abstract class BaseDataTest extends BaseIT{
     protected static final String CONTRAST_USER = System.getProperty("CONTRAST_USER");
     protected static final String CONTRAST_API_KEY = System.getProperty("CONTRAST_API_KEY");
     protected static final String CONTRAST_SERVICE_KEY = System.getProperty("CONTRAST_SERVICE_KEY");
+    protected static final String SONATYPE_URL = System.getProperty("SONATYPE_URL");
+    protected static final String SONATYPE_USER = System.getProperty("SONATYPE_USER");
+    protected static final String SONATYPE_PASSWORD = System.getProperty("SONATYPE_PASSWORD");
 
 
     protected String teamName, appName, userName, roleName;
