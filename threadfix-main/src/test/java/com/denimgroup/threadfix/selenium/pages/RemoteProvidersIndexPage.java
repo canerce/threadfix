@@ -220,6 +220,30 @@ public class RemoteProvidersIndexPage extends BasePage {
         return this;
     }
 
+    public RemoteProvidersIndexPage setSonatypeURL(String url) {
+        driver.findElementById("URL").clear();
+        driver.findElementById("URL").sendKeys(url);
+        return this;
+    }
+
+    public RemoteProvidersIndexPage setSonatypeUsername(String username) {
+        driver.findElementById("Username").clear();
+        driver.findElementById("Username").sendKeys(username);
+        return this;
+    }
+
+    public RemoteProvidersIndexPage setSonatypePassword(String password) {
+        driver.findElementById("Password").clear();
+        driver.findElementById("Password").sendKeys(password);
+        return this;
+    }
+
+    public RemoteProvidersIndexPage setWhiteHatSourceAPIKey(String key) {
+        driver.findElementById("APIKey").clear();
+        driver.findElementById("APIKey").sendKeys(key);
+        return this;
+    }
+
     //===========================================================================================================
     // Get Methods
     //===========================================================================================================
@@ -230,7 +254,7 @@ public class RemoteProvidersIndexPage extends BasePage {
 	}
 
     public String getErrorMessage(){
-        waitForElement(By.xpath("//span[@id='errorSpan' and string-length(text()) > 0]"));
+        waitForElementText("errorSpan",15);
         return driver.findElementById("errorSpan").getText();
     }
 

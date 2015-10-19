@@ -51,21 +51,35 @@ public class RemoteProvidersIT extends BaseDataTest {
         if (SENTINEL_API_KEY == null) {
             throw new RuntimeException("Please set WHITEHAT_KEY in run configuration.");
         }
-
         if (VERACODE_USER == null) {
             throw new RuntimeException("Please set VERACODE_USERNAME in run configuration.");
         }
-
         if (VERACODE_PASSWORD == null) {
             throw new RuntimeException("Please set VERACODE_PASSWORD in run configuration.");
         }
-
         if (QUALYS_USER == null) {
             throw new RuntimeException("Please set QUALYS_USER in run configuration.");
         }
-
         if (QUALYS_PASS == null) {
             throw new RuntimeException("Please set QUALYS_PASS in run configuration.");
+        }
+        if (CONTRAST_USER == null) {
+            throw new RuntimeException("Please set CONTRAST_USER in run configuration.");
+        }
+        if (CONTRAST_API_KEY == null) {
+            throw new RuntimeException("Please set CONTRAST_API_KEY in run configuration.");
+        }
+        if (CONTRAST_SERVICE_KEY == null) {
+            throw new RuntimeException("Please set CONTRAST_SERVICE_KEY in run configuration.");
+        }
+        if (SONATYPE_URL == null) {
+            throw new RuntimeException("Please set SONATYPE_URL in run configuration.");
+        }
+        if (SONATYPE_USER == null) {
+            throw new RuntimeException("Please set SONATYPE_USER in run configuration.");
+        }
+        if (SONATYPE_PASSWORD == null) {
+            throw new RuntimeException("Please set SONATYPE_PASSWORD in run configuration.");
         }
     }
 
@@ -287,6 +301,115 @@ public class RemoteProvidersIT extends BaseDataTest {
     // Sonatype
     //===========================================================================================================
 
+    @Test
+    public void testConfigureSonatype() {
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared(SONATYPE);
+
+        remoteProvidersIndexPage.clickConfigure(SONATYPE)
+                .setSonatypeURL(SONATYPE_URL)
+                .setSonatypeUsername(SONATYPE_USER)
+                .setSonatypePassword(SONATYPE_PASSWORD)
+                .saveConfiguration(SONATYPE);
+
+        assertTrue("Sonatype was not configured properly",
+                remoteProvidersIndexPage.getSuccessAlert().contains("Successfully edited remote provider Sonatype"));
+        assertTrue("Sonatype configured message is not correct.",
+                remoteProvidersIndexPage.doesConfigurationMessageContain(SONATYPE, "Yes"));
+
+        remoteProvidersIndexPage = remoteProvidersIndexPage.clearConfiguration(SONATYPE);
+
+        assertTrue("Sonatype configuration was not cleared properly",
+                remoteProvidersIndexPage.getSuccessAlert().contains("Sonatype configuration was cleared successfully."));
+        assertTrue("Sonatype configured message is not correct.",
+                remoteProvidersIndexPage.doesConfigurationMessageContain(SONATYPE, "No"));
+    }
+
+    @Test
+    public void testInvalidSonatype() {
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared(SONATYPE);
+
+        remoteProvidersIndexPage.clickConfigure(SONATYPE)
+                .setSonatypeURL(SONATYPE_URL)
+                .setSonatypeUsername("Not a user")
+                .setSonatypePassword("Not a password")
+                .clickModalSubmitInvalid();
+
+        assertTrue("Failure message detailing why credentials were not accepted should have been displayed.",
+                remoteProvidersIndexPage.getErrorMessage().contains("Failure. Message was Invalid response 401 received from Sonatype servers, check the logs for more details."));
+    }
+
+    @Test
+    public void testEditSonatypeMapping() {
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared(SONATYPE);
+
+        remoteProvidersIndexPage.clickConfigure(SONATYPE)
+                .setSonatypeURL(SONATYPE_URL)
+                .setSonatypeUsername(SONATYPE_USER)
+                .setSonatypePassword(SONATYPE_PASSWORD)
+                .saveConfiguration(SONATYPE);
+
+        remoteProvidersIndexPage.mapProviderToTeamAndApp(SONATYPE, 0, teamName, appName);
+
+        assertTrue("Team was not mapped properly.", remoteProvidersIndexPage.isMappingCorrect(SONATYPE, 0, teamName, appName));
+
+        remoteProvidersIndexPage.clearConfiguration(SONATYPE);
+
+        assertTrue("Sonatype configuration was not cleared properly",
+                remoteProvidersIndexPage.getSuccessAlert().contains("Sonatype configuration was cleared successfully."));
+    }
+
+    @Test
+    public void testImportSonatypeScan() {
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared(SONATYPE);
+
+        remoteProvidersIndexPage.clickConfigure(SONATYPE)
+                .setSonatypeURL(SONATYPE_URL)
+                .setSonatypeUsername(SONATYPE_USER)
+                .setSonatypePassword(SONATYPE_PASSWORD)
+                .saveConfiguration(SONATYPE);
+
+        assertTrue("Success message was " + remoteProvidersIndexPage.getSuccessAlert(),
+                remoteProvidersIndexPage.getSuccessAlert().contains("Sonatype"));
+
+        remoteProvidersIndexPage.clickEditMappingButton(SONATYPE, 0)
+                .selectTeamMapping(teamName)
+                .selectAppMapping(appName)
+                .clickUpdateMappings();
+
+        remoteProvidersIndexPage.clickImportScan(SONATYPE, 0)
+                .checkForAlert();
+
+        assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
+        driver.switchTo().alert().dismiss();
+
+        remoteProvidersIndexPage = remoteProvidersIndexPage.clearConfiguration(SONATYPE);
+
+        assertTrue("Sonatype configuration was not cleared properly",
+                remoteProvidersIndexPage.getSuccessAlert().contains("Sonatype configuration was cleared successfully."));
+    }
+
+    @Test
+    public void testSonatypeEditNameModalHeader() {
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared(SONATYPE);
+
+        remoteProvidersIndexPage.clickConfigure(SONATYPE)
+                .setSonatypeURL(SONATYPE_URL)
+                .setSonatypeUsername(SONATYPE_USER)
+                .setSonatypePassword(SONATYPE_PASSWORD)
+                .saveConfiguration(SONATYPE);
+
+        assertTrue("Success message was " + remoteProvidersIndexPage.getSuccessAlert(),
+                remoteProvidersIndexPage.getSuccessAlert().contains("Sonatype"));
+
+        remoteProvidersIndexPage.clickEditName(SONATYPE, "0");
+
+        assertTrue("Modal does not contain app name", remoteProvidersIndexPage.getModalText().contains("Admin Console WAR (build)"));
+
+        remoteProvidersIndexPage = remoteProvidersIndexPage.closeModal().clearConfiguration(SONATYPE);
+
+        assertTrue("Sonatype configuration was not cleared properly",
+                remoteProvidersIndexPage.getSuccessAlert().contains("Sonatype configuration was cleared successfully."));
+    }
 
 
     //===========================================================================================================
@@ -330,7 +453,6 @@ public class RemoteProvidersIT extends BaseDataTest {
                 .setVeraPassword("Password Bad")
                 .clickModalSubmitInvalid();
 
-        remoteProvidersIndexPage.sleep(15000);
         String error = remoteProvidersIndexPage.getErrorMessage();
         System.out.println(error);
         assertTrue("Incorrect credentials accepted", error.contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
@@ -432,8 +554,6 @@ public class RemoteProvidersIT extends BaseDataTest {
                 .setWhiteHatAPI("ThisShouldNotWork")
                 .clickModalSubmitInvalid();
 
-        remoteProvidersIndexPage.sleep(1000);
-
         assertTrue("Incorrect credentials accepted",
                 remoteProvidersIndexPage.getErrorMessage().contains("Failure. Message was Unable to retrieve applications. WhiteHat response status:"));
     }
@@ -503,6 +623,98 @@ public class RemoteProvidersIT extends BaseDataTest {
     //===========================================================================================================
     // WhiteHat Sentinel Source
     //===========================================================================================================
+
+    @Test
+    public void testConfigureWhiteHatSource() {
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared(WHITEHATSOURCE);
+
+        remoteProvidersIndexPage.clickConfigure(WHITEHATSOURCE)
+                .setWhiteHatSourceAPIKey(SENTINEL_API_KEY)
+                .saveConfiguration(WHITEHATSOURCE);
+
+        assertTrue("WhiteHat Sentinel Source was not configured properly",
+                remoteProvidersIndexPage.getSuccessAlert().contains("Successfully edited remote provider WhiteHat Sentinel"));
+        assertTrue("WhiteHat Sentinel Source configured message is not correct.",
+                remoteProvidersIndexPage.doesConfigurationMessageContain(WHITEHATSOURCE, "Yes"));
+
+        remoteProvidersIndexPage = remoteProvidersIndexPage.clearConfiguration(WHITEHATSOURCE);
+
+        assertTrue("WhiteHat Sentinel Source configuration was not cleared properly",
+                remoteProvidersIndexPage.getSuccessAlert().contains("WhiteHat Sentinel Source configuration was cleared successfully."));
+        assertTrue("WhiteHat Sentinel Source configured message is not correct.",
+                remoteProvidersIndexPage.doesConfigurationMessageContain(WHITEHATSOURCE, "No"));
+    }
+
+    @Test
+    public void testInvalidWhiteHatSource(){
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared(WHITEHATSOURCE);
+
+        remoteProvidersIndexPage.clickConfigure(WHITEHATSOURCE)
+                .setWhiteHatSourceAPIKey("ThisShouldNotWork")
+                .clickModalSubmitInvalid();
+
+        assertTrue("Incorrect credentials accepted",
+                remoteProvidersIndexPage.getErrorMessage().contains("Failure. Message was We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
+    }
+
+    @Test
+    public void testEditWhiteHatSourceMapping() {
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared(WHITEHATSOURCE);
+
+        remoteProvidersIndexPage.clickConfigure(WHITEHATSOURCE)
+                .setWhiteHatSourceAPIKey(SENTINEL_API_KEY)
+                .saveConfiguration(WHITEHATSOURCE);
+
+        remoteProvidersIndexPage.mapProviderToTeamAndApp(WHITEHATSOURCE, 0, teamName, appName);
+
+        assertTrue("Team was not mapped properly.", remoteProvidersIndexPage.isMappingCorrect(WHITEHATSOURCE, 0, teamName, appName));
+
+        remoteProvidersIndexPage = remoteProvidersIndexPage.clearConfiguration(WHITEHATSOURCE);
+
+        assertTrue("WhiteHat Sentinel Source configuration was not cleared properly",
+                remoteProvidersIndexPage.getSuccessAlert().contains("WhiteHat Sentinel Source configuration was cleared successfully."));
+    }
+
+    @Test
+    public void testImportWhiteHatSourceScan() {
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared(WHITEHATSOURCE);
+
+        remoteProvidersIndexPage.clickConfigure(WHITEHATSOURCE)
+                .setWhiteHatSourceAPIKey(SENTINEL_API_KEY)
+                .saveConfiguration(WHITEHATSOURCE)
+                .mapProviderToTeamAndApp(WHITEHATSOURCE, 2, teamName, appName);
+
+        assertTrue("Success message was " + remoteProvidersIndexPage.getSuccessAlert(), remoteProvidersIndexPage.getSuccessAlert().contains("WhiteHat Sentinel Source"));
+
+        remoteProvidersIndexPage.clickImportScan(WHITEHATSOURCE, 2)
+                .checkForAlert();
+
+        assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
+        driver.switchTo().alert().dismiss();
+
+        remoteProvidersIndexPage = remoteProvidersIndexPage.clearConfiguration(WHITEHATSOURCE);
+
+        assertTrue("WhiteHat Sentinel Source configuration was not cleared properly",
+                remoteProvidersIndexPage.getSuccessAlert().contains("WhiteHat Sentinel Source configuration was cleared successfully."));
+    }
+
+    @Test
+    public void testCheckWhiteHatSourceEditNameModalHeader() {
+        remoteProvidersIndexPage.ensureRemoteProviderConfigurationIsCleared(WHITEHATSOURCE);
+
+        remoteProvidersIndexPage.clickConfigure(WHITEHATSOURCE)
+                .setWhiteHatSourceAPIKey(SENTINEL_API_KEY)
+                .saveConfiguration(WHITEHATSOURCE);
+
+        remoteProvidersIndexPage.clickEditName(WHITEHATSOURCE, "2");
+
+        assertTrue("Modal does not contain app name", remoteProvidersIndexPage.getModalText().contains("IGoat"));
+
+        remoteProvidersIndexPage.closeModal().clearConfiguration(WHITEHATSOURCE);
+
+        assertTrue("WhiteHat Sentinel Source configuration was not cleared properly",
+                remoteProvidersIndexPage.getSuccessAlert().contains("WhiteHat Sentinel Source configuration was cleared successfully."));
+    }
 
     //===========================================================================================================
     // Other
