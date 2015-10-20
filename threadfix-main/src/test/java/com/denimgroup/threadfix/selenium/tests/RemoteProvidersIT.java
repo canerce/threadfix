@@ -682,11 +682,12 @@ public class RemoteProvidersIT extends BaseDataTest {
         remoteProvidersIndexPage.clickConfigure(WHITEHATSOURCE)
                 .setWhiteHatSourceAPIKey(SENTINEL_API_KEY)
                 .saveConfiguration(WHITEHATSOURCE)
-                .mapProviderToTeamAndApp(WHITEHATSOURCE, 2, teamName, appName);
+                .setApplicationFilter(WHITEHATSOURCE, "IGoat")
+                .mapProviderToTeamAndApp(WHITEHATSOURCE, 0, teamName, appName);
 
         assertTrue("Success message was " + remoteProvidersIndexPage.getSuccessAlert(), remoteProvidersIndexPage.getSuccessAlert().contains("WhiteHat Sentinel Source"));
 
-        remoteProvidersIndexPage.clickImportScan(WHITEHATSOURCE, 2)
+        remoteProvidersIndexPage.clickImportScan(WHITEHATSOURCE, 0)
                 .checkForAlert();
 
         assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
@@ -706,7 +707,8 @@ public class RemoteProvidersIT extends BaseDataTest {
                 .setWhiteHatSourceAPIKey(SENTINEL_API_KEY)
                 .saveConfiguration(WHITEHATSOURCE);
 
-        remoteProvidersIndexPage.clickEditName(WHITEHATSOURCE, "2");
+        remoteProvidersIndexPage.setApplicationFilter(WHITEHATSOURCE, "IGoat")
+                .clickEditName(WHITEHATSOURCE, "0");
 
         assertTrue("Modal does not contain app name", remoteProvidersIndexPage.getModalText().contains("IGoat"));
 

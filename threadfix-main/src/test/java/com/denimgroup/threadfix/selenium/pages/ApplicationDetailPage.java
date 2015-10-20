@@ -169,8 +169,8 @@ public class ApplicationDetailPage extends BasePage {
         return new TeamDetailPage(driver);
     }
 
-    public ApplicationDetailPage clickVulnerabilitiesTab(int numberOfVulnerabilities) {
-        driver.findElementByLinkText(numberOfVulnerabilities + " Vulnerabilities").click();
+    public ApplicationDetailPage clickVulnerabilitiesTab() {
+        driver.findElementByCssSelector("vulnTab > a").click();
         waitForElement(By.id("actionItems"));
         return new ApplicationDetailPage(driver);
     }
@@ -179,6 +179,13 @@ public class ApplicationDetailPage extends BasePage {
         sleep(1000);
         driver.findElementByCssSelector("li#scanTab a").click();
         waitForElement(By.linkText("Delete Scan"));
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage clickScansTabNoPermission() {
+        sleep(1000);
+        driver.findElementByCssSelector("li#scanTab a").click();
+        waitForElement(By.linkText("View Scan"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -868,12 +875,22 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage setStartDate(String date) {
-        driver.findElementById("startDateInput").sendKeys(date);
+        driver.findElementById("startDateInput").clear();
+        //The input needed to be slowed down for the datepicker to respond appropriately
+        for (int i = 0; i < date.length(); i++) {
+            driver.findElementById("startDateInput").sendKeys(date.substring(i, i+1));
+            sleep(100);
+        }
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage setEndDate(String date) {
-        driver.findElementById("endDateInput").sendKeys(date);
+        driver.findElementById("endDateInput").clear();
+        //The input needed to be slowed down for the datepicker to respond appropriately
+        for (int i = 0; i < date.length(); i++) {
+            driver.findElementById("endDateInput").sendKeys(date.substring(i, i+1));
+            sleep(100);
+        }
         return new ApplicationDetailPage(driver);
     }
 

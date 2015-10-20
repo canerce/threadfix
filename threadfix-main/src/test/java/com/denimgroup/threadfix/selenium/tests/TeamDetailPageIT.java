@@ -136,7 +136,7 @@ public class TeamDetailPageIT extends BaseIT {
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName);
 
-        teamDetailPage.clickVulnerabilitiesTab("25");
+        teamDetailPage.clickVulnerabilitiesTab();
 
         assertTrue("Team is not showing expected number of vulnerabilities before test.",
                 teamDetailPage.isVulnerabilityCountCorrect("High", "6"));
@@ -160,7 +160,7 @@ public class TeamDetailPageIT extends BaseIT {
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName);
 
-        teamDetailPage.clickVulnerabilitiesTab("25");
+        teamDetailPage.clickVulnerabilitiesTab();
 
         assertTrue("Team is not showing expected number of vulnerabilities before test.",
                 teamDetailPage.isVulnerabilityCountCorrect("High", "6"));
@@ -182,7 +182,7 @@ public class TeamDetailPageIT extends BaseIT {
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName);
 
-        teamDetailPage.clickVulnerabilitiesTab("25");
+        teamDetailPage.clickVulnerabilitiesTab();
 
         assertTrue("Team is not showing expected number of vulnerabilities before test.",
                 teamDetailPage.isVulnerabilityCountCorrect("High", "6"));

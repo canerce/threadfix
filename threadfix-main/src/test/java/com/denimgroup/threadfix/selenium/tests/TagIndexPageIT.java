@@ -133,7 +133,7 @@ public class TagIndexPageIT extends BaseDataTest{
 
         loginPage.defaultLogin()
                 .clickTagsLink()
-                .clickTagName(tagName);
+                .clickCommentTagName(tagName);
 
         assertTrue("Comment Tag name did not navigate correctly",
                 driver.findElement(By.linkText("Back to Tags Page")).isEnabled());

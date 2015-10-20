@@ -86,9 +86,9 @@ public class TagDetailPageIT extends BaseDataTest {
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
-        applicationDetailPage.expandVulnerabilityByType("Critical79")
-                .expandCommentSection("Critical790")
-                .clickAddComment("Critical790")
+        applicationDetailPage.expandVulnerabilityByType("High79")
+                .expandCommentSection("High790")
+                .clickAddComment("High790")
                 .attachTag(tagName)
                 .setComment(teamName + appName)
                 .clickModalSubmit();

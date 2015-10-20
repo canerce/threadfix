@@ -664,7 +664,6 @@ public class PolicyEntIT extends BaseDataTest {
         assertFalse("Application should be failing less than filter.", policyPage.isAppPassing(appPass));
     }
 
-    @Ignore("Date Range filter doesn't respond to Selenium")
     @Test
     public void testPassFailForDateRange() {
         String team = createTeam();
@@ -684,7 +683,7 @@ public class PolicyEntIT extends BaseDataTest {
                 .addAppToPolicy(policyName, appFail)
                 .addAppToPolicy(policyName, appPass);
 
-        assertFalse("Application should be failing more than filter.", policyPage.isAppPassing(appFail));
-        assertTrue("Application should be passing more than filter.", policyPage.isAppPassing(appPass));
+        assertFalse("Application should be failing date range filter.", policyPage.isAppPassing(appFail));
+        assertTrue("Application should be passing date range filter.", policyPage.isAppPassing(appPass));
     }
 }

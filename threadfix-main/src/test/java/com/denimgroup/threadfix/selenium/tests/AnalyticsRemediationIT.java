@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.AnalyticsPage;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
+import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -101,9 +102,9 @@ public class AnalyticsRemediationIT extends BaseDataTest {
     public void testTeamNameNavigation() {
         initialize();
 
-        analyticsPage.clickTeamName();
+        TeamDetailPage teamDetailPage = analyticsPage.clickTeamName();
 
-        assertTrue("Link did not navigate correctly", driver.findElement(By.id("name")).getText().contains(teamName));
+        assertTrue("Link did not navigate correctly", teamDetailPage.getOrgName().contains(teamName));
     }
 
     @Test
