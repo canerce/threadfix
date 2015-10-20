@@ -1115,32 +1115,4 @@ public class ApplicationIT extends BaseDataTest {
         assertTrue("The teams weren't sorted in alphabetical order.",
                 applicationDetailPage.isOrderOfSelectorCorrect(firstTeamName, secondTeamName));
     }
-
-    //TODO wait till the bug for Scheduling to fix
-    @Ignore
-    @Test
-    public void testDateRangeFilterSaving() {
-        initializeTeamAndApp();
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
-
-        String filterName = "testFilter";
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName)
-                .expandDateRange()
-                .setStartDate("03-September-2014")
-                .clickVulnerabilitiesTab(45);
-
-
-        assertTrue("The Vulnerabilities still available", applicationDetailPage.areAllVulnerabilitiesHidden());
-
-        applicationDetailPage.expandSavedFilters()
-                .addSavedFilter(filterName)
-                .clickLoadFilters()
-                .loadSavedFilter(filterName);
-
-        assertTrue("The Vulnerabilities still available", applicationDetailPage.areAllVulnerabilitiesHidden());
-    }
 }

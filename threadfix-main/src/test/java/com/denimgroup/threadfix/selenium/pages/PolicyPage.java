@@ -136,7 +136,7 @@ public class PolicyPage extends BasePage {
     public PolicyPage createDateRangeFilter(String name) {
         clickFiltersTab()
                 .expandFilters()
-                .setDateRange("11-1-14", "1-1-15")
+                .setDateRange("11/1/2014", "1/1/2015")
                 .setFilterName(name)
                 .clickPolicyTab();
         return new PolicyPage(driver);

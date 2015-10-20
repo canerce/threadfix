@@ -345,8 +345,6 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
     // Date Range
     //===========================================================================================================
 
-    //TODO when issue 1833 has been closed this test can be re-examined
-    @Ignore
     @Test
     public void testDateFilter() {
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
@@ -354,21 +352,42 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
         applicationDetailPage.refreshPage();
 
         applicationDetailPage = applicationDetailPage.expandDateRange()
-                .setStartDate("14-June-2012");
+                .setStartDate("6/14/2012");
 
         assertTrue("Only 10 High vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("High", "10"));
-        assertTrue("Only 9 medium vulnerabilities should be shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Medium", "9"));
+        assertTrue("Only 8 medium vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Medium", "8"));
         assertTrue("Only 21 low vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Low", "21"));
         assertTrue("Only 5 info vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Info", "5"));
 
-        applicationDetailPage = applicationDetailPage.setEndDate("15-June-2012")
+        applicationDetailPage = applicationDetailPage.setEndDate("6/15/2012")
+                .expandFieldControls()
                 .toggleStatusFilter("Open");
 
         assertTrue("No Results Found should be displayed.", applicationDetailPage.areAllVulnerabilitiesHidden());
+    }
 
+    @Test
+    public void testSaveDateRangeFilter() {
+        String filterName = getName();
+
+        applicationDetailPage.expandDateRange()
+                .setStartDate("1/1/2015");
+
+        applicationDetailPage.waitForResultsToLoad();
+
+
+        assertTrue("The date filter did not hide vulnerabilities", applicationDetailPage.areAllVulnerabilitiesHidden());
+
+        applicationDetailPage.expandSavedFilters()
+                .addSavedFilter(filterName)
+                .clickLoadFilters()
+                .clearSavedFilter()
+                .loadSavedFilter(filterName);
+
+        assertTrue("The date range did not load properly", applicationDetailPage.areAllVulnerabilitiesHidden());
     }
 }
