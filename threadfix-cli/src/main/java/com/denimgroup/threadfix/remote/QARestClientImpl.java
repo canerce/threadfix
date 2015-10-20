@@ -78,8 +78,8 @@ public class QARestClientImpl implements QARestClient {
 
     public RestResponse<String> failTask(String scanQueueTaskId, String message, String secureTaskKey) {
         return httpRestUtils.httpPost("/tasks/failTask",
-                new String[] {"scanQueueTaskId", "message", "secureTaskKey" },
-                new String[] { scanQueueTaskId,	  message,   secureTaskKey }, String.class);
+                new String[] { "scanQueueTaskId", "message", "secureTaskKey" },
+                new String[] { scanQueueTaskId, message, secureTaskKey }, String.class);
     }
 
     @Override
@@ -157,6 +157,12 @@ public class QARestClientImpl implements QARestClient {
 
     public RestResponse<String> deletePolicies() {
         return httpRestUtils.httpPost("/policy/deleteAll",
+                new String[] {},
+                new String[] {}, String.class);
+    }
+
+    public RestResponse<String> deleteEmailReports(){
+        return httpRestUtils.httpPost("/scheduledEmailReport/deleteAll",
                 new String[] {},
                 new String[] {}, String.class);
     }

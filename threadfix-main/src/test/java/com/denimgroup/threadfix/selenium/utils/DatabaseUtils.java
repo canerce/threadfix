@@ -223,7 +223,7 @@ public class DatabaseUtils {
         RestResponse<Application> response = CLIENT.searchForApplicationByName(appName, teamName);
         assertTrue("Request for Application was unsuccessful. Message:" + response.message, response.success);
 
-        RestResponse<Finding> secondResponse = CLIENT.addDynamicFinding(String.valueOf(response.object.getId()),"Location",
+        RestResponse<Finding> secondResponse = CLIENT.addDynamicFinding(String.valueOf(response.object.getId()), "Location",
                 "3", "qa", "parameter", "description", "", "path");
         assertTrue("Request for Finding was unsuccessful. Message:" + secondResponse.message, secondResponse.success);
     }
@@ -233,6 +233,11 @@ public class DatabaseUtils {
         RestResponse<String> response = QA_CLIENT.deletePolicies();
         assertTrue("Request to delete all policies was unsuccessful. Message: " + response.message, response.success);
 
+    }
+
+    public static void deleteAllEmailReports(){
+        RestResponse<String> response = QA_CLIENT.deleteEmailReports();
+        assertTrue("Request to delete all email reports was unsuccessful. Message: " + response.message, response.success);
     }
 
     public static void attachWAFToApp(String wafName, String teamName, String appName) {

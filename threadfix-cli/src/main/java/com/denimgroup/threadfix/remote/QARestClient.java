@@ -63,4 +63,6 @@ public interface QARestClient {
     public RestResponse<Group> createGroup(String groupName);
 
     public RestResponse<String> deletePolicies();
+
+    public RestResponse<String> deleteEmailReports();
 }

@@ -4,6 +4,9 @@ import com.denimgroup.threadfix.data.entities.ScheduledEmailReport;
 import com.microsoft.tfs.core.clients.build.internal.soapextensions.Schedule;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
+import java.util.List;
 
 /**
  * Created by dharrison on 10/12/2015.
@@ -139,6 +142,38 @@ public class ScheduledEmailReportPage extends BasePage {
 
     public boolean isResetButtonPresent() { return isElementPresent("tagsResetButton"); }
 
+    public boolean isReportPresent(String teamName, String frequency, String severity, String hour, String min, String period){
+        WebElement tableResults = driver.findElementById("table").findElement(By.tagName("tbody"));
+        WebElement tableRow = tableResults.findElements(By.tagName("tr")).get(1);
+        String savedTeamName = tableRow.findElement(By.id("teams0")).findElement(By.id("teamLink0Name" + teamName)).getText();
+        String savedSeverity = tableRow.findElement(By.id("severity0")).getText();
+        String time = tableRow.findElement(By.id("scheduledTime0")).getText();
+
+        return savedTeamName.equals(teamName) &&
+                savedSeverity.equals(severity) &&
+                time.contains(hour+":"+min) &&
+                time.contains(period) &&
+                time.contains(frequency);
+    }
+
+    public boolean isEmailAddressPresent(String email){
+        String savedEmail = driver.findElementById("email{ emailAddress | removeEmailDomain }}").getText();
+        return savedEmail.equals(email);
+    }
+
+    public boolean isEmailListPresent(String listName){
+        String savedEmailList = driver.findElementById("emailList"+listName).getText();
+        return savedEmailList.equals(listName);
+    }
+
+    public boolean isEmailSchedulePresent(String teamName){
+        return driver.findElements(By.id("teamLink0Name" + teamName)).size() > 0;
+    }
+
+    public boolean isNewScheduledEmailReportWindowOpen(){
+        sleep(200);
+        return driver.findElements(By.id("myModalLabel")).size() > 0;
+    }
     //===========================================================================================================
     // Set Methods
     //===========================================================================================================

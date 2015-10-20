@@ -57,6 +57,8 @@ public class QARestController extends TFRestController {
     private GroupService groupService;
     @Autowired(required=false)
     private PolicyService policyService;
+    @Autowired
+    private ScheduledEmailReportService scheduledEmailReportService;
 
     private static final String TEAM_DELETION_FAILED = "Team deletion failed.";
     private static final String TEAM_DELETION_SUCCESS= "Team deleted successfully";
@@ -458,5 +460,23 @@ public class QARestController extends TFRestController {
         return RestResponse.success("Request to delete all policies successful.");
     }
 
+    /********************************
+     * EMAIL REPORTS METHODS
+     ********************************/
+    @JsonView(AllViews.TableRow.class)
+    @RequestMapping(headers = "Accept=application/json", value = "/scheduledEmailReport/deleteAll", method = RequestMethod.POST)
+    public Object deleteEmailReports(HttpServletRequest request){
+        LOG.info("Received REST request to delete all email reports.");
 
+        List<ScheduledEmailReport> reports = scheduledEmailReportService.loadAll();
+
+        for(ScheduledEmailReport report: reports){
+            if (report != null && report.isActive()){
+                int reportId = report.getId();
+                scheduledEmailReportService.delete(report);
+                LOG.info("REST Request to delete Scheduled Email Report " +  Integer.toString(reportId)  + " is completed successfully");
+            }
+        }
+        return RestResponse.success("Request to delete all scheduled email reports successful.");
+    }
 }
