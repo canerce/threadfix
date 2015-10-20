@@ -107,21 +107,14 @@ public class TeamDetailPage extends BasePage {
     }
 
     public TeamDetailPage clickApplicationsTab() {
-        driver.findElementById("applicationsTab").click();
+        driver.findElementByCssSelector("#applicationsTab > a").click();
         waitForElement(By.id("applicationsTableBody"));
         return new TeamDetailPage(driver);
     }
 
     public TeamDetailPage clickVulnerabilitiesTab() {
-        driver.findElementById("vulnerabilitiesTab").click();
+        driver.findElementByCssSelector("#vulnerabilitiesTab > a").click();
         waitForElement(By.className("filter-controls"));
-        return new TeamDetailPage(driver);
-    }
-
-    //TODO: Eliminate method when new ID is added to tab
-    public TeamDetailPage clickVulnerabilitiesTab(String number) {
-        driver.findElementByLinkText(number + " Vulnerabilities").click();
-        waitForResultsToLoad();
         return new TeamDetailPage(driver);
     }
 

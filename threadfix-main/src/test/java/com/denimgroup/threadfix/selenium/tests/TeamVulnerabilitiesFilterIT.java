@@ -67,7 +67,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab("44");
+                .clickVulnerabilitiesTab();
 
         teamDetailPage.expandFieldControls()
                 .setParameterFilter(parameter)
@@ -83,7 +83,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
 
         teamDetailPage.clickClearFilters();
 
-        teamDetailPage.clickVulnerabilitiesTab("44");
+        teamDetailPage.clickVulnerabilitiesTab();
 
         assertTrue("High vulnerabilities should be shown.",
                 teamDetailPage.isSeverityLevelShown("High"));
@@ -108,7 +108,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab("0")
+                .clickVulnerabilitiesTab()
                 .expandSavedFilters()
                 .addInvalidNameSavedFilter(tooLong);
 
@@ -131,7 +131,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab("0")
+                .clickVulnerabilitiesTab()
                 .expandSavedFilters()
                 .addSavedFilter(filterName);
 
@@ -139,7 +139,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
 
         TeamDetailPage teamDetailPage1 = teamDetailPage.clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab("0")
+                .clickVulnerabilitiesTab()
                 .expandSavedFilters()
                 .addInvalidNameSavedFilter(filterName);
 
@@ -160,7 +160,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab("69");
+                .clickVulnerabilitiesTab();
 
         teamDetailPage.expandScannerAndMerged()
                 .addScannerFilter(scanner)
@@ -173,7 +173,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
 
         teamDetailPage.clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab("69")
+                .clickVulnerabilitiesTab()
                 .clickClearFilters()
                 .clickLoadFilters()
                 .loadSavedFilter(newFilter);
@@ -200,7 +200,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab("69");
+                .clickVulnerabilitiesTab();
 
         teamDetailPage.expandTeamApplication()
                 .addApplicationFilter(appName);
@@ -216,7 +216,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
 
         teamDetailPage.clickClearFilters();
 
-        teamDetailPage.clickVulnerabilitiesTab("69");
+        teamDetailPage.clickVulnerabilitiesTab();
 
         assertTrue("Only 16 high vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("High", "16"));
@@ -251,7 +251,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab("69");
+                .clickVulnerabilitiesTab();
 
         teamDetailPage.expandScannerAndMerged()
                 .toggleTwoPlus();
@@ -274,7 +274,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab("69");
+                .clickVulnerabilitiesTab();
 
         teamDetailPage.expandScannerAndMerged()
                 .addScannerFilter(scanner);
@@ -306,7 +306,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab("44");
+                .clickVulnerabilitiesTab();
 
         teamDetailPage.expandFieldControls()
                 .addVulnerabilityTypeFilter(vulnerabilityType, defaultVulnerabilityType);
@@ -324,7 +324,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab("44");
+                .clickVulnerabilitiesTab();
 
         teamDetailPage.expandFieldControls()
                 .setPathFilter(path);
@@ -344,7 +344,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab("44");
+                .clickVulnerabilitiesTab();
 
         teamDetailPage.expandFieldControls()
                 .setParameterFilter(parameter);
@@ -364,7 +364,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab("44");
+                .clickVulnerabilitiesTab();
 
         teamDetailPage.expandFieldControls()
                 .toggleSeverityFilter("Medium")
@@ -390,7 +390,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab("44");
+                .clickVulnerabilitiesTab();
 
         teamDetailPage.expandFieldControls()
                 .toggleStatusFilter("Open")
@@ -411,7 +411,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab("25");
+                .clickVulnerabilitiesTab();
 
         teamDetailPage.expandAging()
                 .toggleLessThan()

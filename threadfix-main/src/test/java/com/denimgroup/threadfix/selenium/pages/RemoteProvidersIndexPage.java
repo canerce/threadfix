@@ -244,6 +244,12 @@ public class RemoteProvidersIndexPage extends BasePage {
         return this;
     }
 
+    public RemoteProvidersIndexPage setApplicationFilter(String provider, String name) {
+        driver.findElementById("filter" + provider).clear();
+        driver.findElementById("filter" + provider).sendKeys(name);
+        return new RemoteProvidersIndexPage(driver);
+    }
+
     //===========================================================================================================
     // Get Methods
     //===========================================================================================================

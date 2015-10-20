@@ -182,6 +182,13 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
+    public ApplicationDetailPage clickScansTabNoPermission() {
+        sleep(1000);
+        driver.findElementByCssSelector("li#scanTab a").click();
+        waitForElement(By.linkText("View Scan"));
+        return new ApplicationDetailPage(driver);
+    }
+
     public ApplicationDetailPage clickUnmappedFindings(String unmappedFindingNumber) {
         driver.findElementByLinkText(unmappedFindingNumber).click();
         waitForElement(By.id("unmappedVulnType"));

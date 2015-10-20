@@ -300,6 +300,7 @@ public class PolicyPage extends BasePage {
 
     public PolicyPage selectFilterToEdit(String name) {
         new Select(driver.findElementByCssSelector("div.saved-filters-tab>#filterSelect")).selectByVisibleText(name);
+        waitForElementTextUpdate(By.id("saveFilterButton"),"Update Saved Filter");
         return this;
     }
 

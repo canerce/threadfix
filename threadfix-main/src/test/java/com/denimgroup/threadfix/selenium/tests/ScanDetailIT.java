@@ -141,6 +141,8 @@ public class ScanDetailIT extends BaseDataTest {
 
         TeamDetailPage teamDetailPage = scanDetailPage.clickTeamNav();
 
-        assertTrue("Team name does not match", teamDetailPage.isTeamNameDisplayedCorrectly(teamName));
+        String teamNameTest = teamDetailPage.getOrgName();
+
+        assertTrue("Team name does not match. Should be " + teamName + " but is " + teamNameTest, teamNameTest.contains(teamName));
     }
 }

@@ -361,7 +361,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
         TeamDetailPage teamDetailPage = loginPage.login(userName, testPassword)
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab("29")
+                .clickVulnerabilitiesTab()
                 .expandVulnerabilityByType("Critical79")
                 .expandCommentSection("Critical790");
 
@@ -762,7 +762,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
         TeamDetailPage teamDetailPage = loginPage.login(userName, testPassword)
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab("44")
+                .clickVulnerabilitiesTab()
                 .expandFieldControls()
                 .toggleStatusFilter("Closed")
                 .clickVulnerabilitiesActionButton();
@@ -963,7 +963,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
         TeamDetailPage teamDetailPage = loginPage.login(userName, testPassword)
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab("29")
+                .clickVulnerabilitiesTab()
                 .expandVulnerabilityByType("Critical79")
                 .expandCommentSection("Critical790");
 
@@ -1309,7 +1309,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
         TeamDetailPage teamDetailPage = loginPage.login(userName, testPassword)
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickVulnerabilitiesTab("44")
+                .clickVulnerabilitiesTab()
                 .expandFieldControls()
                 .toggleStatusFilter("Closed")
                 .clickVulnerabilitiesActionButton();
@@ -1343,7 +1343,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
         assertTrue("Batch Tagging link is not available",
                 applicationDetailPage.isElementPresent("addBatchTaggingBtn"));
 
-        FindingDetailPage findingDetailPage = applicationDetailPage.clickScansTab()
+        FindingDetailPage findingDetailPage = applicationDetailPage.clickScansTabNoPermission()
                 .clickViewScan()
                 .clickViewFinding();
 
