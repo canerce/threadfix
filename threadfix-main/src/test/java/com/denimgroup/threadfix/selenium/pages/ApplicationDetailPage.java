@@ -877,20 +877,16 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage setStartDate(String date) {
         driver.findElementById("startDateInput").clear();
         //The input needed to be slowed down for the datepicker to respond appropriately
-        for (int i = 0; i < date.length(); i++) {
-            driver.findElementById("startDateInput").sendKeys(date.substring(i, i+1));
-            sleep(100);
-        }
+        driver.findElementById("startDateInput").sendKeys(date.substring(0, date.length()-1));
+        driver.findElementById("startDateInput").sendKeys(date.substring(date.length()-1));
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage setEndDate(String date) {
         driver.findElementById("endDateInput").clear();
         //The input needed to be slowed down for the datepicker to respond appropriately
-        for (int i = 0; i < date.length(); i++) {
-            driver.findElementById("endDateInput").sendKeys(date.substring(i, i+1));
-            sleep(100);
-        }
+        driver.findElementById("endDateInput").sendKeys(date.substring(0, date.length()-1));
+        driver.findElementById("endDateInput").sendKeys(date.substring(date.length()-1));
         return new ApplicationDetailPage(driver);
     }
 

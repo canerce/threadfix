@@ -96,19 +96,19 @@ public class TagIndexPage extends BasePage{
     }
 
     public TagDetailPage clickTagName(String name) {
-        driver.findElementByCssSelector("tagName" + name + " > a").click();
+        driver.findElementByCssSelector("#tagName" + name + " > a").click();
         waitForElement(By.linkText("Back to Tags Page"));
         return new TagDetailPage(driver);
     }
 
     public TagDetailPage clickVulnerabilityTagName(String name) {
-        driver.findElementByCssSelector("vulnTagName" + name + " > a").click();
+        driver.findElementByCssSelector("#vulnTagName" + name + " > a").click();
         waitForElement(By.linkText("Back to Tags Page"));
         return new TagDetailPage(driver);
     }
 
     public TagDetailPage clickCommentTagName(String name) {
-        driver.findElementByCssSelector("commentTagName" + name + " > a").click();
+        driver.findElementByCssSelector("#commentTagName" + name + " > a").click();
         waitForElement(By.linkText("Back to Tags Page"));
         return new TagDetailPage(driver);
     }
