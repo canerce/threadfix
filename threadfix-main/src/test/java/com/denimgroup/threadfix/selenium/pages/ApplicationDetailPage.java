@@ -1526,6 +1526,10 @@ public class ApplicationDetailPage extends BasePage {
         return isElementPresent("appLabelTag0");
     }
 
+    public boolean isScansEmpty(){
+        return tryGetText(By.cssSelector("#scanTab > a")).equals("0 Scans");
+    }
+
     //===========================================================================================================
     // Helper Methods
     //===========================================================================================================

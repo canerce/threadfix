@@ -60,7 +60,7 @@ public class ScanDetailIT extends BaseDataTest {
     public void testDeleteScan(){
         ScanDetailPage scanDetailPage = applicationDetailPage.clickViewScan();
         scanDetailPage.clickDeleteScan();
-        assertTrue("Scan was not deleted", scanDetailPage.isScansEmpty());
+        assertTrue("Scan was not deleted", applicationDetailPage.isScansEmpty());
     }
 
     @Test

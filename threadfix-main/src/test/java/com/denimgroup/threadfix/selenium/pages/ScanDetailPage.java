@@ -167,9 +167,5 @@ public class ScanDetailPage extends BasePage {
     public boolean isClosedVulnerabilitiesCorrect(String expectedCount) {
         return driver.findElementById("closedVulnerabilities").getText().trim().equals(expectedCount);
     }
-
-    public boolean isScansEmpty(){
-        return driver.findElementById("scanTab").getAttribute("heading").equals("0 Scans");
-    }
 }
 
