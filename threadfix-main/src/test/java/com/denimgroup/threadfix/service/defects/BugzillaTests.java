@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.service.defects.util.DefectUtils;
 import com.denimgroup.threadfix.viewmodels.ProjectMetadata;
 import org.junit.Test;
 
+import java.io.Console;
 import java.util.List;
 import java.util.Map;
 
@@ -146,7 +147,7 @@ public class BugzillaTests {
         assertEquals("Severities should have had 7 matches, but had " + severitySize, severitySize, 7);
 
         int statusSize = metadata.getStatuses().size();
-        assertEquals("Status should have had 4 matches, but had " + statusSize, statusSize, 4);
+        assertEquals("Status should have had 4 matches, but had " + statusSize, statusSize, 2);
 
         int prioritySize = metadata.getPriorities().size();
         assertEquals("Priorities should have had 6 matches, but had " + prioritySize, prioritySize, 6);
