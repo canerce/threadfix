@@ -104,7 +104,7 @@ public class AnalyticsRemediationIT extends BaseDataTest {
 
         TeamDetailPage teamDetailPage = analyticsPage.clickTeamName();
 
-        assertTrue("Link did not navigate correctly", teamDetailPage.getOrgName().contains(teamName));
+        assertTrue("Link did not navigate correctly", teamDetailPage.isTeamNameDisplayedCorrectly(teamName));
     }
 
     @Test

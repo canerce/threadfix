@@ -451,6 +451,7 @@ public class TeamDetailPage extends BasePage {
     }
 
     public String getOrgName() {
+        waitForElement(By.id("name"));
         return driver.findElementById("name").getText();
     }
 
@@ -508,6 +509,7 @@ public class TeamDetailPage extends BasePage {
     }
 
     public boolean isTeamNameDisplayedCorrectly(String teamName) {
+        waitForElementTextUpdate(By.id("name"), teamName);
         String pageName = driver.findElementById("name").getText();
         pageName = pageName.replaceAll("(.*) Action$", "$1");
         return teamName.equals(pageName);
