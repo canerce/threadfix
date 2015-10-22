@@ -47,6 +47,15 @@ public class TagIndexPage extends BasePage{
         return new TagIndexPage(driver);
     }
 
+    public TagIndexPage createNewVulnerabilityTag(String name) {
+        driver.findElementById("createTagModalButton").click();
+        waitForElement(By.id("myModalLabel"));
+        driver.findElementById("tagCreateNameInput").sendKeys(name);
+        new Select(driver.findElementById("tagType")).selectByVisibleText("VULNERABILITY");
+        clickModalSubmit();
+        return new TagIndexPage(driver);
+    }
+
     public TagIndexPage createNewCommentTag(String name) {
         driver.findElementById("createTagModalButton").click();
         waitForElement(By.id("myModalLabel"));
@@ -75,6 +84,15 @@ public class TagIndexPage extends BasePage{
         return new TagIndexPage(driver);
     }
 
+    public TagIndexPage deleteVulnerabilityTag(String name) {
+        driver.findElementById("editVulnTagModalButton" + name).click();
+        waitForElement(By.id("deleteTagButton"));
+        driver.findElementById("deleteTagButton").click();
+        driver.switchTo().alert().accept();
+        sleep(1000);
+        return new TagIndexPage(driver);
+    }
+
     public TagIndexPage editTagName(String tagName, String newName) {
         driver.findElementById("editTagModalButton" + tagName).click();
         waitForElement(By.id("tagCreateNameInput"));
@@ -87,6 +105,16 @@ public class TagIndexPage extends BasePage{
 
     public TagIndexPage editCommentTagName(String tagName, String newName) {
         driver.findElementById("editCommentTagModalButton" + tagName).click();
+        waitForElement(By.id("tagCreateNameInput"));
+        driver.findElementById("tagCreateNameInput").clear();
+        driver.findElementById("tagCreateNameInput").sendKeys(newName);
+        driver.findElementById("submit").click();
+        sleep(10000);
+        return new TagIndexPage(driver);
+    }
+
+    public TagIndexPage editVulnerabilityTagName(String tagName, String newName) {
+        driver.findElementById("editVulnTagModalButton" + tagName).click();
         waitForElement(By.id("tagCreateNameInput"));
         driver.findElementById("tagCreateNameInput").clear();
         driver.findElementById("tagCreateNameInput").sendKeys(newName);

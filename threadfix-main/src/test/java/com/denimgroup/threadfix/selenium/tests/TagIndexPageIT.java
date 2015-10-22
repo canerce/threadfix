@@ -70,7 +70,7 @@ public class TagIndexPageIT extends BaseDataTest{
 
         TagIndexPage tagIndexPage = loginPage.defaultLogin()
                 .clickTagsLink()
-                .editTagName(tagName,newName);
+                .editTagName(tagName, newName);
 
         assertTrue("Old tag name was not deleted properly", !tagIndexPage.isAppTagNameLinkPresent(tagName));
         assertTrue("New tag name was no added properly ", tagIndexPage.isAppTagNameLinkPresent(newName));
@@ -89,6 +89,53 @@ public class TagIndexPageIT extends BaseDataTest{
                 driver.findElement(By.linkText("Back to Tags Page")).isEnabled());
     }
 
+    @Test
+    public void testCreateVulnerabilityTag() {
+        String tagName = getName();
+        TagIndexPage tagIndexPage = loginPage.defaultLogin()
+                .clickTagsLink()
+                .createNewVulnerabilityTag(tagName);
+        assertTrue("Tag was not created properly", tagIndexPage.isVulnerabilityTagNameLinkPresent(tagName));
+    }
+
+    @Test
+    public void testDeleteVulnerabilityTag() {
+        String tagName = getName();
+        createTag(tagName, TagType.VULNERABILITY.getDisplayName());
+
+        TagIndexPage tagIndexPage = loginPage.defaultLogin()
+                .clickTagsLink()
+                .deleteVulnerabilityTag(tagName);
+
+        assertTrue("Vulnerability Tag was not deleted properly", !tagIndexPage.isVulnerabilityTagNameLinkPresent(tagName));
+    }
+
+    @Test
+    public void testEditVulnerabilityTag() {
+        String tagName = getName();
+        createTag(tagName, TagType.VULNERABILITY.getDisplayName());
+        String newName = getName();
+
+        TagIndexPage tagIndexPage = loginPage.defaultLogin()
+                .clickTagsLink()
+                .editVulnerabilityTagName(tagName, newName);
+
+        assertTrue("Old vulnerability tag name was not deleted properly", !tagIndexPage.isVulnerabilityTagNameLinkPresent(tagName));
+        assertTrue("New vulnerability tag name was not added properly ", tagIndexPage.isVulnerabilityTagNameLinkPresent(newName));
+    }
+
+    @Test
+    public void testVulnerabilityTagNameNavigation() {
+        String tagName = getName();
+        createTag(tagName, TagType.VULNERABILITY.getDisplayName());
+
+        loginPage.defaultLogin()
+                .clickTagsLink()
+                .clickVulnerabilityTagName(tagName);
+
+        assertTrue("Vulnerability Tag name did not navigate correctly",
+                driver.findElement(By.linkText("Back to Tags Page")).isEnabled());
+    }
     @Test
     public void testCreateCommentTag() {
         String tagName = getName();
