@@ -123,7 +123,7 @@ public class TagDetailPageIT extends BaseDataTest {
                 .clickModalSubmit();
 
         TagDetailPage tagDetailPage = applicationDetailPage.clickTagsLink()
-                .clickTagName(tagName);
+                .clickCommentTagName(tagName);
 
         assertTrue("Number of attached comments is incorrect", tagDetailPage.getNumberofAttachedComments().equals("2"));
     }

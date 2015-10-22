@@ -150,7 +150,7 @@ public class PolicyPage extends BasePage {
         driver.findElementByCssSelector("#policyTab>a").click();
         //This sleep is necessary; the page elements are all present upon page load but will
         //update shortly afterward, reverting any actions you make
-        sleep(500);
+        sleep(1000);
         waitForElement(By.id("createNewModalButton"));
         return new PolicyPage(driver);
     }
@@ -159,7 +159,7 @@ public class PolicyPage extends BasePage {
         driver.findElementByCssSelector("#filterTab>a").click();
         //This sleep is necessary; the page elements are all present upon page load but will
         //update shortly afterward, reverting any actions you make
-        sleep(500);
+        sleep(1000);
         waitForElement(By.id("saveFilterButton"));
         return new PolicyPage(driver);
     }

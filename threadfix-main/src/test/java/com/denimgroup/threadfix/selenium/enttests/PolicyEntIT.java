@@ -325,12 +325,12 @@ public class PolicyEntIT extends BaseDataTest {
         assertFalse("Email with invalid length was added to policy.", policyPage.isEmailPresent(longEmail));
 
         policyPage.addEmailAddress(validEmail)
+                .addEmailList(listName)
                 .addEmailAddress(validEmail);
 
         assertTrue("Duplicate email was added to policy.", policyPage.getEmailError().contains("Email address already exists."));
 
-        policyPage.addEmailList(listName)
-                .addEmailList(listName);
+        policyPage.addEmailList(listName);
 
         assertTrue("Duplicate email list was added to policy.", policyPage.getEmailListError().contains("Email list already added."));
     }
@@ -366,12 +366,12 @@ public class PolicyEntIT extends BaseDataTest {
         assertFalse("Email with invalid length was added to app.", policyPage.isEmailPresent(longEmail));
 
         policyPage.addEmailAddress(validEmail)
+                .addEmailList(listName)
                 .addEmailAddress(validEmail);
 
         assertTrue("Duplicate email was added to app.", policyPage.getEmailError().contains("Email address already exists."));
 
-        policyPage.addEmailList(listName)
-                .addEmailList(listName);
+        policyPage.addEmailList(listName);
 
         assertTrue("Duplicate email list was added to app.", policyPage.getEmailListError().contains("Email list already added."));
     }

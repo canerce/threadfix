@@ -143,6 +143,7 @@ public class ScanDetailIT extends BaseDataTest {
 
         String teamNameTest = teamDetailPage.getOrgName();
 
-        assertTrue("Team name does not match. Should be " + teamName + " but is " + teamNameTest, teamNameTest.contains(teamName));
+        assertTrue("Team name does not match. Should be " + teamName + " but is " + teamNameTest,
+                teamDetailPage.isTeamNameDisplayedCorrectly(teamName));
     }
 }
