@@ -64,19 +64,6 @@ public class ScanDetailIT extends BaseDataTest {
     }
 
     @Test
-    public void testCreateMainpping(){
-        String team = teamName;
-        String app = appName;
-        uploadScanToApp(team, app, "Nessus");
-        ScanDetailPage scanDetailPage = applicationDetailPage.clickViewScan("1");
-        System.out.println(scanDetailPage.getVulnerabilityType());
-        scanDetailPage.clickCreateMapping()
-                .setCWEValue("1")
-                .clickCreateMappingButton();
-        sleep(30000);
-    }
-
-    @Test
     public void testShowHideStatisticsDetail() {
         ScanDetailPage scanDetailPage = applicationDetailPage.clickViewScan()
                 .toggleStatistics();
