@@ -476,7 +476,7 @@ public class UserIT extends BaseDataTest {
                 .expandCommentSection("High790");
 
         assertTrue("Display name was not used on comment.",
-                driver.findElement(By.id("commentUser0")).getText().equals(displayName));
+                driver.findElement(By.id("commentUserHigh790-0")).getText().equals(displayName));
     }
 
     @Test

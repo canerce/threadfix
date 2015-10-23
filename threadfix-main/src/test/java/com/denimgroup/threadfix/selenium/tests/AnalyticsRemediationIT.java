@@ -159,7 +159,7 @@ public class AnalyticsRemediationIT extends BaseDataTest {
                 .toggleAgingFilter("Forever", "complianceFilterDiv")
                 .expandVulnComments("0");
 
-        assertTrue("Comment not attached properly", analyticsPage.getCommentText("0").equals(testComment));
+        assertTrue("Comment not attached properly", analyticsPage.getCommentText("0-0").equals(testComment));
     }
 
     @Test

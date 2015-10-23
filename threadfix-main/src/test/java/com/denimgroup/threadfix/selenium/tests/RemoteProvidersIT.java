@@ -843,10 +843,10 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         TeamDetailPage teamDetailPage = remoteProvidersIndexPage.clickTeamLink(teamName);
 
-        assertTrue("Number of Open vulnerabilities is not correct", teamDetailPage.isNumberOfVulnerabilitiesCorrect("Total", "86", 0));
+        assertTrue("Number of Open vulnerabilities is not correct", teamDetailPage.isNumberOfVulnerabilitiesCorrect("Total", "84", 0));
         assertTrue("Number of Critical vulnerabilities is not correct", teamDetailPage.isNumberOfVulnerabilitiesCorrect("Critical", "12", 0));
         assertTrue("Number of High vulnerabilities is not correct", teamDetailPage.isNumberOfVulnerabilitiesCorrect("High", "15", 0));
-        assertTrue("Number of Medium vulnerabilities is not correct", teamDetailPage.isNumberOfVulnerabilitiesCorrect("Medium", "48", 0));
+        assertTrue("Number of Medium vulnerabilities is not correct", teamDetailPage.isNumberOfVulnerabilitiesCorrect("Medium", "46", 0));
         assertTrue("Number of Low vulnerabilities is not correct", teamDetailPage.isNumberOfVulnerabilitiesCorrect("Low", "3", 0));
         assertTrue("Number of Info vulnerabilities is not correct", teamDetailPage.isNumberOfVulnerabilitiesCorrect("Info", "8", 0));
 

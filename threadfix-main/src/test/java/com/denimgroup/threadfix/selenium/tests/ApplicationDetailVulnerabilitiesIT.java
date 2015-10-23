@@ -343,7 +343,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
                 applicationDetailPage.isCommentCountCorrect("High790", "1"));
 
         assertTrue("The comment was not preserved correctly.",
-                applicationDetailPage.isCommentCorrect("0", comment));
+                applicationDetailPage.isCommentCorrect("High790-0", comment));
     }
 
     //TODO fix bad navigation
