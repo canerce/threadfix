@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- Licensed Materials -
+     The contents of this file are subject to the Mozilla Public License
+     Version 2.0 (the "License"); you may not use this file except in
+     compliance with the License. You may obtain a copy of the License at
+     http://www.mozilla.org/MPL/
+
+     Software distributed under the License is distributed on an "AS IS"
+     basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+     License for the specific language governing rights and limitations
+     under the License.
+-->
+<AppScanExtension>
+  <!-- Front End MetaData -->
+  <FullName>Threadfix Plugin</FullName>
+  <Description>
+    This eXtension enables AppScan users to pre-seed appscan using data from Threadfix.
+  </Description>
+  <Version>1.0</Version>
+  <Author>Denim Group</Author>
+  <MainDllFile>Threadfix-Plugin.dll</MainDllFile>
+  <Copyright>Denim Group, Ltd. 2009-2015. All Rights Reserved</Copyright>
+  <HomepageURL>http://www.threadfix.org/</HomepageURL>
+
+  <!-- Target Application this extension can install into, 
+       with minimum and maximum supported versions. -->
+  <TargetEdition>
+
+    <!-- supported values: AppScanAuditors, AppScanDev, AppScanQA, AppScanXM, All -->
+    <ID>All</ID>
+
+    <MinCompatibleVersion>8.6</MinCompatibleVersion>
+
+  </TargetEdition>
+</AppScanExtension>
