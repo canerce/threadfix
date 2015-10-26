@@ -76,8 +76,9 @@ public class TestConstants {
 		SPRING_MODELS_PREFIX = "/src/main/java/org/springframework/samples/petclinic/model/",
 		SPRING_OWNER_MODEL = "Owner.java",
 		SPRING_CONTROLLER_WITH_CLASS_REQUEST_MAPPING = "ControllerWithClassAnnotation.java.txt",
-        	THREADFIX_SOURCE_ROOT = testRoot + "threadfix/"
-		;
+        THREADFIX_SOURCE_ROOT = testRoot + "threadfix/",
+        DVWA_FOLDER_NAME = "dvwa",
+        DVWA_SOURCE_ROOT = testRoot + DVWA_FOLDER_NAME;
 
     public static String getFolderName(String name) {
 

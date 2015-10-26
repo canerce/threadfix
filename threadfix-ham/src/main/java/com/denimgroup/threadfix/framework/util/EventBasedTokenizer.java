@@ -45,7 +45,11 @@ public interface EventBasedTokenizer {
 		OPEN_PAREN = '(',
 		CLOSE_PAREN = ')',
 		OPEN_CURLY = '{',
-		CLOSE_CURLY = '}';
+		CLOSE_CURLY = '}',
+		QUESTION_MARK = '?',
+		DOLLAR_SIGN = '$',
+		UNDERSCORE = '_',
+		OPEN_SQUARE_BRACKET = '[';
 
     boolean shouldContinue();
 	
