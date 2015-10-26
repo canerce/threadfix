@@ -471,8 +471,9 @@ public class UserIndexPage extends BasePage {
 
     public boolean isErrorPresent(String errorMessage) {
         try {
+            waitForElementTextUpdate(By.cssSelector(".errors:not(.ng-hide)"), errorMessage);
             return driver.findElementByCssSelector(".errors:not(.ng-hide)").getText().contains(errorMessage);
-        } catch (NoSuchElementException e) {
+        } catch (TimeoutException e) {
             System.out.println("No error message found.");
             return false;
         }

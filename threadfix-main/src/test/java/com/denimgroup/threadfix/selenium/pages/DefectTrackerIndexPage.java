@@ -96,7 +96,7 @@ public class DefectTrackerIndexPage extends BasePage {
 
     public DefectTrackerIndexPage clickGetProductNames() {
         driver.findElementById("getProductNames").click();
-        waitForElement(By.cssSelector("#getProductNames:not(.ng-hide)"));
+        waitForElement(By.cssSelector("#getProductNames:not(.ng-hide)"), 20);
         return new DefectTrackerIndexPage(driver);
     }
 
@@ -169,6 +169,7 @@ public class DefectTrackerIndexPage extends BasePage {
 	}
 
     public boolean isNamePresent(String name) {
+        waitForElement(By.id("defectTrackerName" + name));
         return driver.findElementById("defectTrackerName" + name).getText().contains(name);
     }
 

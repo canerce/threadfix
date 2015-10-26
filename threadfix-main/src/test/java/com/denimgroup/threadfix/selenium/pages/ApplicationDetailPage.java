@@ -630,7 +630,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage clickGetProductNames() {
         driver.findElementById("getProductNames").click();
-        waitForElement(By.cssSelector("#productNamesSection:not(.ng-hide)"));
+        waitForElement(By.cssSelector("#productNamesSection:not(.ng-hide)"), 20);
         return new ApplicationDetailPage(driver);
     }
 
