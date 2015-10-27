@@ -315,6 +315,8 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage clickScanAgentTasksTab() {
+        //This prevents the tests from clicking this tab before the page properly loads it
+        waitForElementTextUpdate(By.cssSelector("#scanAgentTasksTab>a"), " Scan Agent Task");
         driver.findElementByCssSelector("#scanAgentTasksTab>a").click();
         waitForElement(By.id("scanQueueTable"));
         return new ApplicationDetailPage(driver);
