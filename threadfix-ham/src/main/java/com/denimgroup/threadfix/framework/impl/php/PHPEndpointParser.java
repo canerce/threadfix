@@ -23,7 +23,7 @@ public class PHPEndpointParser implements EventBasedTokenizer{
         START, IN_CLASS, IN_FUNCTION, IN_DEFINE
     }
 
-    private boolean isEndpoint = false;
+    public boolean isEndpoint = false;
     private int unclosedCurlyCount = 0;
 
     public static boolean parse(File file){

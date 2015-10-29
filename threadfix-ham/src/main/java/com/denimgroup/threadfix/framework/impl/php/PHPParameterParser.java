@@ -20,7 +20,7 @@ public class PHPParameterParser implements EventBasedTokenizer {
     @Nonnull
     private PageState pageState = PageState.START;
     @Nonnull
-    private Map<Integer,List<String>> lineNumberToParameterMap = map();
+    public Map<Integer,List<String>> lineNumberToParameterMap = map();
 
     private enum State {
         START, DOLLAR_SIGN, UNDERSCORE, POST, GET, OPEN_BRACKET
