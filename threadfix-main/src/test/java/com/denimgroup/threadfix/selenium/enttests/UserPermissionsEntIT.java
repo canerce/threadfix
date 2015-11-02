@@ -280,19 +280,13 @@ public class UserPermissionsEntIT extends BaseDataTest{
 
     @Test
     public void testPermissionWithNoTeam() {
-        DashboardPage dashboardPage = loginPage.defaultLogin();
+        DatabaseUtils.deleteAllTeams();
 
-        if (dashboardPage.isViewMoreLinkPresent()) {
+        UserIndexPage userIndexPage = loginPage.defaultLogin()
+                .clickManageUsersLink()
+                .clickUserLink("user");
 
-            UserIndexPage userIndexPage = dashboardPage.clickManageUsersLink()
-                    .clickUserLink("user");
-            assertFalse("user Permission wasn't available", userIndexPage.isAddTeamRoleButtonDisabled());
-        } else {
-            UserIndexPage userIndexPage = dashboardPage.clickManageUsersLink()
-                    .clickUserLink("user");
-
-            assertTrue("Add Permission Button is Clickable", userIndexPage.isAddTeamRoleButtonDisabled());
-        }
+        assertTrue("Add Permission Button is Clickable", userIndexPage.isAddTeamRoleButtonDisabled());
     }
 
     @Test

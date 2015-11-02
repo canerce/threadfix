@@ -257,12 +257,13 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         assertTrue("Success message was " + remoteProvidersIndexPage.getSuccessAlert(), remoteProvidersIndexPage.getSuccessAlert().contains("QualysGuard WAS"));
 
-        remoteProvidersIndexPage.clickEditMappingButton(QUALYS, 3)
+        remoteProvidersIndexPage.setApplicationFilter(QUALYS, "PHP Demo site")
+                .clickEditMappingButton(QUALYS, 0)
                 .selectTeamMapping(teamName)
                 .selectAppMapping(appName)
                 .clickUpdateMappings();
 
-        remoteProvidersIndexPage.clickImportScan(QUALYS, 3)
+        remoteProvidersIndexPage.clickImportScan(QUALYS, 0)
                 .checkForAlert();
 
         assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));

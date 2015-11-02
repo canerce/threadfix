@@ -489,7 +489,13 @@ public class UserIndexPage extends BasePage {
     }
 
     public boolean isAddTeamRoleButtonDisabled() {
-        return driver.findElementById("addPermissionButton").getAttribute("ng-disabled") != null;
+        try {
+            driver.findElementById("addPermissionButton").click();
+            waitForElement(By.id("myModalLabel"));
+            return false;
+        } catch (TimeoutException t) {
+            return true;
+        }
     }
 
     public boolean isGroupsTabPresent() {
