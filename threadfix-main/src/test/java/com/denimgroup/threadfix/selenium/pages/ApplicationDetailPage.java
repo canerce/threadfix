@@ -1533,6 +1533,10 @@ public class ApplicationDetailPage extends BasePage {
         return tryGetText(By.cssSelector("#scanTab > a")).equals("0 Scans");
     }
 
+    public boolean isVulnerabilityScannerTagPresent(String vulnerability, String scannerName) {
+        return isElementPresent("channel" + vulnerability + scannerName);
+    }
+
     //===========================================================================================================
     // Helper Methods
     //===========================================================================================================

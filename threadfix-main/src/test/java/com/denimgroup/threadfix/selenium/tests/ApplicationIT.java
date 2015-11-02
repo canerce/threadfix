@@ -944,6 +944,32 @@ public class ApplicationIT extends BaseDataTest {
                 teamIndexPage.isAddApplicationButtonPresent());
     }
 
+    @Test
+    public void testHAMMerging() {
+        initializeTeamAndApp();
+        String repositoryURL = "https://github.com/spring-projects/spring-petclinic.git";
+        String scannerName = "IBM Rational AppScan";
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickEditDeleteBtn()
+                .expandSourceCodeFields()
+                .setRepositoryURLEdited(repositoryURL)
+                .clickModalSubmit();
+
+        uploadScanToApp(teamName, appName, "Petclinic XML");
+        uploadScanToApp(teamName, appName, "Petclinic FPR");
+
+        applicationDetailPage.expandScannerAndMerged()
+                .addScannerFilter("Fortify SCA")
+                .expandVulnerabilityByType("High89");
+
+        assertTrue("Vulnerability was not merged", applicationDetailPage.isVulnerabilityScannerTagPresent("High890", "FortifySCA(2)")
+                    && applicationDetailPage.isVulnerabilityScannerTagPresent("High890", "IBMSecurityAppScanStandard"));
+    }
+
     //===========================================================================================================
     // Vulnerabilities
     //===========================================================================================================
