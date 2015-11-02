@@ -134,7 +134,8 @@ public class DefectTrackerIndexPage extends BasePage {
     }
 
     public DefectTrackerIndexPage selectProduct(String productName) {
-        new Select(driver.findElementById("productNameSelect")).selectByVisibleText(productName);
+        driver.findElementById("productNameSelect").clear();
+        driver.findElementById("productNameSelect").sendKeys(productName);
         return this;
     }
 

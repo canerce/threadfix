@@ -701,7 +701,8 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage selectProduct(String product) {
-        new Select(driver.findElementById("productNameSelect")).selectByVisibleText(product);
+        driver.findElementById("productNameSelect").clear();
+        driver.findElementById("productNameSelect").sendKeys(product);
         return new ApplicationDetailPage(driver);
     }
 
