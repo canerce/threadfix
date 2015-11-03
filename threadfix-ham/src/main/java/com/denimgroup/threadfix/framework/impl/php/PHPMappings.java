@@ -55,8 +55,7 @@ public class PHPMappings implements EndpointGenerator {
         if(rootFile.exists()) {
             this.projectRoot = rootFile;
 
-            Collection<File> phpFiles = FileUtils.listFiles(rootFile,
-                    new FileExtensionFileFilter("php"), TrueFileFilter.INSTANCE);
+            Collection<File> phpFiles = FileUtils.listFiles(rootFile, PHPFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
 
             for (File file : phpFiles) {
                 parseFile(file);
@@ -88,7 +87,7 @@ public class PHPMappings implements EndpointGenerator {
     private void createEndpoint(String staticPath, String dynamicPath, Map<Integer,List<String>> parameters) {
 
         PHPEndpoint endpoint = new PHPEndpoint(
-                staticPath,
+                "webroot" + staticPath,
                 dynamicPath,
                 set("GET", "POST"),
                 parameters);

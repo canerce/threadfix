@@ -23,9 +23,10 @@ public class PHPEndpoint extends AbstractEndpoint{
         this.methods = methods;
         this.staticPath = staticPath;
 
-        String path = dynamicPath;
-        if(path != null && path.indexOf("/index.php") != -1){
-            this.dynamicPath = path.replace("/index.php","/");
+        if(dynamicPath != null && dynamicPath.indexOf("/index.php") != -1){
+            this.dynamicPath = dynamicPath.replace("index.php","");
+        } else {
+            this.dynamicPath = dynamicPath;
         }
 
         for (List<String> value : parameterMap.values()) {
