@@ -50,7 +50,7 @@ import java.util.regex.Pattern;
 import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
- *
+ * 
  * @author mcollins
  *
  */
@@ -402,16 +402,16 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    	if ("issues".equals(qName)) {
 	    		testDate = DateUtils.getCalendarFromString("EEE MMM dd kk:mm:ss zzz yyyy",
                         atts.getValue("exportTime"));
-                if (testDate != null)
-                    hasDate = true;
-                correctFormat = atts.getValue("burpVersion") != null;
-            }
-
-            if ("issue".equals(qName)) {
-                hasFindings = true;
-                setTestStatus();
-                throw new SAXException(FILE_CHECK_COMPLETED);
-            }
-        }
-    }
+	    		if (testDate != null)
+	    			hasDate = true;
+	    		correctFormat = atts.getValue("burpVersion") != null;
+	    	}
+	    	
+	    	if ("issue".equals(qName)) {
+	    		hasFindings = true;	
+	    		setTestStatus();
+	    		throw new SAXException(FILE_CHECK_COMPLETED);
+	    	}
+	    }
+	}
 }

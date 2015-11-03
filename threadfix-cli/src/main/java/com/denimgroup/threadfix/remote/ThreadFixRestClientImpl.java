@@ -70,7 +70,6 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
         propertiesManager.setMemoryKey(apiKey);
         propertiesManager.setMemoryUrl(url);
         httpRestUtils = new HttpRestUtils(propertiesManager);
-        httpRestUtils.setUnsafeFlag(true);
 	}
 	
 	public RestResponse<Application> createApplication(String teamId, String name, String url) {
@@ -249,7 +248,7 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 		String[] paramValues 	= { appId, scannerType };
 		return httpRestUtils.httpPostFile(url, new File(filePath), paramNames, paramValues, String.class);
 	}
-
+	
 	public RestResponse<Finding> addDynamicFinding(String applicationId, String vulnType, String severity,
 		String nativeId, String parameter, String longDescription,
 		String fullUrl, String path) {
