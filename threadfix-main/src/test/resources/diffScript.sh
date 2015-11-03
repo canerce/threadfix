@@ -20,7 +20,8 @@ declare -a blacklist=(".gitignore"
 	"threadfix-main/src/test/java/com/denimgroup/threadfix/service/defects/util/TestConstants.java"
 	"threadfix-main/threadfix.log"
 	"threadfix-service-interfaces/pom.xml"
-	"threadfix-upgrade/mysql-upgrade/src/resources/fabfile.py")
+	"threadfix-upgrade/mysql-upgrade/src/resources/fabfile.py"
+	"threadfix-cli/src/main/java/com/denimgroup/threadfix/remote/ThreadFixRestClientImpl.java")
 
 for url in "${blacklist[@]}"
 do
