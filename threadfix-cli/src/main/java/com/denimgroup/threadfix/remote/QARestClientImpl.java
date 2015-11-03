@@ -34,18 +34,12 @@ import java.io.File;
 /**
  * Created by dharrison on 10/9/2015.
  */
-public class QARestClientImpl implements QARestClient {
+public class QARestClientImpl extends ThreadFixRestClientImpl implements QARestClient {
 
     private static final SanitizedLogger LOGGER = new SanitizedLogger(ThreadFixRestClientImpl.class);
 
-    final HttpRestUtils httpRestUtils;
-    final PropertiesManager propertiesManager;
-
     public QARestClientImpl(String url, String apiKey) {
-        propertiesManager = new PropertiesManager();
-        propertiesManager.setMemoryKey(apiKey);
-        propertiesManager.setMemoryUrl(url);
-        httpRestUtils = new HttpRestUtils(propertiesManager);
+        super(url, apiKey);
         httpRestUtils.setUnsafeFlag(true);
     }
 

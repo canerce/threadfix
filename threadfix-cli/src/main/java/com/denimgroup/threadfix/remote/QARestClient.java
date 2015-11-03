@@ -30,7 +30,7 @@ import com.denimgroup.threadfix.remote.response.RestResponse;
 /**
  * Created by dharrison on 10/9/2015.
  */
-public interface QARestClient {
+public interface QARestClient extends ThreadFixRestClient {
 
     public RestResponse<Task> requestTask(String scanners, String agentConfig);
 

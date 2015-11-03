@@ -41,15 +41,13 @@ import static org.junit.Assert.assertTrue;
 public class DatabaseUtils {
 
     public static final String API_KEY, REST_URL;
-    public static final ThreadFixRestClient CLIENT;
-    public static final QARestClient QA_CLIENT;
+    public static final QARestClient CLIENT;
 
     static {
         API_KEY = System.getProperty("API_KEY");
         REST_URL = System.getProperty("REST_URL");
 
-        CLIENT = new ThreadFixRestClientImpl(REST_URL, API_KEY);
-        QA_CLIENT = new QARestClientImpl(REST_URL, API_KEY);
+        CLIENT = new QARestClientImpl(REST_URL, API_KEY);
 
         if (API_KEY == null) {
             throw new IllegalStateException("API_KEY system variable was null.");
@@ -70,47 +68,47 @@ public class DatabaseUtils {
 
         assertTrue("Search Response was unsuccessful. Message: " + response.message, response.success);
 
-        RestResponse<Organization> restResponse = QA_CLIENT.deleteTeam(String.valueOf(response.object.getId()));
+        response = CLIENT.deleteTeam(String.valueOf(response.object.getId()));
 
         assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
     }
 
     public static void createUser(String username, String globalRoleName) {
-        RestResponse<User> response = QA_CLIENT.createUser(username, globalRoleName);
+        RestResponse<User> response = CLIENT.createUser(username, globalRoleName);
 
         assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
     }
 
     public static void createUser(String username) {
-        RestResponse<User> response = QA_CLIENT.createUser(username);
+        RestResponse<User> response = CLIENT.createUser(username);
 
         assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
     }
 
     public static void createErrorLog() {
-        QA_CLIENT.trap();
+        CLIENT.trap();
     }
 
     public static void addUserWithTeamAppPermission(String userName, String roleName, String teamName, String appName) {
-        RestResponse<User> response = QA_CLIENT.addUserTeamAppPermission(userName, roleName, teamName, appName);
+        RestResponse<User> response = CLIENT.addUserTeamAppPermission(userName, roleName, teamName, appName);
 
         assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
     }
 
     public static void createRole(String roleName, boolean allPermissions) {
-        RestResponse<Role> response = QA_CLIENT.createRole(roleName, allPermissions);
+        RestResponse<Role> response = CLIENT.createRole(roleName, allPermissions);
 
         assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
     }
 
     public static void createSpecificPermissionRole(String roleName, String permission) {
-        RestResponse<Role> response = QA_CLIENT.createSpecificPermissionRole(roleName, permission);
+        RestResponse<Role> response = CLIENT.createSpecificPermissionRole(roleName, permission);
 
         assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
     }
 
     public static void removePermission(String roleName, String permission) {
-        RestResponse<Role> response = QA_CLIENT.removePermission(roleName, permission);
+        RestResponse<Role> response = CLIENT.removePermission(roleName, permission);
 
         assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
     }
@@ -177,24 +175,24 @@ public class DatabaseUtils {
         assertTrue("Request for all teams was unsuccessful. Message: " + response.message, response.success);
 
         for(Organization team: response.object) {
-            RestResponse<Organization> teamResponse = QA_CLIENT.deleteTeam(String.valueOf(team.getId()));
+            RestResponse<Organization> teamResponse = CLIENT.deleteTeam(String.valueOf(team.getId()));
         }
     }
 
     public static void deleteExtraUsers() {
 
-        RestResponse<User[]> response = QA_CLIENT.listUsers();
+        RestResponse<User[]> response = CLIENT.listUsers();
         assertTrue("Request for all users was unsuccessful. Message: " + response.message, response.success);
 
         for(int index = 0; index < response.object.length; index++){
             if(response.object[index].getId() != 1) {
-                RestResponse<User> userResponse = QA_CLIENT.deleteUser(String.valueOf(response.object[index].getId()));
+                RestResponse<User> userResponse = CLIENT.deleteUser(String.valueOf(response.object[index].getId()));
             }
         }
     }
 
     public static void createGroup(String groupName) {
-        RestResponse<Group> response = QA_CLIENT.createGroup(groupName);
+        RestResponse<Group> response = CLIENT.createGroup(groupName);
         assertTrue("Request for create group was unsuccessful.  Message: " + response.message, response.success);
     }
 
@@ -230,13 +228,13 @@ public class DatabaseUtils {
 
     public static void deleteAllPolicies() {
 
-        RestResponse<String> response = QA_CLIENT.deletePolicies();
+        RestResponse<String> response = CLIENT.deletePolicies();
         assertTrue("Request to delete all policies was unsuccessful. Message: " + response.message, response.success);
 
     }
 
     public static void deleteAllEmailReports(){
-        RestResponse<String> response = QA_CLIENT.deleteEmailReports();
+        RestResponse<String> response = CLIENT.deleteEmailReports();
         assertTrue("Request to delete all email reports was unsuccessful. Message: " + response.message, response.success);
     }
 
