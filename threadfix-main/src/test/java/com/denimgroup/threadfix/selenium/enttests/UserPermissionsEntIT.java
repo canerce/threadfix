@@ -967,7 +967,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
         teamDetailPage.checkVulnerabilitiesByCategory("Critical79")
                 .clickVulnerabilitiesActionButton();
 
-        assertTrue("Batch Tagging button is not present on Team page", teamDetailPage.isBatchCommentButtonPresent());
+        assertTrue("Batch Comment button is not present on Team page", teamDetailPage.isBatchCommentButtonPresent());
 
         ApplicationDetailPage applicationDetailPage = teamDetailPage.clickVulnerabilitiesActionButton()
                 .clickOrganizationHeaderLink()
@@ -981,13 +981,13 @@ public class UserPermissionsEntIT extends BaseDataTest{
         applicationDetailPage.checkVulnerabilitiesByCategory("Critical79")
                 .clickVulnerabilitiesActionButton();
 
-        assertTrue("Batch Tagging button is not present on App page", applicationDetailPage.isBatchCommentButtonPresent());
+        assertTrue("Batch Comment button is not present on App page", applicationDetailPage.isBatchCommentButtonPresent());
 
         VulnerabilityDetailPage vulnerabilityDetailPage = applicationDetailPage.clickVulnerabilitiesActionButton()
                 .clickScansHeaderLink()
                 .clickViewScanLink()
                 .clickViewFinding()
-                .clickViewVulnerability();
+                .clickViewVulnerabilityLimitedPermission();
 
         assertTrue("Add comment button is not present on Vulnerability page", vulnerabilityDetailPage.isAddCommentButtonPresent());
     }
@@ -1349,7 +1349,6 @@ public class UserPermissionsEntIT extends BaseDataTest{
 
         assertTrue("Action menu is not present", vulnerabilityDetailPage.isActionMenuPresent());
         assertTrue("Add File Button is not present", vulnerabilityDetailPage.isUploadFileButtonPresent());
-        assertFalse("Add Comment Button is present", vulnerabilityDetailPage.isAddCommentButtonPresent());
 
         CustomizeSeveritiesPage customizeSeveritiesPage = vulnerabilityDetailPage.clickCustomizeThreadFixSeveritiesLink();
 
@@ -1433,14 +1432,13 @@ public class UserPermissionsEntIT extends BaseDataTest{
         assertTrue("Submit Defect is not present", applicationDetailPage.isElementPresent("submitDefectButton"));
         assertTrue("Add to Existing Defect is not present", applicationDetailPage.isElementPresent("mergeDefectButton"));
 
-        //TODO: Uncomment if DGTF-2216 is completed
-//        VulnerabilityDetailPage vulnerabilityDetailPage = applicationDetailPage.clickVulnerabilitiesActionButton()
-//                .expandVulnerabilityByType("High79")
-//                .clickViewMoreVulnerabilityLink("High790")
-//                .clickActionMenu();
-//
-//        assertTrue("Create Defect is not present", vulnerabilityDetailPage.isCreateDefectPresent());
-//        assertTrue("Add to Existing Defect is not present", vulnerabilityDetailPage.isAddToExistingDefectPresent());
+        VulnerabilityDetailPage vulnerabilityDetailPage = applicationDetailPage.clickVulnerabilitiesActionButton()
+                .expandVulnerabilityByType("High79")
+                .clickViewMoreVulnerabilityLink("High790")
+                .clickActionMenu();
+
+        assertTrue("Create Defect is not present", vulnerabilityDetailPage.isCreateDefectPresent());
+        assertTrue("Add to Existing Defect is not present", vulnerabilityDetailPage.isAddToExistingDefectPresent());
     }
 
     @Test
