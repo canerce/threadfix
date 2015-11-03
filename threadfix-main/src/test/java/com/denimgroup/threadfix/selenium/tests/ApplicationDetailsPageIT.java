@@ -296,6 +296,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
             .setUsername(BUGZILLA_USERNAME)
             .setPassword(BUGZILLA_PASSWORD)
             .clickGetProductNames()
+            .selectProduct(BUGZILLA_PROJECTNAME)
             .clickUpdateApplicationButton();
 
         assertTrue("Defect Tracker not added correctly", applicationDetailPage.isDefectTrackerAttached());

@@ -591,6 +591,15 @@ public abstract class BasePage {
         }
     }
 
+    public boolean isThreadFixSeveritiesLinkPresent() {
+        try {
+            hover("manageCustomLink");
+            return driver.findElementById("customizeThreadFixSeveritiesLink").isDisplayed();
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
+
     // wrapper method for testing expected condition
     public boolean isClickable(String elementID) {
         ExpectedCondition<WebElement> condition = ExpectedConditions.elementToBeClickable(

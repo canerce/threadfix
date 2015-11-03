@@ -286,7 +286,8 @@ public class UserPermissionsEntIT extends BaseDataTest{
                 .clickManageUsersLink()
                 .clickUserLink("user");
 
-        assertTrue("Add Permission Button is Clickable", userIndexPage.isAddTeamRoleButtonDisabled());
+        assertTrue("Add Permission Button is Clickable. This may indicate there are teams that cannot be deleted",
+                userIndexPage.isAddTeamRoleButtonDisabled());
     }
 
     @Test
@@ -810,7 +811,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
         vulnerabilityDetailPage.clickConfigTab();
 
         assertFalse("Customize ThreadFix Severities link should not be present",
-                vulnerabilityDetailPage.isCustomizeThreadFixVulnerabilityTypesLinkPresent());
+                vulnerabilityDetailPage.isThreadFixSeveritiesLinkPresent());
     }
 
     @Test
@@ -1380,7 +1381,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
                 applicationDetailPage.isElementPresent("editVulnerabilityFiltersButton"));
 
         TeamDetailPage teamDetailPage = applicationDetailPage.clickTeamLink()
-                .clickActionButton();
+                .clickActionButtonWithoutEditButton();
 
         assertTrue("Customize ThreadFix Vulnerability Types and Severities link is not present",
                 teamDetailPage.isElementPresent("editfiltersButton1"));

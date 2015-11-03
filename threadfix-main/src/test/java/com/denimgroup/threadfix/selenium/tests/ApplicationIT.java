@@ -962,12 +962,14 @@ public class ApplicationIT extends BaseDataTest {
         uploadScanToApp(teamName, appName, "Petclinic XML");
         uploadScanToApp(teamName, appName, "Petclinic FPR");
 
+        applicationDetailPage.refreshPage();
+
         applicationDetailPage.expandScannerAndMerged()
                 .addScannerFilter("Fortify SCA")
                 .expandVulnerabilityByType("High89");
 
         assertTrue("Vulnerability was not merged", applicationDetailPage.isVulnerabilityScannerTagPresent("High890", "FortifySCA(2)")
-                    && applicationDetailPage.isVulnerabilityScannerTagPresent("High890", "IBMSecurityAppScanStandard"));
+                && applicationDetailPage.isVulnerabilityScannerTagPresent("High890", "IBMSecurityAppScanStandard"));
     }
 
     //===========================================================================================================
